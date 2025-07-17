@@ -23,8 +23,7 @@ export default function Signup() {
   return (
     <main className={styles.main}>
       <div className="container">
-        <div className="window" style={{ maxWidth: '400px', margin: 'auto' }}>
-          <div className="title-bar">Sign Up</div>
+        <div className="window" className={styles.formContainer}>
           <div style={{ padding: '20px' }}>
             <form onSubmit={handleSubmit} className={styles.form}>
               <input

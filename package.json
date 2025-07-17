@@ -11,6 +11,7 @@
   "dependencies": {
     "bcryptjs": "^3.0.2",
     "chart.js": "^4.5.0",
+    "colorthief": "^2.6.0",
     "jose": "^6.0.12",
     "next": "14.2.3",
     "react": "^18",

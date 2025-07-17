@@ -11,7 +11,10 @@ interface Vinyl {
   title: string
   year: number
   imageUrl: string
-  genre: string
+  genre: string[]
+  discogsId?: number
+  country?: string
+  style?: string[]
 }
 
 export default function Stats() {
@@ -19,32 +22,63 @@ export default function Stats() {
   const [genreStats, setGenreStats] = useState<Record<string, number>>({})
   const [yearStats, setYearStats] = useState<Record<string, number>>({})
   const [artistStats, setArtistStats] = useState<Record<string, number>>({})
+  const [countryStats, setCountryStats] = useState<Record<string, number>>({})
+  const [styleStats, setStyleStats] = useState<Record<string, number>>({})
+
+  // State for chart visibility
+  const [showGenreChart, setShowGenreChart] = useState(true)
+  const [showYearChart, setShowYearChart] = useState(true)
+  const [showArtistChart, setShowArtistChart] = useState(true)
+  const [showCountryChart, setShowCountryChart] = useState(true)
+  const [showStyleChart, setShowStyleChart] = useState(true)
   const router = useRouter()
 
   useEffect(() => {
-    fetch('/api/collection')
-      .then((res) => {
+    const fetchData = async () => {
+      try {
+        const res = await fetch('/api/collection')
         if (!res.ok) {
           router.push('/login')
-        } else {
-          return res.json()
+          return
         }
-      })
-      .then((data: Vinyl[]) => {
+        const data = await res.json()
         setCollection(data)
 
         const genreCounts: Record<string, number> = {}
         const yearCounts: Record<string, number> = {}
         const artistCounts: Record<string, number> = {}
+        const countryCounts: Record<string, number> = {}
+        const styleCounts: Record<string, number> = {}
 
-        data.forEach((vinyl) => {
+        const fetchDiscogsDetailsPromises = data.map(async (vinyl: any) => {
+          if (vinyl.discogsId) {
+            try {
+              const discogsRes = await fetch(`/api/discogs/release/${vinyl.discogsId}`)
+              if (discogsRes.ok) {
+                const discogsData = await discogsRes.json()
+                if (discogsData.country) {
+                  countryCounts[discogsData.country] = (countryCounts[discogsData.country] || 0) + 1
+                }
+                if (discogsData.styles && Array.isArray(discogsData.styles)) {
+                  discogsData.styles.forEach((style: string) => {
+                    styleCounts[style] = (styleCounts[style] || 0) + 1
+                  })
+                }
+              } else {
+                console.error(`Failed to fetch Discogs details for ${vinyl.discogsId}:`, discogsRes.statusText)
+              }
+            } catch (error) {
+              console.error(`Error fetching Discogs details for ${vinyl.discogsId}:`, error)
+            }
+          }
+
+          // Existing stat calculations
           if (Array.isArray(vinyl.genre)) {
-            vinyl.genre.forEach((g) => {
+            vinyl.genre.forEach((g: string) => {
               genreCounts[g] = (genreCounts[g] || 0) + 1
             })
           } else if (typeof vinyl.genre === 'string') {
-            // Fallback for old data format if needed
-            vinyl.genre.split(',').map(g => g.trim()).filter(g => g).forEach(g => {
+            vinyl.genre.split(',').map((g: string) => g.trim()).filter((g: string) => g).forEach((g: string) => {
               genreCounts[g] = (genreCounts[g] || 0) + 1
             })
           }
@@ -52,29 +86,88 @@ export default function Stats() {
           artistCounts[vinyl.artist] = (artistCounts[vinyl.artist] || 0) + 1
         })
 
+        await Promise.all(fetchDiscogsDetailsPromises)
+
         setGenreStats(genreCounts)
         setYearStats(yearCounts)
         setArtistStats(artistCounts)
-      })
+        setCountryStats(countryCounts)
+        setStyleStats(styleCounts)
+      } catch (error) {
+        console.error("Error fetching stats data:", error)
+      }
+    }
+
+    fetchData()
   }, [router])
 
   return (
     <main className={styles.main}>
       <div className="container">
         <div className="window">
-          <div className="title-bar">Collection Statistics</div>
           <div className={styles.contentSection}>
             <h1>Your Collection Stats</h1>
             <p>Total Records: {collection.length}</p>
 
-            <h2>Records by Genre:</h2>
-            <ChartComponent data={genreStats} title="Records by Genre" type="pie" />
+            <div style={{ marginBottom: '20px', display: 'flex', flexWrap: 'wrap', gap: '15px', justifyContent: 'center' }}>
+              <label style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                <input type="checkbox" checked={showGenreChart} onChange={() => setShowGenreChart(!showGenreChart)} />
+                Genre Chart
+              </label>
+              <label style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                <input type="checkbox" checked={showYearChart} onChange={() => setShowYearChart(!showYearChart)} />
+                Year Chart
+              </label>
+              <label style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                <input type="checkbox" checked={showArtistChart} onChange={() => setShowArtistChart(!showArtistChart)} />
+                Artist Chart
+              </label>
+              <label style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                <input type="checkbox" checked={showCountryChart} onChange={() => setShowCountryChart(!showCountryChart)} />
+                Country Chart
+              </label>
+              <label style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                <input type="checkbox" checked={showStyleChart} onChange={() => setShowStyleChart(!showStyleChart)} />
+                Style Chart
+              </label>
+            </div>
 
-            <h2>Records by Year:</h2>
-            <ChartComponent data={yearStats} title="Records by Year" type="bar" />
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(400px, 50%), 1fr))', gap: '30px' }}>
+              {showGenreChart && (
+                <div>
+                  <h2>Records by Genre:</h2>
+                  <ChartComponent data={genreStats} title="Records by Genre" type="pie" />
+                </div>
+              )}
 
-            <h2>Records by Artist:</h2>
-            <ChartComponent data={artistStats} title="Records by Artist" type="bar" />
+              {showYearChart && (
+                <div>
+                  <h2>Records by Year:</h2>
+                  <ChartComponent data={yearStats} title="Records by Year" type="bar" />
+                </div>
+              )}
+
+              {showArtistChart && (
+                <div>
+                  <h2>Records by Artist:</h2>
+                  <ChartComponent data={artistStats} title="Records by Artist" type="bar" />
+                </div>
+              )}
+
+              {showCountryChart && (
+                <div>
+                  <h2>Records by Country:</h2>
+                  <ChartComponent data={countryStats} title="Records by Country" type="bar" />
+                </div>
+              )}
+
+              {showStyleChart && (
+                <div>
+                  <h2>Records by Style:</h2>
+                  <ChartComponent data={styleStats} title="Records by Style" type="bar" />
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>

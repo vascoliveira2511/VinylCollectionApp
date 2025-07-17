@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import styles from './page.module.css'
 
@@ -11,6 +12,7 @@ interface Vinyl {
   year: number
   imageUrl: string
   genre: string[]
+  discogsId?: number // Add discogsId to the Vinyl interface
 }
 
 interface Suggestion {
@@ -38,9 +40,11 @@ export default function Home() {
   const [year, setYear] = useState('')
   const [imageUrl, setImageUrl] = useState('')
   const [genre, setGenre] = useState<string[]>([])
+  const [discogsId, setDiscogsId] = useState<number | null>(null)
   const [editingVinyl, setEditingVinyl] = useState<Vinyl | null>(null)
   const [suggestions, setSuggestions] = useState<Suggestion[]>([])
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null)
+  const [displayLimit, setDisplayLimit] = useState(12) // Default display limit
 
   // Filter states
   const [filterArtist, setFilterArtist] = useState('')
@@ -51,6 +55,12 @@ export default function Home() {
   const router = useRouter()
 
   useEffect(() => {
+    // Load display limit from local storage
+    const savedLimit = localStorage.getItem('vinylDisplayLimit')
+    if (savedLimit) {
+      setDisplayLimit(parseInt(savedLimit))
+    }
+
     const fetchInitialData = async () => {
       // Fetch user profile data
       const userRes = await fetch('/api/auth/user')
@@ -74,9 +84,14 @@ export default function Home() {
     fetchInitialData()
   }, [router])
 
+  useEffect(() => {
+    // Save display limit to local storage whenever it changes
+    localStorage.setItem('vinylDisplayLimit', displayLimit.toString())
+  }, [displayLimit])
+
   const addOrUpdateVinyl = async (e: React.FormEvent) => {
     e.preventDefault()
-    const vinylData = { artist, title, year: parseInt(year), imageUrl, genre }
+    const vinylData = { artist, title, year: parseInt(year), imageUrl, genre, discogsId }
     let updatedCollection
 
     if (editingVinyl) {
@@ -139,6 +154,7 @@ export default function Home() {
     setYear(vinyl.year.toString())
     setImageUrl(vinyl.imageUrl)
     setGenre(vinyl.genre)
+    setDiscogsId(vinyl.discogsId || null)
   }
 
   const fetchAlbumData = async () => {
@@ -155,6 +171,7 @@ export default function Home() {
         setYear(data.year ? data.year.toString() : '')
         setImageUrl(data.imageUrl || '')
         setGenre(data.genre || [])
+        setDiscogsId(data.discogsId || null)
       } else {
         const errorData = await res.json()
         console.error('Frontend: Album not found error', errorData)
@@ -203,7 +220,7 @@ export default function Home() {
     const matchesGenre = filterGenre === '' || vinyl.genre.some(g => g.toLowerCase().includes(filterGenre.toLowerCase()))
     const matchesYear = filterYear === '' || vinyl.year.toString().includes(filterYear)
     return matchesArtist && matchesTitle && matchesGenre && matchesYear
-  })
+  }).slice(0, displayLimit)
 
   return (
     <main className={styles.main}>
@@ -259,12 +276,27 @@ export default function Home() {
                 value={filterYear}
                 onChange={(e) => setFilterYear(e.target.value)}
               />
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <label htmlFor="displayLimit">Display:</label>
+                <select
+                  id="displayLimit"
+                  value={displayLimit}
+                  onChange={(e) => setDisplayLimit(parseInt(e.target.value))}
+                  style={{ padding: '8px', borderRadius: '4px', border: '1px solid #45475a', backgroundColor: '#313244', color: '#cdd6f4' }}
+                >
+                  <option value={12}>12</option>
+                  <option value={24}>24</option>
+                  <option value={48}>48</option>
+                  <option value={96}>96</option>
+                  <option value={collection.length}>All</option>
+                </select>
+              </div>
             </div>
 
             <div className={styles.collectionGrid}>
               {filteredCollection.map((vinyl) => (
-                <div key={vinyl.id} className={styles.card}>
-                  <img src={vinyl.imageUrl || 'https://via.placeholder.com/150'} alt={`${vinyl.title} cover`} className={styles.albumArt} />
+                <Link href={`/collection/${vinyl.id}`} key={vinyl.id} className={styles.card}>
+                  <img src={`/api/image-proxy?url=${encodeURIComponent(vinyl.imageUrl || 'https://via.placeholder.com/150')}`} alt={`${vinyl.title} cover`} className={styles.albumArt} />
                   <h3>{vinyl.title}</h3>
                   <p>{vinyl.artist}</p>
                   <p>{vinyl.year}</p>
@@ -274,10 +306,10 @@ export default function Home() {
                     ))}
                   </div>
                   <div className={styles.buttonGroup}>
-                    <button onClick={() => startEditing(vinyl)}>Edit</button>
-                    <button className="delete-btn" onClick={() => deleteVinyl(vinyl.id)}>Delete</button>
+                    <button onClick={(e) => { e.preventDefault(); startEditing(vinyl); }}>Edit</button>
+                    <button className="delete-btn" onClick={(e) => { e.preventDefault(); deleteVinyl(vinyl.id); }}>Delete</button>
                   </div>
-                </div>
+                </Link>
               ))}
             </div>
           </div>

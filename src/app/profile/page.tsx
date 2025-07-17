@@ -115,43 +115,48 @@ export default function Profile() {
         <div className="window">
           <div className="title-bar">Profile</div>
           <div className={styles.contentSection}>
-            <h1>Welcome, {user.username}!</h1>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '30px' }}>
+              <div>
+                <h1>Welcome, {user.username}!</h1>
 
-            {discogsAvatarUrl && (
-              <img src={discogsAvatarUrl} alt="Discogs Avatar" className={styles.discogsAvatar} />
-            )}
+                {discogsAvatarUrl && (
+                  <img src={`/api/image-proxy?url=${encodeURIComponent(discogsAvatarUrl)}`} alt="Discogs Avatar" className={styles.discogsAvatar} />
+                )}
 
-            <form onSubmit={handleDiscogsUsernameSubmit} className={styles.form} style={{ gridTemplateColumns: '1fr' }}>
-              <input
-                type="text"
-                placeholder="Discogs Username"
-                value={discogsUsernameInput}
-                onChange={(e) => setDiscogsUsernameInput(e.target.value)}
-              />
-              <button type="submit">Save Discogs Username</button>
-            </form>
+                <form onSubmit={handleDiscogsUsernameSubmit} className={styles.form} style={{ gridTemplateColumns: '1fr' }}>
+                  <input
+                    type="text"
+                    placeholder="Discogs Username"
+                    value={discogsUsernameInput}
+                    onChange={(e) => setDiscogsUsernameInput(e.target.value)}
+                  />
+                  <button type="submit">Save Discogs Username</button>
+                </form>
 
-            <p className={styles.totalRecordsText}>Total Records in Collection: {user.totalRecords}</p>
+                <p className={styles.totalRecordsText}>Total Records in Collection: {user.totalRecords}</p>
+                <button onClick={logout}>Logout</button>
+              </div>
 
-            <h2>Records by Genre:</h2>
-            <ul>
-              {Object.entries(user.genreStats).map(([genre, count]) => (
-                <li key={genre}>
-                  {genre}: {count}
-                </li>
-              ))}
-            </ul>
+              <div>
+                <h2>Records by Genre:</h2>
+                <ul>
+                  {Object.entries(user.genreStats).map(([genre, count]) => (
+                    <li key={genre}>
+                      {genre}: {count}
+                    </li>
+                  ))}
+                </ul>
 
-            <h2>Recently Added:</h2>
-            <ul>
-              {user.recentVinyls.map((vinyl) => (
-                <li key={vinyl.id}>
-                  {vinyl.artist} - {vinyl.title} ({vinyl.year})
-                </li>
-              ))}
-            </ul>
-
-            <button onClick={logout}>Logout</button>
+                <h2>Recently Added:</h2>
+                <ul>
+                  {user.recentVinyls.map((vinyl) => (
+                    <li key={vinyl.id}>
+                      {vinyl.artist} - {vinyl.title} ({vinyl.year})
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
           </div>
         </div>
       </div>

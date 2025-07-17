@@ -43,6 +43,7 @@ export async function GET(request: Request) {
       }
 
       return NextResponse.json({
+        discogsId: firstResult.id,
         title: trackTitle,
         artist: artistName || 'Unknown Artist',
         year: firstResult.year,
