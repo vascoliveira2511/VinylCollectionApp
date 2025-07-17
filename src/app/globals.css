@@ -1,0 +1,82 @@
+body {
+  background-color: #282828;
+  color: #ebdbb2;
+  font-family: "Roboto Mono", monospace;
+  font-size: 16px;
+}
+
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+.window {
+  background-color: #3c3836;
+  border: 2px solid #504945;
+  border-radius: 8px;
+  margin-bottom: 30px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.title-bar {
+  background-color: #504945;
+  color: #ebdbb2;
+  padding: 8px 15px;
+  font-weight: bold;
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #fabd2f; /* Gruvbox Yellow */
+}
+
+a {
+  color: #83a598; /* Gruvbox Aqua */
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+button {
+  background-color: #fabd2f; /* Gruvbox Yellow */
+  color: #282828;
+  border: none;
+  padding: 10px 20px;
+  font-family: "Roboto Mono", monospace;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+button:hover {
+  background-color: #d79921; /* Darker Yellow */
+}
+
+button.delete-btn {
+    background-color: #fb4934; /* Gruvbox Red */
+}
+
+button.delete-btn:hover {
+    background-color: #cc241d; /* Darker Red */
+}
+
+input, textarea {
+  background-color: #504945;
+  color: #ebdbb2;
+  border: 1px solid #665c54;
+  padding: 10px;
+  font-family: "Roboto Mono", monospace;
+  font-size: 16px;
+  width: 100%;
+  border-radius: 4px;
+}
+
+input:focus, textarea:focus {
+    outline: none;
+    border-color: #fabd2f;
+}
