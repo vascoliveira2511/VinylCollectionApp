@@ -37,22 +37,28 @@ const ChartComponent: React.FC<ChartProps> = ({ data, title, type }) => {
         label: title,
         data: Object.values(data),
         backgroundColor: [
-          'rgba(137, 180, 250, 0.7)', // Catppuccin Mocha - Lavender
-          'rgba(180, 190, 254, 0.7)', // Catppuccin Mocha - Blue
-          'rgba(245, 194, 231, 0.7)', // Catppuccin Mocha - Pink
-          'rgba(166, 227, 161, 0.7)', // Catppuccin Mocha - Green
-          'rgba(249, 226, 175, 0.7)', // Catppuccin Mocha - Yellow
-          'rgba(116, 199, 236, 0.7)', // Catppuccin Mocha - Sky
-          'rgba(250, 200, 187, 0.7)', // Catppuccin Mocha - Peach
+          'rgba(120, 80, 220, 0.8)',  // Purple
+          'rgba(220, 80, 120, 0.8)',  // Pink
+          'rgba(80, 200, 180, 0.8)',  // Teal
+          'rgba(255, 140, 80, 0.8)',  // Orange
+          'rgba(140, 220, 80, 0.8)',  // Green
+          'rgba(80, 160, 220, 0.8)',  // Blue
+          'rgba(200, 160, 80, 0.8)',  // Gold
+          'rgba(160, 80, 200, 0.8)',  // Violet
+          'rgba(80, 220, 140, 0.8)',  // Mint
+          'rgba(220, 160, 80, 0.8)',  // Amber
         ],
         borderColor: [
-          'rgba(137, 180, 250, 1)',
-          'rgba(180, 190, 254, 1)',
-          'rgba(245, 194, 231, 1)',
-          'rgba(166, 227, 161, 1)',
-          'rgba(249, 226, 175, 1)',
-          'rgba(116, 199, 236, 1)',
-          'rgba(250, 200, 187, 1)',
+          'rgba(120, 80, 220, 1)',
+          'rgba(220, 80, 120, 1)',
+          'rgba(80, 200, 180, 1)',
+          'rgba(255, 140, 80, 1)',
+          'rgba(140, 220, 80, 1)',
+          'rgba(80, 160, 220, 1)',
+          'rgba(200, 160, 80, 1)',
+          'rgba(160, 80, 200, 1)',
+          'rgba(80, 220, 140, 1)',
+          'rgba(220, 160, 80, 1)',
         ],
         borderWidth: 1,
       },
@@ -65,13 +71,20 @@ const ChartComponent: React.FC<ChartProps> = ({ data, title, type }) => {
       legend: {
         position: 'top' as const,
         labels: {
-          color: '#cdd6f4', // Catppuccin Mocha - Text
+          color: '#e0e0e0',
+          font: {
+            family: 'Space Grotesk',
+          }
         },
       },
       title: {
         display: true,
         text: title,
-        color: '#89b4fa', // Catppuccin Mocha - Lavender
+        color: '#ffffff',
+        font: {
+          family: 'Space Grotesk',
+          weight: 600,
+        }
       },
       tooltip: {
         callbacks: {
@@ -93,19 +106,25 @@ const ChartComponent: React.FC<ChartProps> = ({ data, title, type }) => {
     scales: type === 'bar' ? {
       x: {
         ticks: {
-          color: '#cdd6f4', // Catppuccin Mocha - Text
+          color: '#e0e0e0',
+          font: {
+            family: 'Space Grotesk',
+          }
         },
         grid: {
-          color: 'rgba(255, 255, 255, 0.1)', // Subtle grid lines
+          color: 'rgba(255, 255, 255, 0.1)',
         },
       },
       y: {
         ticks: {
-          color: '#cdd6f4', // Catppuccin Mocha - Text
+          color: '#e0e0e0',
           stepSize: 1,
+          font: {
+            family: 'Space Grotesk',
+          }
         },
         grid: {
-          color: 'rgba(255, 255, 255, 0.1)', // Subtle grid lines
+          color: 'rgba(255, 255, 255, 0.1)',
         },
       },
     } : {},

@@ -1,9 +1,22 @@
 .navbar {
-  background-color: #11111b; /* Catppuccin Mocha - Crust */
-  padding: 20px 30px; /* Increased padding */
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  margin-bottom: 50px; /* Increased margin */
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  background: linear-gradient(135deg, #404040, #383838);
+  padding: 28px 32px;
+  border-bottom: 2px solid rgba(120, 80, 220, 0.3);
+  margin-bottom: 0;
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.6),
+    0 2px 0 rgba(255, 255, 255, 0.1) inset;
+  position: relative;
+}
+
+.navbar::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: rgba(120, 80, 220, 0.4);
 }
 
 .navList {
@@ -12,17 +25,30 @@
   margin: 0;
   display: flex;
   justify-content: center;
-  gap: 50px; /* Increased gap */
+  gap: 48px;
+  margin: 0 auto;
 }
 
 .navItem a {
-  color: #b4befe;
+  color: #ffffff;
   text-decoration: none;
   font-weight: 600;
-  font-size: 1.1em;
-  transition: color 0.2s ease-in-out;
+  font-size: 0.95em;
+  letter-spacing: 0.8px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  text-transform: uppercase;
+  padding: 12px 20px;
+  border-radius: 8px;
+  position: relative;
+  background: linear-gradient(135deg, transparent, rgba(255, 255, 255, 0.05));
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .navItem a:hover {
-  color: #cdd6f4;
+  color: #ffffff;
+  background: rgba(120, 80, 220, 0.2);
+  box-shadow: 
+    0 2px 8px rgba(0, 0, 0, 0.2),
+    0 0 0 1px rgba(120, 80, 220, 0.3),
+    0 1px 0 rgba(255, 255, 255, 0.1) inset;
 }

@@ -1,107 +1,183 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap');
+
 body {
-  background-color: #1e1e2e; /* Catppuccin Mocha - Base */
-  color: #cdd6f4; /* Catppuccin Mocha - Text */
-  font-family: 'Inter', sans-serif; /* Modern sans-serif font */
-  font-size: 16px;
-  line-height: 1.6;
+  background: linear-gradient(135deg, #0a0a0a 0%, #1a0f1a 25%, #0f1a1a 50%, #1a1a0f 75%, #0a0a0a 100%);
+  background-attachment: fixed;
+  color: #e0e0e0;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  position: relative;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    radial-gradient(circle at 25% 25%, rgba(120, 80, 220, 0.06) 0%, transparent 50%),
+    radial-gradient(circle at 75% 75%, rgba(220, 80, 120, 0.04) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: -1;
 }
 
 .container {
-  width: 100%; /* Allow content to occupy full width */
+  width: 100%;
   margin: 0 auto;
   padding: 40px 20px;
 }
 
 .window {
-  background-color: #181825; /* Catppuccin Mocha - Mantle */
-  border-radius: 12px;
+  background: linear-gradient(145deg, #2a2a2a, #252525);
+  border-radius: 16px;
   margin-bottom: 30px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3); /* Softer, larger shadow */
+  box-shadow: 
+    0 12px 48px rgba(0, 0, 0, 0.7),
+    0 2px 0 rgba(255, 255, 255, 0.08) inset,
+    0 0 0 1px rgba(120, 80, 220, 0.2);
   overflow: hidden;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  position: relative;
+}
+
+.window::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: rgba(120, 80, 220, 0.4);
+  z-index: 1;
 }
 
 .title-bar {
-  background-color: #11111b; /* Catppuccin Mocha - Crust */
-  color: #cdd6f4; /* Catppuccin Mocha - Text */
-  padding: 12px 20px;
+  background: linear-gradient(135deg, #333333, #3a3a3a);
+  color: #ffffff;
+  padding: 20px 24px;
   font-weight: 600;
   font-size: 1.1em;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05); /* Very subtle separator */
+  border-bottom: 2px solid rgba(120, 80, 220, 0.3);
+  letter-spacing: 0.5px;
+  position: relative;
+  z-index: 2;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.title-bar::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: rgba(120, 80, 220, 0.5);
 }
 
 h1, h2, h3, h4, h5, h6 {
-  color: #89b4fa; /* Catppuccin Mocha - Lavender */
-  margin-bottom: 15px;
+  color: #ffffff;
+  margin-bottom: 20px;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: 1.2;
 }
 
+h1 { font-size: 2rem; }
+h2 { font-size: 1.5rem; }
+h3 { font-size: 1.125rem; }
+
 a {
-  color: #89b4fa; /* Catppuccin Mocha - Lavender */
+  color: #cccccc;
   text-decoration: none;
-  transition: color 0.2s ease-in-out;
+  transition: color 0.2s ease;
 }
 
 a:hover {
-  color: #b4befe; /* Catppuccin Mocha - Lavender (lightened) */
+  color: #ffffff;
   text-decoration: underline;
 }
 
 button {
-  background-color: #89b4fa; /* Catppuccin Mocha - Lavender */
-  color: #11111b; /* Dark text for contrast */
+  background: linear-gradient(135deg, #ffffff, #f5f5f5);
+  color: #000000;
   border: none;
-  padding: 12px 25px;
+  padding: 10px 20px;
   font-family: 'Inter', sans-serif;
-  font-size: 1em;
+  font-size: 0.875rem;
+  font-weight: 500;
   cursor: pointer;
-  border-radius: 8px;
-  transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  border-radius: 6px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  letter-spacing: -0.01em;
+  box-shadow: 
+    0 4px 12px rgba(0, 0, 0, 0.15),
+    0 1px 0 rgba(255, 255, 255, 0.4) inset;
 }
 
 button:hover {
-  background-color: #b4befe; /* Catppuccin Mocha - Lavender (lightened) */
+  background: linear-gradient(135deg, #f0f0f0, #e8e8e8);
   transform: translateY(-2px);
+  box-shadow: 
+    0 8px 24px rgba(0, 0, 0, 0.25),
+    0 0 0 1px rgba(120, 80, 220, 0.3);
 }
 
 button.delete-btn {
-    background-color: #f38ba8; /* Catppuccin Mocha - Red */
+  background: linear-gradient(135deg, #444444, #333333);
+  color: #ffffff;
 }
 
 button.delete-btn:hover {
-    background-color: #eba0ac; /* Catppuccin Mocha - Red (darkened) */
+  background: linear-gradient(135deg, #555555, #444444);
+  box-shadow: 
+    0 8px 24px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(220, 80, 120, 0.3);
 }
 
-input, textarea {
-  background-color: #313244; /* Catppuccin Mocha - Surface1 */
-  color: #cdd6f4;
-  border: 1px solid #45475a; /* Catppuccin Mocha - Surface2 */
-  padding: 12px;
-  font-family: 'Inter', sans-serif;
-  font-size: 1em;
+input, textarea, select {
+  background-color: #2a2a2a;
+  color: #e0e0e0;
+  border: 1px solid #404040;
+  padding: 12px 16px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.95em;
+  font-weight: 400;
   width: 100%;
-  border-radius: 8px;
-  transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  border-radius: 4px;
+  transition: border-color 0.2s ease;
+  letter-spacing: -0.01em;
 }
 
-input:focus, textarea:focus {
-    outline: none;
-    border-color: #89b4fa; /* Catppuccin Mocha - Lavender */
-    box-shadow: 0 0 0 3px rgba(137, 180, 250, 0.3); /* Glow effect */
+input:focus, textarea:focus, select:focus {
+  outline: none;
+  border-color: #666666;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
+}
+
+input::placeholder, textarea::placeholder {
+  color: #888888;
+  font-weight: 400;
 }
 
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #181825;
+  background: #1a1a1a;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #45475a;
-  border-radius: 4px;
+  background: #404040;
+  border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #585b70;
+  background: #555555;
 }
