@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install:*)",
+      "Bash(npx prisma init:*)",
+      "Bash(npx prisma migrate dev:*)",
+      "Bash(set DATABASE_URL=file:./dev.db)",
+      "Bash(DATABASE_URL=\"file:./dev.db\" npx prisma migrate dev --name init)",
+      "Bash(node:*)",
+      "Bash(DATABASE_URL=\"file:./dev.db\" node scripts/migrate-data.js)",
+      "Bash(npm run build:*)",
+      "Bash(npm run lint)",
+      "Bash(timeout 10 npm run dev)",
+      "Bash(true)",
+      "Bash(timeout 5 npm run dev)",
+      "Bash(rm:*)",
+      "Bash(mv:*)",
+      "Bash(timeout 30 npm run dev)",
+      "Bash(DATABASE_URL=\"file:./dev.db\" npx prisma generate)"
+    ],
+    "deny": []
+  }
+}

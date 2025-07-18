@@ -12,7 +12,9 @@ interface Vinyl {
   year: number
   imageUrl: string
   genre: string[]
-  discogsId?: number // Add discogsId to the Vinyl interface
+  discogsId?: number
+  createdAt?: string
+  updatedAt?: string
 }
 
 interface Suggestion {
@@ -27,123 +29,149 @@ interface UserProfile {
   totalRecords: number
   genreStats: Record<string, number>
   recentVinyls: Vinyl[]
-  discogsUsername?: string
-  discogsAvatarUrl?: string
-  totalDiscogsItems?: number
-  discogsReleases?: Vinyl[]
 }
 
 export default function Home() {
   const [collection, setCollection] = useState<Vinyl[]>([])
+  const [suggestions, setSuggestions] = useState<Suggestion[]>([])
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null)
+  const [editingVinyl, setEditingVinyl] = useState<Vinyl | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  
+  // Form state
   const [artist, setArtist] = useState('')
   const [title, setTitle] = useState('')
   const [year, setYear] = useState('')
   const [imageUrl, setImageUrl] = useState('')
   const [genre, setGenre] = useState<string[]>([])
-  const [discogsId, setDiscogsId] = useState<number | null>(null)
-  const [editingVinyl, setEditingVinyl] = useState<Vinyl | null>(null)
-  const [suggestions, setSuggestions] = useState<Suggestion[]>([])
-  const [userProfile, setUserProfile] = useState<UserProfile | null>(null)
-  const [displayLimit, setDisplayLimit] = useState(12) // Default display limit
-
+  
   // Filter states
   const [filterArtist, setFilterArtist] = useState('')
   const [filterTitle, setFilterTitle] = useState('')
   const [filterGenre, setFilterGenre] = useState('')
   const [filterYear, setFilterYear] = useState('')
+  const [displayLimit, setDisplayLimit] = useState(12)
 
   const router = useRouter()
 
   useEffect(() => {
-    // Load display limit from local storage
-    const savedLimit = localStorage.getItem('vinylDisplayLimit')
-    if (savedLimit) {
-      setDisplayLimit(parseInt(savedLimit))
+    const fetchData = async () => {
+      try {
+        // Fetch user profile
+        const userRes = await fetch('/api/auth/user')
+        if (!userRes.ok) {
+          if (userRes.status === 401) {
+            router.push('/login')
+            return
+          }
+          throw new Error('Failed to fetch user profile')
+        }
+        const userData = await userRes.json()
+        setUserProfile(userData)
+
+        // Fetch collection
+        const collectionRes = await fetch('/api/collection')
+        if (!collectionRes.ok) {
+          if (collectionRes.status === 401) {
+            router.push('/login')
+            return
+          }
+          throw new Error('Failed to fetch collection')
+        }
+        const collectionData = await collectionRes.json()
+        setCollection(collectionData)
+      } catch (error) {
+        console.error('Error fetching data:', error)
+        setError(error instanceof Error ? error.message : 'An error occurred')
+      } finally {
+        setLoading(false)
+      }
     }
 
-    const fetchInitialData = async () => {
-      // Fetch user profile data
-      const userRes = await fetch('/api/auth/user')
-      if (!userRes.ok) {
-        router.push('/login')
-        return
-      }
-      const userData = await userRes.json()
-      setUserProfile(userData)
-
-      // Fetch collection data
-      const collectionRes = await fetch('/api/collection')
-      if (!collectionRes.ok) {
-        router.push('/login')
-        return
-      }
-      const collectionData = await collectionRes.json()
-      setCollection(collectionData)
-    }
-
-    fetchInitialData()
+    fetchData()
   }, [router])
-
-  useEffect(() => {
-    // Save display limit to local storage whenever it changes
-    localStorage.setItem('vinylDisplayLimit', displayLimit.toString())
-  }, [displayLimit])
 
   const addOrUpdateVinyl = async (e: React.FormEvent) => {
     e.preventDefault()
-    const vinylData = { artist, title, year: parseInt(year), imageUrl, genre, discogsId }
-    let updatedCollection
-
-    if (editingVinyl) {
-      const res = await fetch(`/api/collection/${editingVinyl.id}`,
-        {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(vinylData),
-        }
-      )
-      const updatedVinyl = await res.json()
-      updatedCollection = collection.map((v) =>
-        v.id === updatedVinyl.id ? updatedVinyl : v
-      )
-    } else {
-      const res = await fetch('/api/collection', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(vinylData),
-      })
-      updatedCollection = await res.json()
+    
+    if (!artist || !title || !year) {
+      setError('Please fill in all required fields')
+      return
     }
 
-    setCollection(updatedCollection)
-    setArtist('')
-    setTitle('')
-    setYear('')
-    setImageUrl('')
-    setGenre([])
-    setEditingVinyl(null)
+    try {
+      setError(null)
+      const vinylData = { 
+        artist, 
+        title, 
+        year: parseInt(year), 
+        imageUrl, 
+        genre 
+      }
 
-    // Re-fetch user profile data to update stats on home page
-    const userRes = await fetch('/api/auth/user')
-    if (userRes.ok) {
-      const userData = await userRes.json()
-      setUserProfile(userData)
+      if (editingVinyl) {
+        const res = await fetch(`/api/collection/${editingVinyl.id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(vinylData),
+        })
+        if (!res.ok) throw new Error('Failed to update vinyl')
+      } else {
+        const res = await fetch('/api/collection', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(vinylData),
+        })
+        if (!res.ok) throw new Error('Failed to add vinyl')
+      }
+
+      // Reset form
+      setArtist('')
+      setTitle('')
+      setYear('')
+      setImageUrl('')
+      setGenre([])
+      setEditingVinyl(null)
+      setSuggestions([])
+      
+      // Refresh data
+      const collectionRes = await fetch('/api/collection')
+      if (collectionRes.ok) {
+        const collectionData = await collectionRes.json()
+        setCollection(collectionData)
+      }
+      
+      const userRes = await fetch('/api/auth/user')
+      if (userRes.ok) {
+        const userData = await userRes.json()
+        setUserProfile(userData)
+      }
+    } catch (error) {
+      setError(error instanceof Error ? error.message : 'An error occurred')
     }
   }
 
   const deleteVinyl = async (id: number) => {
-    await fetch(`/api/collection/${id}`, { method: 'DELETE' })
-    setCollection(collection.filter((v) => v.id !== id))
-
-    // Re-fetch user profile data to update stats on home page
-    const userRes = await fetch('/api/auth/user')
-    if (userRes.ok) {
-      const userData = await userRes.json()
-      setUserProfile(userData)
+    try {
+      setError(null)
+      const res = await fetch(`/api/collection/${id}`, { method: 'DELETE' })
+      if (!res.ok) throw new Error('Failed to delete vinyl')
+      
+      // Refresh data
+      const collectionRes = await fetch('/api/collection')
+      if (collectionRes.ok) {
+        const collectionData = await collectionRes.json()
+        setCollection(collectionData)
+      }
+      
+      const userRes = await fetch('/api/auth/user')
+      if (userRes.ok) {
+        const userData = await userRes.json()
+        setUserProfile(userData)
+      }
+    } catch (error) {
+      setError(error instanceof Error ? error.message : 'An error occurred')
     }
   }
 
@@ -154,53 +182,23 @@ export default function Home() {
     setYear(vinyl.year.toString())
     setImageUrl(vinyl.imageUrl)
     setGenre(vinyl.genre)
-    setDiscogsId(vinyl.discogsId || null)
-  }
-
-  const fetchAlbumData = async () => {
-    if (!artist || !title) {
-      alert('Please enter both artist and title to fetch album data.')
-      return
-    }
-    try {
-      console.log('Frontend: Fetching album data for', artist, title)
-      const res = await fetch(`/api/discogs?artist=${encodeURIComponent(artist)}&title=${encodeURIComponent(title)}`)
-      if (res.ok) {
-        const data = await res.json()
-        console.log('Frontend: Received album data', data)
-        setYear(data.year ? data.year.toString() : '')
-        setImageUrl(data.imageUrl || '')
-        setGenre(data.genre || [])
-        setDiscogsId(data.discogsId || null)
-      } else {
-        const errorData = await res.json()
-        console.error('Frontend: Album not found error', errorData)
-        alert('Album not found on Discogs.')
-      }
-    } catch (error) {
-      console.error('Frontend: Error fetching album data:', error)
-      alert('Failed to fetch album data.')
-    }
+    setSuggestions([])
   }
 
   const handleSearchChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const query = e.target.value
     setArtist(query)
+    
     if (query.length > 2) {
       try {
-        console.log('Frontend: Fetching suggestions for', query)
         const res = await fetch(`/api/discogs-suggest?query=${encodeURIComponent(query)}`)
         if (res.ok) {
           const data = await res.json()
-          console.log('Frontend: Received suggestions', data)
           setSuggestions(data)
         } else {
-          const errorData = await res.json()
-          console.error('Frontend: Suggestions error', errorData)
           setSuggestions([])
         }
       } catch (error) {
-        console.error('Frontend: Error fetching suggestions:', error)
         setSuggestions([])
       }
     } else {
@@ -211,7 +209,31 @@ export default function Home() {
   const handleSuggestionClick = (suggestion: Suggestion) => {
     setArtist(suggestion.artist)
     setTitle(suggestion.title)
+    setGenre(suggestion.genre)
     setSuggestions([])
+  }
+
+  const fetchAlbumData = async () => {
+    if (!artist || !title) {
+      setError('Please enter both artist and title to fetch album data.')
+      return
+    }
+    
+    try {
+      setError(null)
+      const res = await fetch(`/api/discogs?artist=${encodeURIComponent(artist)}&title=${encodeURIComponent(title)}`)
+      
+      if (res.ok) {
+        const data = await res.json()
+        if (data.year) setYear(data.year.toString())
+        if (data.imageUrl) setImageUrl(data.imageUrl)
+        if (data.genre) setGenre(data.genre)
+      } else {
+        throw new Error('Album not found on Discogs')
+      }
+    } catch (error) {
+      setError(error instanceof Error ? error.message : 'An error occurred')
+    }
   }
 
   const filteredCollection = collection.filter((vinyl) => {
@@ -222,6 +244,37 @@ export default function Home() {
     return matchesArtist && matchesTitle && matchesGenre && matchesYear
   }).slice(0, displayLimit)
 
+  if (loading) {
+    return (
+      <main className={styles.main}>
+        <div className="container">
+          <div className="window">
+            <div className="title-bar">Loading...</div>
+            <div className={styles.contentSection}>
+              <p>Loading your vinyl collection...</p>
+            </div>
+          </div>
+        </div>
+      </main>
+    )
+  }
+
+  if (error) {
+    return (
+      <main className={styles.main}>
+        <div className="container">
+          <div className="window">
+            <div className="title-bar">Error</div>
+            <div className={styles.contentSection}>
+              <p style={{ color: '#f38ba8' }}>{error}</p>
+              <button onClick={() => window.location.reload()}>Try Again</button>
+            </div>
+          </div>
+        </div>
+      </main>
+    )
+  }
+
   return (
     <main className={styles.main}>
       <div className="container">
@@ -229,15 +282,12 @@ export default function Home() {
           <div className="window">
             <div className="title-bar">Welcome, {userProfile.username}!</div>
             <div className={styles.contentSection}>
-              {userProfile.discogsAvatarUrl && (
-                <img src={userProfile.discogsAvatarUrl} alt="Discogs Avatar" className={styles.discogsAvatar} />
-              )}
               <p>Total Records: {userProfile.totalRecords}</p>
               <p>Top Genres:</p>
               <ul>
                 {Object.entries(userProfile.genreStats)
                   .sort(([, countA], [, countB]) => countB - countA)
-                  .slice(0, 3) // Show top 3 genres
+                  .slice(0, 3)
                   .map(([genre, count]) => (
                     <li key={genre}>{genre}: {count}</li>
                   ))}
@@ -245,6 +295,87 @@ export default function Home() {
             </div>
           </div>
         )}
+
+        <div className="window">
+          <div className="title-bar">{editingVinyl ? 'Edit Vinyl' : 'Add New Vinyl'}</div>
+          <div className={styles.contentSection}>
+            <form onSubmit={addOrUpdateVinyl} className={styles.form}>
+              <div className={styles.inputContainer}>
+                <input
+                  type="text"
+                  placeholder="Artist"
+                  value={artist}
+                  onChange={handleSearchChange}
+                  required
+                />
+                {suggestions.length > 0 && (
+                  <ul className={styles.suggestionsList}>
+                    {suggestions.map((s, index) => (
+                      <li key={index} onClick={() => handleSuggestionClick(s)}>
+                        {s.artist} - {s.title}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+              <input
+                type="text"
+                placeholder="Title"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                required
+              />
+              <button 
+                type="button" 
+                onClick={fetchAlbumData}
+                style={{ gridColumn: '1 / -1', marginBottom: '10px' }}
+              >
+                Fetch Album Data
+              </button>
+              <input
+                type="number"
+                placeholder="Year"
+                value={year}
+                onChange={(e) => setYear(e.target.value)}
+                required
+              />
+              <input
+                type="text"
+                placeholder="Genre (comma-separated)"
+                value={genre.join(', ')}
+                onChange={(e) => setGenre(e.target.value.split(',').map(g => g.trim()).filter(g => g))}
+                required
+              />
+              <input
+                type="text"
+                placeholder="Image URL"
+                value={imageUrl}
+                onChange={(e) => setImageUrl(e.target.value)}
+                className={styles.fullWidthInput}
+              />
+              <div className={styles.formActions}>
+                <button type="submit">{editingVinyl ? 'Update Vinyl' : 'Add Vinyl'}</button>
+                {editingVinyl && (
+                  <button 
+                    type="button" 
+                    onClick={() => {
+                      setEditingVinyl(null)
+                      setArtist('')
+                      setTitle('')
+                      setYear('')
+                      setImageUrl('')
+                      setGenre([])
+                      setSuggestions([])
+                    }} 
+                    style={{ marginLeft: '10px' }}
+                  >
+                    Cancel
+                  </button>
+                )}
+              </div>
+            </form>
+          </div>
+        </div>
 
         <div className="window">
           <div className="title-bar">My Vinyl Collection</div>
@@ -276,27 +407,25 @@ export default function Home() {
                 value={filterYear}
                 onChange={(e) => setFilterYear(e.target.value)}
               />
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <label htmlFor="displayLimit">Display:</label>
-                <select
-                  id="displayLimit"
-                  value={displayLimit}
-                  onChange={(e) => setDisplayLimit(parseInt(e.target.value))}
-                  style={{ padding: '8px', borderRadius: '4px', border: '1px solid #45475a', backgroundColor: '#313244', color: '#cdd6f4' }}
-                >
-                  <option value={12}>12</option>
-                  <option value={24}>24</option>
-                  <option value={48}>48</option>
-                  <option value={96}>96</option>
-                  <option value={collection.length}>All</option>
-                </select>
-              </div>
+              <select
+                value={displayLimit}
+                onChange={(e) => setDisplayLimit(parseInt(e.target.value))}
+              >
+                <option value={12}>Show 12</option>
+                <option value={24}>Show 24</option>
+                <option value={48}>Show 48</option>
+                <option value={collection.length}>Show All</option>
+              </select>
             </div>
 
             <div className={styles.collectionGrid}>
               {filteredCollection.map((vinyl) => (
                 <Link href={`/collection/${vinyl.id}`} key={vinyl.id} className={styles.card}>
-                  <img src={`/api/image-proxy?url=${encodeURIComponent(vinyl.imageUrl || 'https://via.placeholder.com/150')}`} alt={`${vinyl.title} cover`} className={styles.albumArt} />
+                  <img 
+                    src={`/api/image-proxy?url=${encodeURIComponent(vinyl.imageUrl || 'https://via.placeholder.com/150')}`} 
+                    alt={`${vinyl.title} cover`} 
+                    className={styles.albumArt} 
+                  />
                   <h3>{vinyl.title}</h3>
                   <p>{vinyl.artist}</p>
                   <p>{vinyl.year}</p>
@@ -314,73 +443,7 @@ export default function Home() {
             </div>
           </div>
         </div>
-
-        <div className="window">
-          <div className="title-bar">{editingVinyl ? 'Edit Vinyl' : 'Add New Vinyl'}</div>
-          <div className={styles.contentSection}>
-            <form onSubmit={addOrUpdateVinyl} className={styles.form}>
-              <div className={styles.inputContainer}>
-                <input
-                  type="text"
-                  placeholder="Artist"
-                  value={artist}
-                  onChange={handleSearchChange}
-                  required
-                />
-                {suggestions.length > 0 && (
-                  <ul className={styles.suggestionsList}>
-                    {suggestions.map((s, index) => (
-                      <li key={index} onClick={() => handleSuggestionClick(s)}>
-                        {s.artist} - {s.title}
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </div>
-              <input
-                type="text"
-                placeholder="Title"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                required
-              />
-              <button type="button" onClick={fetchAlbumData} style={{ gridColumn: '1 / -1' }}>Fetch Album Data</button>
-              <input
-                type="number"
-                placeholder="Year"
-                value={year}
-                onChange={(e) => setYear(e.target.value)}
-                required
-              />
-              <input
-                type="text"
-                placeholder="Genre (comma-separated)"
-                value={genre.join(', ')}
-                onChange={(e) => setGenre(e.target.value.split(',').map(g => g.trim()).filter(g => g))}
-                required
-              />
-              <input
-                type="text"
-                placeholder="Image URL"
-                value={imageUrl}
-                onChange={(e) => setImageUrl(e.target.value)}
-                className={styles.fullWidthInput}
-              />
-              <div className={styles.formActions}>
-                <button type="submit">{editingVinyl ? 'Update Vinyl' : 'Add Vinyl'}</button>
-                {editingVinyl && (
-                  <button type="button" onClick={() => setEditingVinyl(null)} style={{ marginLeft: '10px' }}>
-                    Cancel
-                  </button>
-                )}
-              </div>
-            </form>
-          </div>
-        </div>
       </div>
     </main>
   )
 }
-
-
-

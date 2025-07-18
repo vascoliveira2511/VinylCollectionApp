@@ -1,29 +1,17 @@
 import { NextResponse } from 'next/server'
-import path from 'path'
-import fs from 'fs/promises'
 import bcrypt from 'bcryptjs'
 import * as jose from 'jose'
+import { prisma } from '@/lib/db'
 
-const usersFilePath = path.join(process.cwd(), 'data', 'users.json')
 const secret = new TextEncoder().encode(process.env.JWT_SECRET)
-
-async function getUsers() {
-  try {
-    const data = await fs.readFile(usersFilePath, 'utf-8')
-    return JSON.parse(data)
-  } catch (error) {
-    if (error.code === 'ENOENT') {
-      return []
-    }
-    throw error
-  }
-}
 
 export async function POST(request: Request) {
   const { username, password } = await request.json()
-  const users = await getUsers()
 
-  const user = users.find((u: any) => u.username === username)
+  const user = await prisma.user.findUnique({
+    where: { username }
+  })
+
   if (!user) {
     return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 })
   }

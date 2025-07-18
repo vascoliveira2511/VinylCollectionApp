@@ -48,7 +48,26 @@
     border-radius: 20px;
     font-size: 0.9em; /* Slightly larger font */
     display: inline-block;
-    font-weight: 500;
+}
+
+/* Form validation styles */
+.inputContainer {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.inputError {
+  border-color: #f38ba8 !important;
+  box-shadow: 0 0 0 2px rgba(243, 139, 168, 0.2) !important;
+}
+
+.errorText {
+  color: #f38ba8;
+  font-size: 12px;
+  margin-top: 4px;
+  font-weight: 500;
 }
 
 .buttonGroup {

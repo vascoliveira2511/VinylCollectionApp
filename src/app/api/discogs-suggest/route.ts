@@ -31,7 +31,7 @@ export async function GET(request: Request) {
     // await appendLog(JSON.stringify(data.results, null, 2)) // Commented out for production
 
     if (data.results && data.results.length > 0) {
-      const uniqueSuggestions = new Map<string, { artist: string; title: string; isMaster: boolean }>();
+      const uniqueSuggestions = new Map<string, { artist: string; title: string; isMaster: boolean; genre: string[]; style: string[] }>();
 
       data.results.forEach((result: any) => {
         let artistName = result.artist;

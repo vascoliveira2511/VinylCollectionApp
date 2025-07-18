@@ -1,35 +1,63 @@
 import { NextResponse } from 'next/server'
-import path from 'path'
-import fs from 'fs/promises'
-
-const filePath = path.join(process.cwd(), 'data', 'collection.json')
-
-async function getAllCollections() {
-  try {
-    const data = await fs.readFile(filePath, 'utf-8')
-    return JSON.parse(data)
-  } catch (error) {
-    if (error.code === 'ENOENT') {
-      return {}
-    }
-    throw error
-  }
-}
-
-async function saveAllCollections(allCollections: any) {
-  await fs.writeFile(filePath, JSON.stringify(allCollections, null, 2))
-}
+import { prisma } from '@/lib/db'
 
 export async function GET(request: Request) {
   const userId = request.headers.get('x-user-id')
+  const { searchParams } = new URL(request.url)
+  const search = searchParams.get('search')
+  const artist = searchParams.get('artist')
+  const title = searchParams.get('title')
+  const genre = searchParams.get('genre')
+  const year = searchParams.get('year')
+  const yearFrom = searchParams.get('yearFrom')
+  const yearTo = searchParams.get('yearTo')
+  
   console.log('API Collection GET: userId', userId)
   if (!userId) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  const allCollections = await getAllCollections()
-  const userCollection = allCollections[userId] || []
-  return NextResponse.json(userCollection)
+  let whereClause: any = { userId: parseInt(userId) }
+
+  // Global search across artist, title, and genres
+  if (search) {
+    whereClause.OR = [
+      { artist: { contains: search, mode: 'insensitive' } },
+      { title: { contains: search, mode: 'insensitive' } },
+      { genres: { contains: search, mode: 'insensitive' } }
+    ]
+  }
+
+  // Specific field filters
+  if (artist) {
+    whereClause.artist = { contains: artist, mode: 'insensitive' }
+  }
+  if (title) {
+    whereClause.title = { contains: title, mode: 'insensitive' }
+  }
+  if (genre) {
+    whereClause.genres = { contains: genre, mode: 'insensitive' }
+  }
+  if (year) {
+    whereClause.year = parseInt(year)
+  }
+  if (yearFrom || yearTo) {
+    whereClause.year = {}
+    if (yearFrom) whereClause.year.gte = parseInt(yearFrom)
+    if (yearTo) whereClause.year.lte = parseInt(yearTo)
+  }
+
+  const vinyls = await prisma.vinyl.findMany({
+    where: whereClause,
+    orderBy: { createdAt: 'desc' }
+  })
+
+  const formattedVinyls = vinyls.map(vinyl => ({
+    ...vinyl,
+    genre: JSON.parse(vinyl.genres)
+  }))
+
+  return NextResponse.json(formattedVinyls)
 }
 
 export async function POST(request: Request) {
@@ -39,19 +67,35 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  const allCollections = await getAllCollections()
-  const userCollection = allCollections[userId] || []
-
-  const newVinyl = await request.json()
-  newVinyl.id = userCollection.length > 0 ? Math.max(...userCollection.map((v: any) => v.id)) + 1 : 1
+  const newVinylData = await request.json()
+  
   // Ensure genre is an array
-  if (typeof newVinyl.genre === 'string') {
-    newVinyl.genre = newVinyl.genre.split(',').map((g: string) => g.trim()).filter((g: string) => g)
+  let genres = newVinylData.genre
+  if (typeof genres === 'string') {
+    genres = genres.split(',').map((g: string) => g.trim()).filter((g: string) => g)
   }
-  userCollection.push(newVinyl)
 
-  allCollections[userId] = userCollection
-  await saveAllCollections(allCollections)
+  const newVinyl = await prisma.vinyl.create({
+    data: {
+      discogsId: newVinylData.discogsId,
+      artist: newVinylData.artist,
+      title: newVinylData.title,
+      year: newVinylData.year,
+      imageUrl: newVinylData.imageUrl,
+      genres: JSON.stringify(genres),
+      userId: parseInt(userId)
+    }
+  })
 
-  return NextResponse.json(userCollection)
+  const vinyls = await prisma.vinyl.findMany({
+    where: { userId: parseInt(userId) },
+    orderBy: { createdAt: 'desc' }
+  })
+
+  const formattedVinyls = vinyls.map(vinyl => ({
+    ...vinyl,
+    genre: JSON.parse(vinyl.genres)
+  }))
+
+  return NextResponse.json(formattedVinyls)
 }
