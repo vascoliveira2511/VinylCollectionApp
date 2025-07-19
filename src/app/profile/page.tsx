@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import Avatar from '../components/Avatar'
 import styles from '../page.module.css'
 
 interface Vinyl {
@@ -22,6 +23,8 @@ interface User {
   genreStats: Record<string, number>
   recentVinyls: Vinyl[]
   createdAt: string
+  avatar?: string
+  avatarType?: string
 }
 
 export default function Profile() {
@@ -70,6 +73,33 @@ export default function Profile() {
   const logout = async () => {
     await fetch('/api/auth/logout', { method: 'POST' })
     router.push('/login')
+  }
+
+  const handleAvatarChange = async (avatar: string, avatarType: string) => {
+    try {
+      setError(null)
+      const res = await fetch('/api/auth/avatar', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ avatar, avatarType })
+      })
+      
+      if (!res.ok) {
+        const data = await res.json()
+        throw new Error(data.error || 'Failed to update avatar')
+      }
+      
+      // Update local user state
+      if (user) {
+        setUser({
+          ...user,
+          avatar,
+          avatarType
+        })
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An error occurred')
+    }
   }
 
   const handlePasswordChange = async (e: React.FormEvent) => {
@@ -187,10 +217,22 @@ export default function Profile() {
                 Overview
               </button>
               <button 
+                className={activeTab === 'preferences' ? styles.tabActive : styles.tabInactive}
+                onClick={() => setActiveTab('preferences')}
+              >
+                Preferences
+              </button>
+              <button 
                 className={activeTab === 'security' ? styles.tabActive : styles.tabInactive}
                 onClick={() => setActiveTab('security')}
               >
                 Security
+              </button>
+              <button 
+                className={activeTab === 'data' ? styles.tabActive : styles.tabInactive}
+                onClick={() => setActiveTab('data')}
+              >
+                Data & Privacy
               </button>
               <button 
                 className={activeTab === 'danger' ? styles.tabActive : styles.tabInactive}
@@ -214,6 +256,16 @@ export default function Profile() {
                   <div className={styles.profileCard}>
                     <h3>Profile Information</h3>
                     <div className={styles.profileInfo}>
+                      <div className={styles.avatarSection}>
+                        <Avatar 
+                          username={user.username}
+                          avatar={user.avatar}
+                          avatarType={user.avatarType}
+                          size="large"
+                          editable={true}
+                          onAvatarChange={handleAvatarChange}
+                        />
+                      </div>
                       <p><strong>Username:</strong> {user.username}</p>
                       <p><strong>Member since:</strong> {new Date(user.createdAt).toLocaleDateString()}</p>
                       <p><strong>Total Records:</strong> {user.totalRecords}</p>
@@ -255,6 +307,78 @@ export default function Profile() {
                   <button onClick={logout} className={styles.logoutButton}>
                     Logout
                   </button>
+                </div>
+              </div>
+            )}
+
+            {/* Preferences Tab */}
+            {activeTab === 'preferences' && (
+              <div className={styles.tabContent}>
+                <h2>Display Preferences</h2>
+                
+                <div className={styles.preferencesGrid}>
+                  <div className={styles.preferenceCard}>
+                    <h3>Collection Display</h3>
+                    <div className={styles.preferenceSection}>
+                      <label className={styles.preferenceLabel}>
+                        <span>Default Collection View</span>
+                        <select className={styles.preferenceSelect}>
+                          <option value="grid">Grid View</option>
+                          <option value="list">List View</option>
+                          <option value="compact">Compact View</option>
+                        </select>
+                      </label>
+                      <label className={styles.preferenceLabel}>
+                        <span>Records per Page</span>
+                        <select className={styles.preferenceSelect}>
+                          <option value="12">12 records</option>
+                          <option value="24">24 records</option>
+                          <option value="48">48 records</option>
+                          <option value="96">96 records</option>
+                        </select>
+                      </label>
+                    </div>
+                  </div>
+                  
+                  <div className={styles.preferenceCard}>
+                    <h3>Statistics</h3>
+                    <div className={styles.preferenceSection}>
+                      <label className={styles.checkboxLabel}>
+                        <input type="checkbox" defaultChecked />
+                        <span>Show genre charts by default</span>
+                      </label>
+                      <label className={styles.checkboxLabel}>
+                        <input type="checkbox" defaultChecked />
+                        <span>Show year distribution</span>
+                      </label>
+                      <label className={styles.checkboxLabel}>
+                        <input type="checkbox" />
+                        <span>Show artist statistics</span>
+                      </label>
+                      <label className={styles.checkboxLabel}>
+                        <input type="checkbox" />
+                        <span>Show country breakdown</span>
+                      </label>
+                    </div>
+                  </div>
+                  
+                  <div className={styles.preferenceCard}>
+                    <h3>Discogs Integration</h3>
+                    <div className={styles.preferenceSection}>
+                      <label className={styles.checkboxLabel}>
+                        <input type="checkbox" defaultChecked />
+                        <span>Auto-fetch release data</span>
+                      </label>
+                      <label className={styles.checkboxLabel}>
+                        <input type="checkbox" defaultChecked />
+                        <span>Include high-resolution images</span>
+                      </label>
+                      <label className={styles.checkboxLabel}>
+                        <input type="checkbox" />
+                        <span>Show marketplace prices</span>
+                      </label>
+                    </div>
+                  </div>
                 </div>
               </div>
             )}
@@ -301,6 +425,90 @@ export default function Profile() {
                       {passwordChangeLoading ? 'Changing...' : 'Change Password'}
                     </button>
                   </form>
+                </div>
+              </div>
+            )}
+
+            {/* Data & Privacy Tab */}
+            {activeTab === 'data' && (
+              <div className={styles.tabContent}>
+                <h2>Data & Privacy</h2>
+                
+                <div className={styles.dataGrid}>
+                  <div className={styles.dataCard}>
+                    <h3>Data Export</h3>
+                    <p className={styles.dataDescription}>
+                      Download your complete vinyl collection data in various formats.
+                    </p>
+                    <div className={styles.exportButtons}>
+                      <button className={styles.exportButton}>
+                        Export as JSON
+                      </button>
+                      <button className={styles.exportButton}>
+                        Export as CSV
+                      </button>
+                      <button className={styles.exportButton}>
+                        Export as PDF Report
+                      </button>
+                    </div>
+                  </div>
+                  
+                  <div className={styles.dataCard}>
+                    <h3>Data Import</h3>
+                    <p className={styles.dataDescription}>
+                      Import vinyl collection data from other sources.
+                    </p>
+                    <div className={styles.importSection}>
+                      <input 
+                        type="file" 
+                        accept=".json,.csv"
+                        className={styles.fileInput}
+                        id="importFile"
+                      />
+                      <label htmlFor="importFile" className={styles.fileLabel}>
+                        Choose File
+                      </label>
+                      <button className={styles.importButton} disabled>
+                        Import Data
+                      </button>
+                    </div>
+                  </div>
+                  
+                  <div className={styles.dataCard}>
+                    <h3>Privacy Settings</h3>
+                    <div className={styles.privacySection}>
+                      <label className={styles.checkboxLabel}>
+                        <input type="checkbox" />
+                        <span>Make collection publicly viewable</span>
+                      </label>
+                      <label className={styles.checkboxLabel}>
+                        <input type="checkbox" defaultChecked />
+                        <span>Allow anonymous usage analytics</span>
+                      </label>
+                      <label className={styles.checkboxLabel}>
+                        <input type="checkbox" defaultChecked />
+                        <span>Receive feature updates via email</span>
+                      </label>
+                    </div>
+                  </div>
+                  
+                  <div className={styles.dataCard}>
+                    <h3>Storage Information</h3>
+                    <div className={styles.storageInfo}>
+                      <div className={styles.storageItem}>
+                        <span className={styles.storageLabel}>Total Records:</span>
+                        <span className={styles.storageValue}>{user.totalRecords}</span>
+                      </div>
+                      <div className={styles.storageItem}>
+                        <span className={styles.storageLabel}>Account Created:</span>
+                        <span className={styles.storageValue}>{new Date(user.createdAt).toLocaleDateString()}</span>
+                      </div>
+                      <div className={styles.storageItem}>
+                        <span className={styles.storageLabel}>Data Size:</span>
+                        <span className={styles.storageValue}>~{Math.ceil(user.totalRecords * 0.5)} KB</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             )}

@@ -37,28 +37,28 @@ const ChartComponent: React.FC<ChartProps> = ({ data, title, type }) => {
         label: title,
         data: Object.values(data),
         backgroundColor: [
-          'rgba(120, 80, 220, 0.8)',  // Purple
-          'rgba(220, 80, 120, 0.8)',  // Pink
-          'rgba(80, 200, 180, 0.8)',  // Teal
-          'rgba(255, 140, 80, 0.8)',  // Orange
-          'rgba(140, 220, 80, 0.8)',  // Green
-          'rgba(80, 160, 220, 0.8)',  // Blue
-          'rgba(200, 160, 80, 0.8)',  // Gold
-          'rgba(160, 80, 200, 0.8)',  // Violet
-          'rgba(80, 220, 140, 0.8)',  // Mint
-          'rgba(220, 160, 80, 0.8)',  // Amber
+          'rgba(203, 166, 247, 0.8)',  // Mauve
+          'rgba(245, 194, 231, 0.8)',  // Pink
+          'rgba(148, 226, 213, 0.8)',  // Teal
+          'rgba(250, 179, 135, 0.8)',  // Peach
+          'rgba(166, 227, 161, 0.8)',  // Green
+          'rgba(137, 180, 250, 0.8)',  // Blue
+          'rgba(249, 226, 175, 0.8)',  // Yellow
+          'rgba(180, 190, 254, 0.8)',  // Lavender
+          'rgba(137, 220, 235, 0.8)',  // Sky
+          'rgba(243, 139, 168, 0.8)',  // Red
         ],
         borderColor: [
-          'rgba(120, 80, 220, 1)',
-          'rgba(220, 80, 120, 1)',
-          'rgba(80, 200, 180, 1)',
-          'rgba(255, 140, 80, 1)',
-          'rgba(140, 220, 80, 1)',
-          'rgba(80, 160, 220, 1)',
-          'rgba(200, 160, 80, 1)',
-          'rgba(160, 80, 200, 1)',
-          'rgba(80, 220, 140, 1)',
-          'rgba(220, 160, 80, 1)',
+          '#cba6f7',  // Mauve
+          '#f5c2e7',  // Pink
+          '#94e2d5',  // Teal
+          '#fab387',  // Peach
+          '#a6e3a1',  // Green
+          '#89b4fa',  // Blue
+          '#f9e2af',  // Yellow
+          '#b4befe',  // Lavender
+          '#89dceb',  // Sky
+          '#f38ba8',  // Red
         ],
         borderWidth: 1,
       },
@@ -71,19 +71,22 @@ const ChartComponent: React.FC<ChartProps> = ({ data, title, type }) => {
       legend: {
         position: 'top' as const,
         labels: {
-          color: '#e0e0e0',
+          color: '#cdd6f4',
           font: {
-            family: 'Space Grotesk',
+            family: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif',
+            size: 12,
+            weight: '500',
           }
         },
       },
       title: {
         display: true,
         text: title,
-        color: '#ffffff',
+        color: '#cdd6f4',
         font: {
-          family: 'Space Grotesk',
-          weight: 600,
+          family: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif',
+          size: 16,
+          weight: '600',
         }
       },
       tooltip: {
@@ -106,25 +109,29 @@ const ChartComponent: React.FC<ChartProps> = ({ data, title, type }) => {
     scales: type === 'bar' ? {
       x: {
         ticks: {
-          color: '#e0e0e0',
+          color: '#cdd6f4',
           font: {
-            family: 'Space Grotesk',
+            family: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif',
+            size: 11,
+            weight: '500',
           }
         },
         grid: {
-          color: 'rgba(255, 255, 255, 0.1)',
+          color: 'rgba(108, 112, 134, 0.3)',
         },
       },
       y: {
         ticks: {
-          color: '#e0e0e0',
+          color: '#cdd6f4',
           stepSize: 1,
           font: {
-            family: 'Space Grotesk',
+            family: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif',
+            size: 11,
+            weight: '500',
           }
         },
         grid: {
-          color: 'rgba(255, 255, 255, 0.1)',
+          color: 'rgba(108, 112, 134, 0.3)',
         },
       },
     } : {},

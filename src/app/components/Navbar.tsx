@@ -1,25 +1,82 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import Avatar from './Avatar'
 import styles from './Navbar.module.css'
 
+interface User {
+  username: string
+  avatar?: string
+  avatarType?: string
+}
+
 export default function Navbar() {
+  const [user, setUser] = useState<User | null>(null)
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const res = await fetch('/api/auth/user')
+        if (res.ok) {
+          const userData = await res.json()
+          setUser(userData)
+        }
+      } catch (error) {
+        // User not logged in or error fetching
+        setUser(null)
+      }
+    }
+
+    fetchUser()
+  }, [])
+
   return (
     <nav className={styles.navbar}>
-      <ul className={styles.navList}>
-        <li className={styles.navItem}>
-          <Link href="/">Home</Link>
-        </li>
-        <li className={styles.navItem}>
-          <Link href="/profile">Profile</Link>
-        </li>
-        <li className={styles.navItem}>
-          <Link href="/collections">Collections</Link>
-        </li>
-        <li className={styles.navItem}>
-          <Link href="/stats">Stats</Link>
-        </li>
-      </ul>
+      <div className={styles.navContent}>
+        <Link href="/" className={styles.navBrand}>
+          <span className={styles.brandIcon}>🎵</span>
+          <span className={styles.brandText}>Vinyl Collection</span>
+        </Link>
+        
+        <ul className={styles.navList}>
+          {user && (
+            <>
+              <li className={styles.navItem}>
+                <Link href="/">Home</Link>
+              </li>
+              <li className={styles.navItem}>
+                <Link href="/collections">Collections</Link>
+              </li>
+              <li className={styles.navItem}>
+                <Link href="/stats">Stats</Link>
+              </li>
+              <li className={styles.navItem}>
+                <Link href="/profile" className={styles.profileLink}>
+                  <Avatar 
+                    username={user.username}
+                    avatar={user.avatar}
+                    avatarType={user.avatarType}
+                    size="small"
+                  />
+                  <span className={styles.username}>{user.username}</span>
+                </Link>
+              </li>
+            </>
+          )}
+          
+          {!user && (
+            <>
+              <li className={styles.navItem}>
+                <Link href="/login" className={styles.authLink}>Login</Link>
+              </li>
+              <li className={styles.navItem}>
+                <Link href="/signup" className={styles.authLink}>Sign Up</Link>
+              </li>
+            </>
+          )}
+        </ul>
+      </div>
     </nav>
   )
 }

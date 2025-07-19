@@ -102,7 +102,7 @@ export default function Stats() {
   }, [router])
 
   return (
-    <main className={styles.main}>
+    <main className={`${styles.main} stats-page`}>
       <div className="container">
         <div className="window">
           <div className="title-bar">Collection Statistics</div>

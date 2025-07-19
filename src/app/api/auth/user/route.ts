@@ -20,7 +20,13 @@ export async function GET(request: NextRequest) {
     // Get user info
     const user = await prisma.user.findUnique({
       where: { id: parseInt(userId) },
-      select: { id: true, username: true, createdAt: true }
+      select: { 
+        id: true, 
+        username: true, 
+        createdAt: true,
+        avatar: true,
+        avatarType: true
+      }
     })
 
     if (!user) {
@@ -52,6 +58,8 @@ export async function GET(request: NextRequest) {
       id: user.id,
       username: user.username, 
       createdAt: user.createdAt,
+      avatar: user.avatar,
+      avatarType: user.avatarType,
       totalRecords, 
       genreStats, 
       recentVinyls 

@@ -38,9 +38,10 @@ export const config = {
      * - signup (signup page)
      * - _next/static (static files)
      * - _next/image (image optimization files)
+     * - favicon.svg (favicon file)
      * - favicon.ico (favicon file)
      */
-    '/((?!api/auth/login|api/auth/signup|api/auth/logout|login|signup|_next/static|_next/image|favicon.ico).*)',
+    '/((?!api/auth/login|api/auth/signup|api/auth/logout|login|signup|_next/static|_next/image|favicon).*)',
   ],
 }
 

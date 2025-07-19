@@ -18,7 +18,10 @@
       "Bash(timeout 30 npm run dev)",
       "Bash(DATABASE_URL=\"file:./dev.db\" npx prisma generate)",
       "WebFetch(domain:blackscreenrecords.com)",
-      "Bash(npx tsc:*)"
+      "Bash(npx tsc:*)",
+      "Bash(npm run dev:*)",
+      "Bash(del favicon.ico)",
+      "Bash(del apple-touch-icon.png)"
     ],
     "deny": []
   }

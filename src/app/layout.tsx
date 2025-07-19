@@ -1,17 +1,27 @@
 import type { Metadata } from "next";
-import { Roboto_Mono } from "next/font/google";
+import { Inter, Roboto_Mono } from "next/font/google";
 import "./reset.css"; // Import reset.css first
 import "./globals.css";
-import Navbar from "./components/Navbar";
+import ConditionalNavbar from "./components/ConditionalNavbar";
+
+const inter = Inter({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-inter",
+});
 
 const robotoMono = Roboto_Mono({
   subsets: ["latin"],
   weight: "400",
+  variable: "--font-mono",
 });
 
 export const metadata: Metadata = {
-  title: "My Vinyl Collection",
-  description: "A retro-themed app to manage your vinyls.",
+  title: "Vinyl Collection",
+  description: "A beautiful app to manage your vinyl record collection",
+  icons: {
+    icon: '/favicon.svg',
+  },
 };
 
 export default function RootLayout({
@@ -21,8 +31,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={robotoMono.className}>
-        <Navbar />
+      <body className={`${inter.variable} ${robotoMono.variable}`}>
+        <ConditionalNavbar />
         {children}
       </body>
     </html>

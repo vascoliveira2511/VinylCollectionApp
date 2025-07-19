@@ -1,10 +1,42 @@
 .navbar {
   background: var(--ctp-surface0);
-  padding: 20px 24px;
+  padding: 16px 24px;
   border-bottom: 1px solid var(--ctp-surface1);
   margin-bottom: 0;
   box-shadow: 0 4px 16px rgba(17, 17, 27, 0.3);
   position: relative;
+}
+
+.navContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.navBrand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  border-radius: 8px;
+  padding: 4px 8px;
+}
+
+.navBrand:hover {
+  background: var(--ctp-surface1);
+}
+
+.brandIcon {
+  font-size: 1.5rem;
+}
+
+.brandText {
+  color: var(--ctp-text);
+  font-weight: 600;
+  font-size: 1.2rem;
 }
 
 .navList {
@@ -12,9 +44,8 @@
   padding: 0;
   margin: 0;
   display: flex;
-  justify-content: center;
-  gap: 48px;
-  margin: 0 auto;
+  align-items: center;
+  gap: 32px;
 }
 
 .navItem a {
@@ -35,4 +66,46 @@
   color: var(--ctp-mauve);
   background: var(--ctp-surface1);
   border-color: var(--ctp-surface2);
+}
+
+.profileLink {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  background: var(--ctp-surface1);
+  border: 1px solid var(--ctp-surface2);
+  transition: all 0.2s ease;
+}
+
+.profileLink:hover {
+  background: var(--ctp-surface2);
+  border-color: var(--ctp-mauve);
+  text-decoration: none;
+}
+
+.username {
+  color: var(--ctp-text);
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.authLink {
+  color: var(--ctp-text) !important;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.9em;
+  letter-spacing: 0.025em;
+  transition: all 0.2s ease;
+  padding: 8px 16px;
+  border-radius: 8px;
+  background: var(--ctp-surface1);
+  border: 1px solid var(--ctp-surface2);
+}
+
+.authLink:hover {
+  color: var(--ctp-mauve) !important;
+  background: var(--ctp-surface2);
+  border-color: var(--ctp-mauve);
 }

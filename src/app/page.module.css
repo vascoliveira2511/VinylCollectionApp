@@ -230,10 +230,11 @@
 
 .totalRecordsText {
   margin: 20px 0;
-  font-size: 1.1em;
-  font-weight: 500;
+  font-size: 1.2rem;
+  font-weight: 600;
   color: var(--ctp-text);
   letter-spacing: -0.01em;
+  font-family: var(--font-inter), sans-serif;
 }
 
 .formContainer {
@@ -307,6 +308,14 @@
   font-size: 1.1em;
 }
 
+.avatarSection {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--ctp-surface1);
+}
+
 .profileInfo p {
   margin-bottom: 8px;
   color: var(--ctp-subtext1);
@@ -314,6 +323,183 @@
 
 .profileInfo strong {
   color: var(--ctp-text);
+}
+
+/* Profile Preferences Styles */
+.preferencesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+}
+
+.preferenceCard {
+  background: var(--ctp-surface1);
+  border-radius: 8px;
+  padding: 20px;
+  border: 1px solid var(--ctp-surface2);
+}
+
+.preferenceCard h3 {
+  margin-bottom: 16px;
+  color: var(--ctp-text);
+  font-size: 1.1em;
+  font-weight: 600;
+}
+
+.preferenceSection {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.preferenceLabel {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--ctp-subtext1);
+  font-weight: 500;
+}
+
+.preferenceSelect {
+  background: var(--ctp-surface2);
+  border: 1px solid var(--ctp-surface1);
+  border-radius: 6px;
+  padding: 8px 12px;
+  color: var(--ctp-text);
+  font-size: 0.9em;
+  min-width: 120px;
+}
+
+.checkboxLabel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--ctp-subtext1);
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.checkboxLabel input[type="checkbox"] {
+  accent-color: var(--ctp-mauve);
+}
+
+/* Data & Privacy Styles */
+.dataGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+}
+
+.dataCard {
+  background: var(--ctp-surface1);
+  border-radius: 8px;
+  padding: 20px;
+  border: 1px solid var(--ctp-surface2);
+}
+
+.dataCard h3 {
+  margin-bottom: 12px;
+  color: var(--ctp-text);
+  font-size: 1.1em;
+  font-weight: 600;
+}
+
+.dataDescription {
+  color: var(--ctp-subtext1);
+  margin-bottom: 16px;
+  font-size: 0.9em;
+}
+
+.exportButtons {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.exportButton {
+  background: var(--ctp-surface2);
+  border: 1px solid var(--ctp-surface1);
+  border-radius: 6px;
+  padding: 10px 16px;
+  color: var(--ctp-text);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.exportButton:hover {
+  background: var(--ctp-mauve);
+  color: var(--ctp-base);
+}
+
+.importSection {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.fileInput {
+  display: none;
+}
+
+.fileLabel {
+  background: var(--ctp-surface2);
+  border: 1px solid var(--ctp-surface1);
+  border-radius: 6px;
+  padding: 10px 16px;
+  color: var(--ctp-text);
+  font-weight: 500;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.2s ease;
+}
+
+.fileLabel:hover {
+  background: var(--ctp-surface1);
+}
+
+.importButton {
+  background: var(--ctp-surface2);
+  border: 1px solid var(--ctp-surface1);
+  border-radius: 6px;
+  padding: 10px 16px;
+  color: var(--ctp-subtext0);
+  font-weight: 500;
+  cursor: not-allowed;
+}
+
+.privacySection {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.storageInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.storageItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--ctp-surface2);
+}
+
+.storageItem:last-child {
+  border-bottom: none;
+}
+
+.storageLabel {
+  color: var(--ctp-subtext1);
+  font-weight: 500;
+}
+
+.storageValue {
+  color: var(--ctp-text);
+  font-weight: 600;
 }
 
 .genreStats {
@@ -499,6 +685,11 @@
 
 .statsHeader h1 {
   margin-bottom: 8px;
+  color: var(--ctp-text);
+  font-size: 2.5rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  font-family: var(--font-inter), sans-serif;
 }
 
 .chartControls {
@@ -512,7 +703,10 @@
 .chartControls h3 {
   margin-bottom: 16px;
   color: var(--ctp-text);
-  font-size: 1.1em;
+  font-size: 1.3rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  font-family: var(--font-inter), sans-serif;
 }
 
 .checkboxGrid {
@@ -546,7 +740,8 @@
 .chartCheckbox span {
   color: var(--ctp-text);
   font-weight: 500;
-  font-size: 0.9em;
+  font-size: 1rem;
+  font-family: var(--font-inter), sans-serif;
 }
 
 .chartsGrid {
@@ -565,8 +760,11 @@
 .chartCard h2 {
   margin-bottom: 16px;
   color: var(--ctp-text);
-  font-size: 1.2em;
+  font-size: 1.4rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
   text-align: center;
+  font-family: var(--font-inter), sans-serif;
 }
 
 /* Collections Page Styles */
@@ -853,4 +1051,223 @@
   line-height: 1.6;
   max-width: 600px;
   margin: 0 auto;
+}
+
+/* Enhanced Login Page Styles */
+.loginMain {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.loginBackground {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, var(--ctp-base) 0%, var(--ctp-mantle) 50%, var(--ctp-crust) 100%);
+}
+
+.loginBackground::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    radial-gradient(circle at 20% 80%, rgba(203, 166, 247, 0.05) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(245, 194, 231, 0.04) 0%, transparent 50%),
+    radial-gradient(circle at 40% 40%, rgba(137, 180, 250, 0.03) 0%, transparent 50%);
+}
+
+.loginContainer {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.loginHeader {
+  text-align: center;
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.appLogo {
+  font-size: 4rem;
+  margin-bottom: 16px;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+  animation: float 3s ease-in-out infinite;
+}
+
+.appTitle {
+  color: var(--ctp-text);
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  background: linear-gradient(135deg, var(--ctp-text), var(--ctp-mauve));
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.appSubtitle {
+  color: var(--ctp-subtext1);
+  font-size: 1.1rem;
+  margin: 0;
+  opacity: 0.9;
+}
+
+.loginCard {
+  background: var(--ctp-surface0);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 
+    0 20px 40px rgba(17, 17, 27, 0.4),
+    0 0 0 1px var(--ctp-surface1);
+  animation: fadeInUp 0.6s ease-out 0.2s both;
+  backdrop-filter: blur(10px);
+}
+
+.loginContent {
+  padding: 32px;
+}
+
+.loginForm {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.inputLabel {
+  color: var(--ctp-text);
+  font-weight: 500;
+  font-size: 0.9rem;
+  margin-bottom: 4px;
+}
+
+.loginInput {
+  width: 100%;
+  padding: 16px;
+  background: var(--ctp-surface1);
+  border: 2px solid var(--ctp-surface2);
+  border-radius: 8px;
+  color: var(--ctp-text);
+  font-size: 1rem;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+
+.loginInput:focus {
+  outline: none;
+  border-color: var(--ctp-mauve);
+  background: var(--ctp-base);
+  box-shadow: 0 0 0 3px rgba(203, 166, 247, 0.1);
+}
+
+.loginInput:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.loginButton {
+  width: 100%;
+  padding: 16px;
+  background: linear-gradient(135deg, var(--ctp-mauve), var(--ctp-pink));
+  color: var(--ctp-base);
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.loginButton:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(203, 166, 247, 0.3);
+}
+
+.loginButton:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid transparent;
+  border-top: 2px solid currentColor;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.loginFooter {
+  text-align: center;
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid var(--ctp-surface2);
+}
+
+.loginFooter p {
+  color: var(--ctp-subtext1);
+  margin: 0;
+}
+
+.signupLink {
+  color: var(--ctp-blue);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.signupLink:hover {
+  color: var(--ctp-sky);
+  text-decoration: underline;
+}
+
+/* Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
