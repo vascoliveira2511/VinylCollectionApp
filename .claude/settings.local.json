@@ -17,7 +17,8 @@
       "Bash(mv:*)",
       "Bash(timeout 30 npm run dev)",
       "Bash(DATABASE_URL=\"file:./dev.db\" npx prisma generate)",
-      "WebFetch(domain:blackscreenrecords.com)"
+      "WebFetch(domain:blackscreenrecords.com)",
+      "Bash(npx tsc:*)"
     ],
     "deny": []
   }

@@ -20,22 +20,44 @@ model User {
   
   // Relations
   vinyls          Vinyl[]
+  collections     Collection[]
+}
+
+model Collection {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String?
+  isDefault   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Foreign key
+  userId      Int
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Relations
+  vinyls      Vinyl[]
+  
+  @@index([userId])
 }
 
 model Vinyl {
-  id        Int      @id @default(autoincrement())
-  discogsId Int?
-  artist    String
-  title     String
-  year      Int?
-  imageUrl  String?
-  genres    String   // JSON array stored as string
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id           Int      @id @default(autoincrement())
+  discogsId    Int?
+  artist       String
+  title        String
+  year         Int?
+  imageUrl     String?
+  genres       String   // JSON array stored as string
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
   
-  // Foreign key
-  userId    Int
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  // Foreign keys
+  userId       Int
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  collectionId Int?
+  collection   Collection? @relation(fields: [collectionId], references: [id], onDelete: SetNull)
   
   @@index([userId])
+  @@index([collectionId])
 }

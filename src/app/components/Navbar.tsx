@@ -14,6 +14,9 @@ export default function Navbar() {
           <Link href="/profile">Profile</Link>
         </li>
         <li className={styles.navItem}>
+          <Link href="/collections">Collections</Link>
+        </li>
+        <li className={styles.navItem}>
           <Link href="/stats">Stats</Link>
         </li>
       </ul>

@@ -28,6 +28,19 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/', '/profile', '/stats', '/api/collection/:path*', '/api/auth/user'], // Apply middleware to these paths
+  matcher: [
+    /*
+     * Match all request paths except for the ones starting with:
+     * - api/auth/login (login endpoint)
+     * - api/auth/signup (signup endpoint) 
+     * - api/auth/logout (logout endpoint)
+     * - login (login page)
+     * - signup (signup page)
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     */
+    '/((?!api/auth/login|api/auth/signup|api/auth/logout|login|signup|_next/static|_next/image|favicon.ico).*)',
+  ],
 }
 

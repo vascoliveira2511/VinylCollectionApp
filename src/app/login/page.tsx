@@ -18,7 +18,7 @@ export default function Login() {
     })
 
     if (res.ok) {
-      router.push('/')
+      window.location.href = '/'
     } else {
       // Handle login error
       alert('Invalid credentials')

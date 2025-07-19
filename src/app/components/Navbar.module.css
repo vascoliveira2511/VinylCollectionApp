@@ -1,22 +1,10 @@
 .navbar {
-  background: linear-gradient(135deg, #404040, #383838);
-  padding: 28px 32px;
-  border-bottom: 2px solid rgba(120, 80, 220, 0.3);
+  background: var(--ctp-surface0);
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--ctp-surface1);
   margin-bottom: 0;
-  box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.6),
-    0 2px 0 rgba(255, 255, 255, 0.1) inset;
+  box-shadow: 0 4px 16px rgba(17, 17, 27, 0.3);
   position: relative;
-}
-
-.navbar::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: rgba(120, 80, 220, 0.4);
 }
 
 .navList {
@@ -30,25 +18,21 @@
 }
 
 .navItem a {
-  color: #ffffff;
+  color: var(--ctp-text);
   text-decoration: none;
-  font-weight: 600;
-  font-size: 0.95em;
-  letter-spacing: 0.8px;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  text-transform: uppercase;
-  padding: 12px 20px;
+  font-weight: 500;
+  font-size: 0.9em;
+  letter-spacing: 0.025em;
+  transition: all 0.2s ease;
+  padding: 8px 16px;
   border-radius: 8px;
   position: relative;
-  background: linear-gradient(135deg, transparent, rgba(255, 255, 255, 0.05));
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: transparent;
+  border: 1px solid transparent;
 }
 
 .navItem a:hover {
-  color: #ffffff;
-  background: rgba(120, 80, 220, 0.2);
-  box-shadow: 
-    0 2px 8px rgba(0, 0, 0, 0.2),
-    0 0 0 1px rgba(120, 80, 220, 0.3),
-    0 1px 0 rgba(255, 255, 255, 0.1) inset;
+  color: var(--ctp-mauve);
+  background: var(--ctp-surface1);
+  border-color: var(--ctp-surface2);
 }

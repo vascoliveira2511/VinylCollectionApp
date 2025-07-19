@@ -1,15 +1,45 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap');
 
+:root {
+  /* Catppuccin Mocha Colors */
+  --ctp-rosewater: #f5e0dc;
+  --ctp-flamingo: #f2cdcd;
+  --ctp-pink: #f5c2e7;
+  --ctp-mauve: #cba6f7;
+  --ctp-red: #f38ba8;
+  --ctp-maroon: #eba0ac;
+  --ctp-peach: #fab387;
+  --ctp-yellow: #f9e2af;
+  --ctp-green: #a6e3a1;
+  --ctp-teal: #94e2d5;
+  --ctp-sky: #89dceb;
+  --ctp-sapphire: #74c7ec;
+  --ctp-blue: #89b4fa;
+  --ctp-lavender: #b4befe;
+  --ctp-text: #cdd6f4;
+  --ctp-subtext1: #bac2de;
+  --ctp-subtext0: #a6adc8;
+  --ctp-overlay2: #9399b2;
+  --ctp-overlay1: #7f849c;
+  --ctp-overlay0: #6c7086;
+  --ctp-surface2: #585b70;
+  --ctp-surface1: #45475a;
+  --ctp-surface0: #313244;
+  --ctp-base: #1e1e2e;
+  --ctp-mantle: #181825;
+  --ctp-crust: #11111b;
+}
+
 body {
-  background: linear-gradient(135deg, #0a0a0a 0%, #1a0f1a 25%, #0f1a1a 50%, #1a1a0f 75%, #0a0a0a 100%);
-  background-attachment: fixed;
-  color: #e0e0e0;
+  background: var(--ctp-base);
+  color: var(--ctp-text);
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   font-size: 15px;
   line-height: 1.5;
   font-weight: 400;
   letter-spacing: -0.01em;
   position: relative;
+  min-height: 100vh;
 }
 
 body::before {
@@ -20,8 +50,8 @@ body::before {
   width: 100%;
   height: 100%;
   background-image: 
-    radial-gradient(circle at 25% 25%, rgba(120, 80, 220, 0.06) 0%, transparent 50%),
-    radial-gradient(circle at 75% 75%, rgba(220, 80, 120, 0.04) 0%, transparent 50%);
+    radial-gradient(circle at 25% 25%, rgba(203, 166, 247, 0.04) 0%, transparent 50%),
+    radial-gradient(circle at 75% 75%, rgba(245, 194, 231, 0.03) 0%, transparent 50%);
   pointer-events: none;
   z-index: -1;
 }
@@ -33,151 +63,129 @@ body::before {
 }
 
 .window {
-  background: linear-gradient(145deg, #2a2a2a, #252525);
-  border-radius: 16px;
+  background: var(--ctp-surface0);
+  border-radius: 12px;
   margin-bottom: 30px;
   box-shadow: 
-    0 12px 48px rgba(0, 0, 0, 0.7),
-    0 2px 0 rgba(255, 255, 255, 0.08) inset,
-    0 0 0 1px rgba(120, 80, 220, 0.2);
+    0 8px 32px rgba(17, 17, 27, 0.4),
+    0 0 0 1px var(--ctp-surface1);
   overflow: hidden;
-  border: 2px solid transparent;
-  background-clip: padding-box;
+  border: 1px solid var(--ctp-surface1);
   position: relative;
+  transition: box-shadow 0.3s ease;
 }
 
-.window::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: rgba(120, 80, 220, 0.4);
-  z-index: 1;
+.window:hover {
+  box-shadow: 
+    0 12px 48px rgba(17, 17, 27, 0.6),
+    0 0 0 1px var(--ctp-mauve);
 }
 
 .title-bar {
-  background: linear-gradient(135deg, #333333, #3a3a3a);
-  color: #ffffff;
-  padding: 20px 24px;
+  background: var(--ctp-surface1);
+  color: var(--ctp-text);
+  padding: 16px 20px;
   font-weight: 600;
   font-size: 1.1em;
-  border-bottom: 2px solid rgba(120, 80, 220, 0.3);
-  letter-spacing: 0.5px;
+  border-bottom: 1px solid var(--ctp-surface2);
+  letter-spacing: 0.025em;
   position: relative;
   z-index: 2;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-}
-
-.title-bar::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: rgba(120, 80, 220, 0.5);
 }
 
 h1, h2, h3, h4, h5, h6 {
-  color: #ffffff;
+  color: var(--ctp-text);
   margin-bottom: 20px;
   font-weight: 600;
   letter-spacing: -0.025em;
   line-height: 1.2;
 }
 
-h1 { font-size: 2rem; }
-h2 { font-size: 1.5rem; }
-h3 { font-size: 1.125rem; }
+h1 { font-size: 2rem; color: var(--ctp-mauve); }
+h2 { font-size: 1.5rem; color: var(--ctp-pink); }
+h3 { font-size: 1.125rem; color: var(--ctp-text); }
 
 a {
-  color: #cccccc;
+  color: var(--ctp-blue);
   text-decoration: none;
   transition: color 0.2s ease;
 }
 
 a:hover {
-  color: #ffffff;
+  color: var(--ctp-sky);
   text-decoration: underline;
 }
 
 button {
-  background: linear-gradient(135deg, #ffffff, #f5f5f5);
-  color: #000000;
+  background: var(--ctp-mauve);
+  color: var(--ctp-base);
   border: none;
   padding: 10px 20px;
   font-family: 'Inter', sans-serif;
   font-size: 0.875rem;
   font-weight: 500;
   cursor: pointer;
-  border-radius: 6px;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 8px;
+  transition: all 0.2s ease;
   letter-spacing: -0.01em;
-  box-shadow: 
-    0 4px 12px rgba(0, 0, 0, 0.15),
-    0 1px 0 rgba(255, 255, 255, 0.4) inset;
+  box-shadow: 0 2px 8px rgba(17, 17, 27, 0.3);
 }
 
 button:hover {
-  background: linear-gradient(135deg, #f0f0f0, #e8e8e8);
-  transform: translateY(-2px);
-  box-shadow: 
-    0 8px 24px rgba(0, 0, 0, 0.25),
-    0 0 0 1px rgba(120, 80, 220, 0.3);
+  background: var(--ctp-pink);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(17, 17, 27, 0.4);
 }
 
 button.delete-btn {
-  background: linear-gradient(135deg, #444444, #333333);
-  color: #ffffff;
+  background: var(--ctp-red);
+  color: var(--ctp-base);
 }
 
 button.delete-btn:hover {
-  background: linear-gradient(135deg, #555555, #444444);
-  box-shadow: 
-    0 8px 24px rgba(0, 0, 0, 0.4),
-    0 0 0 1px rgba(220, 80, 120, 0.3);
+  background: var(--ctp-maroon);
+  box-shadow: 0 4px 16px rgba(243, 139, 168, 0.3);
 }
 
 input, textarea, select {
-  background-color: #2a2a2a;
-  color: #e0e0e0;
-  border: 1px solid #404040;
+  background-color: var(--ctp-surface1);
+  color: var(--ctp-text);
+  border: 1px solid var(--ctp-surface2);
   padding: 12px 16px;
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 0.95em;
   font-weight: 400;
   width: 100%;
-  border-radius: 4px;
-  transition: border-color 0.2s ease;
+  border-radius: 8px;
+  transition: all 0.2s ease;
   letter-spacing: -0.01em;
 }
 
 input:focus, textarea:focus, select:focus {
   outline: none;
-  border-color: #666666;
-  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
+  border-color: var(--ctp-mauve);
+  box-shadow: 0 0 0 2px rgba(203, 166, 247, 0.2);
+  background-color: var(--ctp-surface0);
 }
 
 input::placeholder, textarea::placeholder {
-  color: #888888;
+  color: var(--ctp-overlay0);
   font-weight: 400;
 }
 
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #1a1a1a;
+  background: var(--ctp-mantle);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #404040;
-  border-radius: 3px;
+  background: var(--ctp-surface1);
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #555555;
+  background: var(--ctp-surface2);
 }

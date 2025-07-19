@@ -11,6 +11,7 @@ export async function GET(request: Request) {
   const year = searchParams.get('year')
   const yearFrom = searchParams.get('yearFrom')
   const yearTo = searchParams.get('yearTo')
+  const collectionId = searchParams.get('collectionId')
   
   console.log('API Collection GET: userId', userId)
   if (!userId) {
@@ -18,6 +19,15 @@ export async function GET(request: Request) {
   }
 
   let whereClause: any = { userId: parseInt(userId) }
+
+  // Filter by collection if specified
+  if (collectionId) {
+    if (collectionId === 'null' || collectionId === 'undefined') {
+      whereClause.collectionId = null
+    } else {
+      whereClause.collectionId = parseInt(collectionId)
+    }
+  }
 
   // Global search across artist, title, and genres
   if (search) {
@@ -49,6 +59,15 @@ export async function GET(request: Request) {
 
   const vinyls = await prisma.vinyl.findMany({
     where: whereClause,
+    include: {
+      collection: {
+        select: {
+          id: true,
+          title: true,
+          isDefault: true
+        }
+      }
+    },
     orderBy: { createdAt: 'desc' }
   })
 
@@ -75,6 +94,23 @@ export async function POST(request: Request) {
     genres = genres.split(',').map((g: string) => g.trim()).filter((g: string) => g)
   }
 
+  // Determine the collection ID
+  let collectionId = newVinylData.collectionId
+  
+  // If no collection is specified, find the user's default collection
+  if (!collectionId) {
+    const defaultCollection = await prisma.collection.findFirst({
+      where: {
+        userId: parseInt(userId),
+        isDefault: true
+      }
+    })
+    
+    if (defaultCollection) {
+      collectionId = defaultCollection.id
+    }
+  }
+
   const newVinyl = await prisma.vinyl.create({
     data: {
       discogsId: newVinylData.discogsId,
@@ -83,12 +119,31 @@ export async function POST(request: Request) {
       year: newVinylData.year,
       imageUrl: newVinylData.imageUrl,
       genres: JSON.stringify(genres),
-      userId: parseInt(userId)
+      userId: parseInt(userId),
+      collectionId: collectionId || null
+    },
+    include: {
+      collection: {
+        select: {
+          id: true,
+          title: true,
+          isDefault: true
+        }
+      }
     }
   })
 
   const vinyls = await prisma.vinyl.findMany({
     where: { userId: parseInt(userId) },
+    include: {
+      collection: {
+        select: {
+          id: true,
+          title: true,
+          isDefault: true
+        }
+      }
+    },
     orderBy: { createdAt: 'desc' }
   })
 

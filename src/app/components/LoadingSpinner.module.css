@@ -25,7 +25,7 @@
 }
 
 .spinner > div {
-  background-color: #89b4fa;
+  background-color: var(--ctp-mauve);
   border-radius: 100%;
   display: inline-block;
   animation: sk-bouncedelay 1.4s infinite ease-in-out both;
@@ -63,7 +63,7 @@
 }
 
 .loadingText {
-  color: #a6adc8;
+  color: var(--ctp-subtext0);
   font-size: 14px;
   margin-top: 16px;
   text-align: center;

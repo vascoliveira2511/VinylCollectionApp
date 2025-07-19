@@ -17,6 +17,16 @@ export async function GET(request: NextRequest) {
     const userId = payload.userId as string
     const username = payload.username as string
 
+    // Get user info
+    const user = await prisma.user.findUnique({
+      where: { id: parseInt(userId) },
+      select: { id: true, username: true, createdAt: true }
+    })
+
+    if (!user) {
+      return NextResponse.json({ error: 'User not found' }, { status: 404 })
+    }
+
     const vinyls = await prisma.vinyl.findMany({
       where: { userId: parseInt(userId) },
       orderBy: { createdAt: 'desc' }
@@ -38,7 +48,14 @@ export async function GET(request: NextRequest) {
       genre: JSON.parse(vinyl.genres)
     }))
 
-    return NextResponse.json({ username, totalRecords, genreStats, recentVinyls })
+    return NextResponse.json({ 
+      id: user.id,
+      username: user.username, 
+      createdAt: user.createdAt,
+      totalRecords, 
+      genreStats, 
+      recentVinyls 
+    })
   } catch (error) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }

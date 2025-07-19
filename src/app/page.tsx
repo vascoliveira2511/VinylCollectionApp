@@ -15,6 +15,21 @@ interface Vinyl {
   discogsId?: number
   createdAt?: string
   updatedAt?: string
+  collection?: {
+    id: number
+    title: string
+    isDefault: boolean
+  }
+}
+
+interface Collection {
+  id: number
+  title: string
+  description?: string
+  isDefault: boolean
+  _count: {
+    vinyls: number
+  }
 }
 
 interface Suggestion {
@@ -32,7 +47,8 @@ interface UserProfile {
 }
 
 export default function Home() {
-  const [collection, setCollection] = useState<Vinyl[]>([])
+  const [vinyls, setVinyls] = useState<Vinyl[]>([])
+  const [collections, setCollections] = useState<Collection[]>([])
   const [suggestions, setSuggestions] = useState<Suggestion[]>([])
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null)
   const [editingVinyl, setEditingVinyl] = useState<Vinyl | null>(null)
@@ -45,12 +61,15 @@ export default function Home() {
   const [year, setYear] = useState('')
   const [imageUrl, setImageUrl] = useState('')
   const [genre, setGenre] = useState<string[]>([])
+  const [discogsId, setDiscogsId] = useState<number | undefined>(undefined)
+  const [selectedCollectionId, setSelectedCollectionId] = useState<number | undefined>(undefined)
   
   // Filter states
   const [filterArtist, setFilterArtist] = useState('')
   const [filterTitle, setFilterTitle] = useState('')
   const [filterGenre, setFilterGenre] = useState('')
   const [filterYear, setFilterYear] = useState('')
+  const [filterCollection, setFilterCollection] = useState<string>('all')
   const [displayLimit, setDisplayLimit] = useState(12)
 
   const router = useRouter()
@@ -70,17 +89,26 @@ export default function Home() {
         const userData = await userRes.json()
         setUserProfile(userData)
 
-        // Fetch collection
-        const collectionRes = await fetch('/api/collection')
-        if (!collectionRes.ok) {
-          if (collectionRes.status === 401) {
+        // Fetch collections
+        const collectionsRes = await fetch('/api/collections')
+        if (!collectionsRes.ok) {
+          if (collectionsRes.status === 401) {
             router.push('/login')
             return
           }
-          throw new Error('Failed to fetch collection')
+          throw new Error('Failed to fetch collections')
         }
-        const collectionData = await collectionRes.json()
-        setCollection(collectionData)
+        const collectionsData = await collectionsRes.json()
+        setCollections(collectionsData)
+        
+        // Set default collection as selected if available
+        const defaultCollection = collectionsData.find((c: Collection) => c.isDefault)
+        if (defaultCollection) {
+          setSelectedCollectionId(defaultCollection.id)
+        }
+
+        // Fetch vinyls
+        await fetchVinyls()
       } catch (error) {
         console.error('Error fetching data:', error)
         setError(error instanceof Error ? error.message : 'An error occurred')
@@ -91,6 +119,31 @@ export default function Home() {
 
     fetchData()
   }, [router])
+
+  const fetchVinyls = async (collectionFilter?: string) => {
+    try {
+      let url = '/api/collection'
+      if (collectionFilter && collectionFilter !== 'all') {
+        url += `?collectionId=${collectionFilter}`
+      }
+      
+      const vinylsRes = await fetch(url)
+      if (!vinylsRes.ok) {
+        throw new Error('Failed to fetch vinyls')
+      }
+      const vinylsData = await vinylsRes.json()
+      setVinyls(vinylsData)
+    } catch (error) {
+      console.error('Error fetching vinyls:', error)
+      setError(error instanceof Error ? error.message : 'An error occurred')
+    }
+  }
+
+  useEffect(() => {
+    if (collections.length > 0) {
+      fetchVinyls(filterCollection)
+    }
+  }, [filterCollection, collections])
 
   const addOrUpdateVinyl = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -107,7 +160,9 @@ export default function Home() {
         title, 
         year: parseInt(year), 
         imageUrl, 
-        genre 
+        genre,
+        discogsId,
+        collectionId: selectedCollectionId 
       }
 
       if (editingVinyl) {
@@ -132,15 +187,12 @@ export default function Home() {
       setYear('')
       setImageUrl('')
       setGenre([])
+      setDiscogsId(undefined)
       setEditingVinyl(null)
       setSuggestions([])
       
-      // Refresh data
-      const collectionRes = await fetch('/api/collection')
-      if (collectionRes.ok) {
-        const collectionData = await collectionRes.json()
-        setCollection(collectionData)
-      }
+      // Refresh vinyls
+      await fetchVinyls(filterCollection)
       
       const userRes = await fetch('/api/auth/user')
       if (userRes.ok) {
@@ -182,6 +234,8 @@ export default function Home() {
     setYear(vinyl.year.toString())
     setImageUrl(vinyl.imageUrl)
     setGenre(vinyl.genre)
+    setDiscogsId(vinyl.discogsId)
+    setSelectedCollectionId(vinyl.collection?.id)
     setSuggestions([])
   }
 
@@ -206,37 +260,30 @@ export default function Home() {
     }
   }
 
-  const handleSuggestionClick = (suggestion: Suggestion) => {
+  const handleSuggestionClick = async (suggestion: Suggestion) => {
     setArtist(suggestion.artist)
     setTitle(suggestion.title)
-    setGenre(suggestion.genre)
     setSuggestions([])
-  }
-
-  const fetchAlbumData = async () => {
-    if (!artist || !title) {
-      setError('Please enter both artist and title to fetch album data.')
-      return
-    }
     
+    // Automatically fetch full album data when suggestion is clicked
     try {
       setError(null)
-      const res = await fetch(`/api/discogs?artist=${encodeURIComponent(artist)}&title=${encodeURIComponent(title)}`)
+      const res = await fetch(`/api/discogs?artist=${encodeURIComponent(suggestion.artist)}&title=${encodeURIComponent(suggestion.title)}`)
       
       if (res.ok) {
         const data = await res.json()
         if (data.year) setYear(data.year.toString())
         if (data.imageUrl) setImageUrl(data.imageUrl)
         if (data.genre) setGenre(data.genre)
-      } else {
-        throw new Error('Album not found on Discogs')
+        if (data.discogsId) setDiscogsId(data.discogsId)
       }
     } catch (error) {
-      setError(error instanceof Error ? error.message : 'An error occurred')
+      console.error('Error fetching album data:', error)
     }
   }
 
-  const filteredCollection = collection.filter((vinyl) => {
+
+  const filteredVinyls = vinyls.filter((vinyl) => {
     const matchesArtist = filterArtist === '' || vinyl.artist.toLowerCase().includes(filterArtist.toLowerCase())
     const matchesTitle = filterTitle === '' || vinyl.title.toLowerCase().includes(filterTitle.toLowerCase())
     const matchesGenre = filterGenre === '' || vinyl.genre.some(g => g.toLowerCase().includes(filterGenre.toLowerCase()))
@@ -278,27 +325,19 @@ export default function Home() {
   return (
     <main className={styles.main}>
       <div className="container">
-        {userProfile && (
-          <div className="window">
-            <div className="title-bar">Welcome, {userProfile.username}!</div>
-            <div className={styles.contentSection}>
-              <p>Total Records: {userProfile.totalRecords}</p>
-              <p>Top Genres:</p>
-              <ul>
-                {Object.entries(userProfile.genreStats)
-                  .sort(([, countA], [, countB]) => countB - countA)
-                  .slice(0, 3)
-                  .map(([genre, count]) => (
-                    <li key={genre}>{genre}: {count}</li>
-                  ))}
-              </ul>
-            </div>
-          </div>
-        )}
 
         <div className="window">
           <div className="title-bar">{editingVinyl ? 'Edit Vinyl' : 'Add New Vinyl'}</div>
           <div className={styles.contentSection}>
+            {!editingVinyl && (
+              <div className={styles.collectionsHelp}>
+                <h3>📚 Organize with Collections</h3>
+                <p>
+                  Create custom collections like "Jazz Classics", "Want List", or "Punk Rock" to organize your vinyls. 
+                  <Link href="/collections" className={styles.helpLink}>Manage Collections →</Link>
+                </p>
+              </div>
+            )}
             <form onSubmit={addOrUpdateVinyl} className={styles.form}>
               <div className={styles.inputContainer}>
                 <input
@@ -325,13 +364,6 @@ export default function Home() {
                 onChange={(e) => setTitle(e.target.value)}
                 required
               />
-              <button 
-                type="button" 
-                onClick={fetchAlbumData}
-                style={{ gridColumn: '1 / -1', marginBottom: '10px' }}
-              >
-                Fetch Album Data
-              </button>
               <input
                 type="number"
                 placeholder="Year"
@@ -353,6 +385,28 @@ export default function Home() {
                 onChange={(e) => setImageUrl(e.target.value)}
                 className={styles.fullWidthInput}
               />
+              <div className={styles.collectionSelector}>
+                <label htmlFor="collection-select" className={styles.selectorLabel}>
+                  📁 Add to Collection:
+                </label>
+                <select
+                  id="collection-select"
+                  value={selectedCollectionId || ''}
+                  onChange={(e) => setSelectedCollectionId(e.target.value ? parseInt(e.target.value) : undefined)}
+                  className={styles.fullWidthInput}
+                  required
+                >
+                  <option value="">Choose a collection...</option>
+                  {collections.map((collection) => (
+                    <option key={collection.id} value={collection.id}>
+                      {collection.title} {collection.isDefault ? '(Default)' : ''} • {collection._count.vinyls} records
+                    </option>
+                  ))}
+                </select>
+                <p className={styles.selectorHint}>
+                  <Link href="/collections" className={styles.helpLink}>+ Create new collection</Link>
+                </p>
+              </div>
               <div className={styles.formActions}>
                 <button type="submit">{editingVinyl ? 'Update Vinyl' : 'Add Vinyl'}</button>
                 {editingVinyl && (
@@ -365,6 +419,7 @@ export default function Home() {
                       setYear('')
                       setImageUrl('')
                       setGenre([])
+                      setDiscogsId(undefined)
                       setSuggestions([])
                     }} 
                     style={{ marginLeft: '10px' }}
@@ -380,7 +435,14 @@ export default function Home() {
         <div className="window">
           <div className="title-bar">My Vinyl Collection</div>
           <div className={styles.contentSection}>
-            <h1>My Vinyl Collection</h1>
+            <div className={styles.collectionHeader}>
+              <h1>My Vinyl Collection</h1>
+              <div className={styles.quickActions}>
+                <Link href="/collections" className={styles.manageButton}>
+                  📚 Manage Collections
+                </Link>
+              </div>
+            </div>
 
             <div className={styles.filters}>
               <input
@@ -408,18 +470,29 @@ export default function Home() {
                 onChange={(e) => setFilterYear(e.target.value)}
               />
               <select
+                value={filterCollection}
+                onChange={(e) => setFilterCollection(e.target.value)}
+              >
+                <option value="all">All Collections</option>
+                {collections.map((collection) => (
+                  <option key={collection.id} value={collection.id.toString()}>
+                    {collection.title} ({collection._count.vinyls})
+                  </option>
+                ))}
+              </select>
+              <select
                 value={displayLimit}
                 onChange={(e) => setDisplayLimit(parseInt(e.target.value))}
               >
                 <option value={12}>Show 12</option>
                 <option value={24}>Show 24</option>
                 <option value={48}>Show 48</option>
-                <option value={collection.length}>Show All</option>
+                <option value={vinyls.length}>Show All</option>
               </select>
             </div>
 
             <div className={styles.collectionGrid}>
-              {filteredCollection.map((vinyl) => (
+              {filteredVinyls.map((vinyl) => (
                 <Link href={`/collection/${vinyl.id}`} key={vinyl.id} className={styles.card}>
                   <img 
                     src={`/api/image-proxy?url=${encodeURIComponent(vinyl.imageUrl || 'https://via.placeholder.com/150')}`} 

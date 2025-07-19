@@ -105,65 +105,71 @@ export default function Stats() {
     <main className={styles.main}>
       <div className="container">
         <div className="window">
+          <div className="title-bar">Collection Statistics</div>
           <div className={styles.contentSection}>
-            <h1>Your Collection Stats</h1>
-            <p>Total Records: {collection.length}</p>
-
-            <div style={{ marginBottom: '20px', display: 'flex', flexWrap: 'wrap', gap: '15px', justifyContent: 'center' }}>
-              <label style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                <input type="checkbox" checked={showGenreChart} onChange={() => setShowGenreChart(!showGenreChart)} />
-                Genre Chart
-              </label>
-              <label style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                <input type="checkbox" checked={showYearChart} onChange={() => setShowYearChart(!showYearChart)} />
-                Year Chart
-              </label>
-              <label style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                <input type="checkbox" checked={showArtistChart} onChange={() => setShowArtistChart(!showArtistChart)} />
-                Artist Chart
-              </label>
-              <label style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                <input type="checkbox" checked={showCountryChart} onChange={() => setShowCountryChart(!showCountryChart)} />
-                Country Chart
-              </label>
-              <label style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                <input type="checkbox" checked={showStyleChart} onChange={() => setShowStyleChart(!showStyleChart)} />
-                Style Chart
-              </label>
+            <div className={styles.statsHeader}>
+              <h1>Your Collection Stats</h1>
+              <p className={styles.totalRecordsText}>Total Records: {collection.length}</p>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(400px, 50%), 1fr))', gap: '30px' }}>
+            <div className={styles.chartControls}>
+              <h3>Chart Visibility</h3>
+              <div className={styles.checkboxGrid}>
+                <label className={styles.chartCheckbox}>
+                  <input type="checkbox" checked={showGenreChart} onChange={() => setShowGenreChart(!showGenreChart)} />
+                  <span>Genre Chart</span>
+                </label>
+                <label className={styles.chartCheckbox}>
+                  <input type="checkbox" checked={showYearChart} onChange={() => setShowYearChart(!showYearChart)} />
+                  <span>Year Chart</span>
+                </label>
+                <label className={styles.chartCheckbox}>
+                  <input type="checkbox" checked={showArtistChart} onChange={() => setShowArtistChart(!showArtistChart)} />
+                  <span>Artist Chart</span>
+                </label>
+                <label className={styles.chartCheckbox}>
+                  <input type="checkbox" checked={showCountryChart} onChange={() => setShowCountryChart(!showCountryChart)} />
+                  <span>Country Chart</span>
+                </label>
+                <label className={styles.chartCheckbox}>
+                  <input type="checkbox" checked={showStyleChart} onChange={() => setShowStyleChart(!showStyleChart)} />
+                  <span>Style Chart</span>
+                </label>
+              </div>
+            </div>
+
+            <div className={styles.chartsGrid}>
               {showGenreChart && (
-                <div>
-                  <h2>Records by Genre:</h2>
+                <div className={styles.chartCard}>
+                  <h2>Records by Genre</h2>
                   <ChartComponent data={genreStats} title="Records by Genre" type="pie" />
                 </div>
               )}
 
               {showYearChart && (
-                <div>
-                  <h2>Records by Year:</h2>
+                <div className={styles.chartCard}>
+                  <h2>Records by Year</h2>
                   <ChartComponent data={yearStats} title="Records by Year" type="bar" />
                 </div>
               )}
 
               {showArtistChart && (
-                <div>
-                  <h2>Records by Artist:</h2>
+                <div className={styles.chartCard}>
+                  <h2>Records by Artist</h2>
                   <ChartComponent data={artistStats} title="Records by Artist" type="bar" />
                 </div>
               )}
 
               {showCountryChart && (
-                <div>
-                  <h2>Records by Country:</h2>
+                <div className={styles.chartCard}>
+                  <h2>Records by Country</h2>
                   <ChartComponent data={countryStats} title="Records by Country" type="bar" />
                 </div>
               )}
 
               {showStyleChart && (
-                <div>
-                  <h2>Records by Style:</h2>
+                <div className={styles.chartCard}>
+                  <h2>Records by Style</h2>
                   <ChartComponent data={styleStats} title="Records by Style" type="bar" />
                 </div>
               )}
