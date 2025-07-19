@@ -64,6 +64,13 @@ export default function Home() {
   const [discogsId, setDiscogsId] = useState<number | undefined>(undefined)
   const [selectedCollectionId, setSelectedCollectionId] = useState<number | undefined>(undefined)
   
+  // Search and form states
+  const [searchMode, setSearchMode] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('')
+  const [isSearching, setIsSearching] = useState(false)
+  const [dataFetched, setDataFetched] = useState(false)
+  const [successMessage, setSuccessMessage] = useState<string | null>(null)
+  
   // Filter states
   const [filterArtist, setFilterArtist] = useState('')
   const [filterTitle, setFilterTitle] = useState('')
@@ -155,6 +162,7 @@ export default function Home() {
 
     try {
       setError(null)
+      setSuccessMessage(null)
       const vinylData = { 
         artist, 
         title, 
@@ -172,6 +180,7 @@ export default function Home() {
           body: JSON.stringify(vinylData),
         })
         if (!res.ok) throw new Error('Failed to update vinyl')
+        setSuccessMessage(`✅ "${title}" by ${artist} updated successfully!`)
       } else {
         const res = await fetch('/api/collection', {
           method: 'POST',
@@ -179,9 +188,11 @@ export default function Home() {
           body: JSON.stringify(vinylData),
         })
         if (!res.ok) throw new Error('Failed to add vinyl')
+        setSuccessMessage(`✅ "${title}" by ${artist} added to your collection!`)
       }
 
-      // Reset form
+      // Reset form but keep current search mode
+      const currentSearchMode = searchMode
       setArtist('')
       setTitle('')
       setYear('')
@@ -190,6 +201,16 @@ export default function Home() {
       setDiscogsId(undefined)
       setEditingVinyl(null)
       setSuggestions([])
+      setSearchQuery('')
+      setDataFetched(false)
+      
+      // Keep the user in their preferred mode
+      setSearchMode(currentSearchMode)
+      
+      // Hide success message after 4 seconds
+      setTimeout(() => {
+        setSuccessMessage(null)
+      }, 4000)
       
       // Refresh vinyls
       await fetchVinyls(filterCollection)
@@ -237,13 +258,17 @@ export default function Home() {
     setDiscogsId(vinyl.discogsId)
     setSelectedCollectionId(vinyl.collection?.id)
     setSuggestions([])
+    setSearchQuery('')
+    setSearchMode(false) // Use manual mode for editing
+    setDataFetched(false)
   }
 
   const handleSearchChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const query = e.target.value
-    setArtist(query)
+    setSearchQuery(query)
     
     if (query.length > 2) {
+      setIsSearching(true)
       try {
         const res = await fetch(`/api/discogs-suggest?query=${encodeURIComponent(query)}`)
         if (res.ok) {
@@ -254,18 +279,32 @@ export default function Home() {
         }
       } catch (error) {
         setSuggestions([])
+      } finally {
+        setIsSearching(false)
       }
     } else {
       setSuggestions([])
+      // Clear form if search is cleared
+      if (query === '' && searchMode) {
+        setArtist('')
+        setTitle('')
+        setYear('')
+        setImageUrl('')
+        setGenre([])
+        setDiscogsId(undefined)
+        setDataFetched(false)
+      }
     }
   }
 
   const handleSuggestionClick = async (suggestion: Suggestion) => {
+    setSearchQuery(`${suggestion.artist} - ${suggestion.title}`)
     setArtist(suggestion.artist)
     setTitle(suggestion.title)
     setSuggestions([])
+    setIsSearching(true)
+    setDataFetched(false)
     
-    // Automatically fetch full album data when suggestion is clicked
     try {
       setError(null)
       const res = await fetch(`/api/discogs?artist=${encodeURIComponent(suggestion.artist)}&title=${encodeURIComponent(suggestion.title)}`)
@@ -276,10 +315,37 @@ export default function Home() {
         if (data.imageUrl) setImageUrl(data.imageUrl)
         if (data.genre) setGenre(data.genre)
         if (data.discogsId) setDiscogsId(data.discogsId)
+        setDataFetched(true)
       }
     } catch (error) {
       console.error('Error fetching album data:', error)
+      setError('Failed to fetch album data from Discogs')
+    } finally {
+      setIsSearching(false)
     }
+  }
+
+  const toggleSearchMode = () => {
+    setSearchMode(!searchMode)
+    setSearchQuery('')
+    setSuggestions([])
+    setDataFetched(false)
+    // Clear form when switching modes
+    if (!searchMode) {
+      setArtist('')
+      setTitle('')
+      setYear('')
+      setImageUrl('')
+      setGenre([])
+      setDiscogsId(undefined)
+    }
+  }
+
+  const handleManualEntry = () => {
+    setSearchMode(false)
+    setSuggestions([])
+    setSearchQuery('')
+    setDataFetched(false)
   }
 
 
@@ -338,53 +404,122 @@ export default function Home() {
                 </p>
               </div>
             )}
-            <form onSubmit={addOrUpdateVinyl} className={styles.form}>
-              <div className={styles.inputContainer}>
-                <input
-                  type="text"
-                  placeholder="Artist"
-                  value={artist}
-                  onChange={handleSearchChange}
-                  required
-                />
-                {suggestions.length > 0 && (
-                  <ul className={styles.suggestionsList}>
-                    {suggestions.map((s, index) => (
-                      <li key={index} onClick={() => handleSuggestionClick(s)}>
-                        {s.artist} - {s.title}
-                      </li>
-                    ))}
-                  </ul>
-                )}
+            {/* Search Mode Toggle - Outside form to prevent expansion */}
+            <div className={styles.searchModeToggle}>
+              <button 
+                type="button" 
+                onClick={toggleSearchMode}
+                className={`${styles.modeButton} ${searchMode ? styles.active : ''}`}
+              >
+                🔍 Search
+              </button>
+              <button 
+                type="button" 
+                onClick={handleManualEntry}
+                className={`${styles.modeButton} ${!searchMode ? styles.active : ''}`}
+              >
+                ✏️ Manual
+              </button>
+            </div>
+
+            {/* Success Message */}
+            {successMessage && (
+              <div className={styles.successMessage}>
+                {successMessage}
               </div>
-              <input
-                type="text"
-                placeholder="Title"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                required
-              />
-              <input
-                type="number"
-                placeholder="Year"
-                value={year}
-                onChange={(e) => setYear(e.target.value)}
-                required
-              />
-              <input
-                type="text"
-                placeholder="Genre (comma-separated)"
-                value={genre.join(', ')}
-                onChange={(e) => setGenre(e.target.value.split(',').map(g => g.trim()).filter(g => g))}
-                required
-              />
-              <input
-                type="text"
-                placeholder="Image URL"
-                value={imageUrl}
-                onChange={(e) => setImageUrl(e.target.value)}
-                className={styles.fullWidthInput}
-              />
+            )}
+
+            <form onSubmit={addOrUpdateVinyl} className={styles.form}>
+
+              {/* Search Mode */}
+              {searchMode ? (
+                <div className={styles.searchContainer}>
+                  <div className={styles.inputContainer}>
+                    <input
+                      type="text"
+                      placeholder="Search for artist and album... (e.g., 'Miles Davis Kind of Blue')"
+                      value={searchQuery}
+                      onChange={handleSearchChange}
+                      className={styles.searchInput}
+                    />
+                    {isSearching && (
+                      <div className={styles.searchingIndicator}>🔍 Searching...</div>
+                    )}
+                    {suggestions.length > 0 && (
+                      <ul className={styles.suggestionsList}>
+                        {suggestions.map((s, index) => (
+                          <li key={index} onClick={() => handleSuggestionClick(s)} className={styles.suggestionItem}>
+                            <div className={styles.suggestionMain}>
+                              <strong>{s.artist}</strong> - {s.title}
+                            </div>
+                            <div className={styles.suggestionMeta}>
+                              {s.genre.length > 0 && s.genre.slice(0, 2).join(', ')}
+                              {s.style.length > 0 && ` • ${s.style.slice(0, 2).join(', ')}`}
+                            </div>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+
+                  {/* Show fetched data */}
+                  <div style={{ minHeight: dataFetched ? 'auto' : '0', overflow: 'hidden', transition: 'all 0.3s ease' }}>
+                    {dataFetched && (
+                      <div className={styles.fetchedData}>
+                        <h4>✅ Found on Discogs:</h4>
+                        <div className={styles.dataPreview}>
+                          <div>
+                            <p><strong>Artist:</strong> {artist}</p>
+                            <p><strong>Title:</strong> {title}</p>
+                            <p><strong>Year:</strong> {year}</p>
+                            <p><strong>Genre:</strong> {genre.join(', ')}</p>
+                          </div>
+                          {imageUrl && <img src={imageUrl} alt="Album cover" className={styles.previewImage} />}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ) : (
+                /* Manual Entry Mode */
+                <div className={styles.manualContainer}>
+                  <input
+                    type="text"
+                    placeholder="Artist"
+                    value={artist}
+                    onChange={(e) => setArtist(e.target.value)}
+                    required
+                  />
+                  <input
+                    type="text"
+                    placeholder="Title"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    required
+                  />
+                  <input
+                    type="number"
+                    placeholder="Year"
+                    value={year}
+                    onChange={(e) => setYear(e.target.value)}
+                    required
+                  />
+                  <input
+                    type="text"
+                    placeholder="Genre (comma-separated)"
+                    value={genre.join(', ')}
+                    onChange={(e) => setGenre(e.target.value.split(',').map(g => g.trim()).filter(g => g))}
+                    required
+                  />
+                  <input
+                    type="text"
+                    placeholder="Image URL"
+                    value={imageUrl}
+                    onChange={(e) => setImageUrl(e.target.value)}
+                    className={styles.fullWidthInput}
+                  />
+                </div>
+              )}
               <div className={styles.collectionSelector}>
                 <label htmlFor="collection-select" className={styles.selectorLabel}>
                   📁 Add to Collection:
@@ -421,6 +556,9 @@ export default function Home() {
                       setGenre([])
                       setDiscogsId(undefined)
                       setSuggestions([])
+                      setSearchQuery('')
+                      setSearchMode(false)
+                      setDataFetched(false)
                     }} 
                     style={{ marginLeft: '10px' }}
                   >

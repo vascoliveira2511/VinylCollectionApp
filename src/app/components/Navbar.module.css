@@ -68,6 +68,13 @@
   border-color: var(--ctp-surface2);
 }
 
+.activeLink {
+  color: var(--ctp-mauve) !important;
+  background: var(--ctp-surface1) !important;
+  border-color: var(--ctp-mauve) !important;
+  font-weight: 600 !important;
+}
+
 .profileLink {
   display: flex;
   align-items: center;
@@ -83,6 +90,11 @@
   background: var(--ctp-surface2);
   border-color: var(--ctp-mauve);
   text-decoration: none;
+}
+
+.activeProfile {
+  background: var(--ctp-surface2) !important;
+  border-color: var(--ctp-mauve) !important;
 }
 
 .username {

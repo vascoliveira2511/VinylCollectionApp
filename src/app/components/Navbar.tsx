@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 import Avatar from './Avatar'
 import styles from './Navbar.module.css'
@@ -13,6 +14,7 @@ interface User {
 
 export default function Navbar() {
   const [user, setUser] = useState<User | null>(null)
+  const pathname = usePathname()
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -43,16 +45,22 @@ export default function Navbar() {
           {user && (
             <>
               <li className={styles.navItem}>
-                <Link href="/">Home</Link>
+                <Link href="/" className={pathname === '/' ? styles.activeLink : ''}>
+                  Home
+                </Link>
               </li>
               <li className={styles.navItem}>
-                <Link href="/collections">Collections</Link>
+                <Link href="/collections" className={pathname === '/collections' ? styles.activeLink : ''}>
+                  Collections
+                </Link>
               </li>
               <li className={styles.navItem}>
-                <Link href="/stats">Stats</Link>
+                <Link href="/stats" className={pathname === '/stats' ? styles.activeLink : ''}>
+                  Stats
+                </Link>
               </li>
               <li className={styles.navItem}>
-                <Link href="/profile" className={styles.profileLink}>
+                <Link href="/profile" className={`${styles.profileLink} ${pathname === '/profile' ? styles.activeProfile : ''}`}>
                   <Avatar 
                     username={user.username}
                     avatar={user.avatar}
