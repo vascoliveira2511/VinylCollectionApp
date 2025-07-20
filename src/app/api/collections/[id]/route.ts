@@ -50,7 +50,7 @@ export async function PUT(request: Request, { params }: { params: { id: string }
   }
 
   try {
-    const { title, description } = await request.json()
+    const { title, description, imageUrl, color, isPublic } = await request.json()
     
     if (!title || title.trim().length === 0) {
       return NextResponse.json({ error: 'Collection title is required' }, { status: 400 })
@@ -59,12 +59,14 @@ export async function PUT(request: Request, { params }: { params: { id: string }
     const collection = await prisma.collection.updateMany({
       where: {
         id: parseInt(params.id),
-        userId: parseInt(userId),
-        isDefault: false // Prevent editing default collection
+        userId: parseInt(userId)
       },
       data: {
         title: title.trim(),
-        description: description?.trim() || null
+        description: description?.trim() || null,
+        imageUrl: imageUrl?.trim() || null,
+        color: color || null,
+        isPublic: isPublic || false
       }
     })
 

@@ -73,7 +73,8 @@ export async function GET(request: Request) {
 
   const formattedVinyls = vinyls.map(vinyl => ({
     ...vinyl,
-    genre: JSON.parse(vinyl.genres)
+    genre: JSON.parse(vinyl.genres),
+    trackList: vinyl.trackList ? JSON.parse(vinyl.trackList) : null
   }))
 
   return NextResponse.json(formattedVinyls)
@@ -111,6 +112,16 @@ export async function POST(request: Request) {
     }
   }
 
+  // Process track list if provided
+  let trackList = null
+  if (newVinylData.trackList) {
+    if (typeof newVinylData.trackList === 'string') {
+      trackList = newVinylData.trackList
+    } else {
+      trackList = JSON.stringify(newVinylData.trackList)
+    }
+  }
+
   const newVinyl = await prisma.vinyl.create({
     data: {
       discogsId: newVinylData.discogsId,
@@ -119,6 +130,18 @@ export async function POST(request: Request) {
       year: newVinylData.year,
       imageUrl: newVinylData.imageUrl,
       genres: JSON.stringify(genres),
+      // New manual fields
+      trackList: trackList,
+      description: newVinylData.description || null,
+      label: newVinylData.label || null,
+      format: newVinylData.format || null,
+      condition: newVinylData.condition || null,
+      rating: newVinylData.rating ? parseInt(newVinylData.rating) : null,
+      purchaseDate: newVinylData.purchaseDate ? new Date(newVinylData.purchaseDate) : null,
+      purchasePrice: newVinylData.purchasePrice ? parseFloat(newVinylData.purchasePrice) : null,
+      purchaseLocation: newVinylData.purchaseLocation || null,
+      catalogNumber: newVinylData.catalogNumber || null,
+      country: newVinylData.country || null,
       userId: parseInt(userId),
       collectionId: collectionId || null
     },
@@ -149,7 +172,8 @@ export async function POST(request: Request) {
 
   const formattedVinyls = vinyls.map(vinyl => ({
     ...vinyl,
-    genre: JSON.parse(vinyl.genres)
+    genre: JSON.parse(vinyl.genres),
+    trackList: vinyl.trackList ? JSON.parse(vinyl.trackList) : null
   }))
 
   return NextResponse.json(formattedVinyls)

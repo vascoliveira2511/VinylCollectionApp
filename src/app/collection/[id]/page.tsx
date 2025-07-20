@@ -134,9 +134,9 @@ export default function VinylDetailPage({ params }: { params: { id: string } }) 
           <div className={styles.contentSection}>
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '20px' }}>
               <img src={`/api/image-proxy?url=${encodeURIComponent(vinyl.imageUrl)}`} alt={`${vinyl.title} cover`} className={styles.albumArt} style={{ maxWidth: '300px', height: 'auto' }} />
-              <p style={{ marginTop: '20px', textAlign: 'center', fontSize: '2em', fontWeight: 'bold', color: '#e0e0e0' }}>{vinyl.title}</p>
-              <p style={{ textAlign: 'center', fontSize: '1.5em', color: '#a29bfe' }}>{vinyl.artist}</p>
-              <p style={{ textAlign: 'center', fontSize: '1.1em', color: '#bdae93' }}>Year: {vinyl.year}</p>
+              <p style={{ marginTop: '20px', textAlign: 'center', fontSize: '2em', fontWeight: 'bold', color: 'var(--ctp-text)' }}>{vinyl.title}</p>
+              <p style={{ textAlign: 'center', fontSize: '1.5em', color: 'var(--ctp-mauve)' }}>{vinyl.artist}</p>
+              <p style={{ textAlign: 'center', fontSize: '1.1em', color: 'var(--ctp-subtext1)' }}>Year: {vinyl.year}</p>
               <div className={styles.genrePills} style={{ marginTop: '15px' }}>
                 {vinyl.genre.map((g, idx) => (
                   <span key={idx} className={styles.genrePill}>{g}</span>

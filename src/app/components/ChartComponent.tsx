@@ -37,28 +37,28 @@ const ChartComponent: React.FC<ChartProps> = ({ data, title, type }) => {
         label: title,
         data: Object.values(data),
         backgroundColor: [
-          'rgba(203, 166, 247, 0.8)',  // Mauve
-          'rgba(245, 194, 231, 0.8)',  // Pink
-          'rgba(148, 226, 213, 0.8)',  // Teal
-          'rgba(250, 179, 135, 0.8)',  // Peach
-          'rgba(166, 227, 161, 0.8)',  // Green
-          'rgba(137, 180, 250, 0.8)',  // Blue
-          'rgba(249, 226, 175, 0.8)',  // Yellow
-          'rgba(180, 190, 254, 0.8)',  // Lavender
-          'rgba(137, 220, 235, 0.8)',  // Sky
-          'rgba(243, 139, 168, 0.8)',  // Red
+          '#cba6f7cc',  // Mauve with 80% opacity
+          '#f5c2e7cc',  // Pink with 80% opacity
+          '#94e2d5cc',  // Teal with 80% opacity
+          '#fab387cc',  // Peach with 80% opacity
+          '#a6e3a1cc',  // Green with 80% opacity
+          '#89b4facc',  // Blue with 80% opacity
+          '#f9e2afcc',  // Yellow with 80% opacity
+          '#b4befecc',  // Lavender with 80% opacity
+          '#89dcebcc',  // Sky with 80% opacity
+          '#f38ba8cc',  // Red with 80% opacity
         ],
         borderColor: [
-          '#cba6f7',  // Mauve
-          '#f5c2e7',  // Pink
-          '#94e2d5',  // Teal
-          '#fab387',  // Peach
-          '#a6e3a1',  // Green
-          '#89b4fa',  // Blue
-          '#f9e2af',  // Yellow
-          '#b4befe',  // Lavender
-          '#89dceb',  // Sky
-          '#f38ba8',  // Red
+          'var(--ctp-mauve)',  // Mauve
+          'var(--ctp-pink)',  // Pink
+          'var(--ctp-teal)',  // Teal
+          'var(--ctp-peach)',  // Peach
+          'var(--ctp-green)',  // Green
+          'var(--ctp-blue)',  // Blue
+          'var(--ctp-yellow)',  // Yellow
+          'var(--ctp-lavender)',  // Lavender
+          'var(--ctp-sky)',  // Sky
+          'var(--ctp-red)',  // Red
         ],
         borderWidth: 1,
       },
@@ -75,7 +75,7 @@ const ChartComponent: React.FC<ChartProps> = ({ data, title, type }) => {
           font: {
             family: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif',
             size: 12,
-            weight: '500',
+            weight: 500,
           }
         },
       },
@@ -86,7 +86,7 @@ const ChartComponent: React.FC<ChartProps> = ({ data, title, type }) => {
         font: {
           family: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif',
           size: 16,
-          weight: '600',
+          weight: 600,
         }
       },
       tooltip: {
@@ -113,11 +113,11 @@ const ChartComponent: React.FC<ChartProps> = ({ data, title, type }) => {
           font: {
             family: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif',
             size: 11,
-            weight: '500',
+            weight: 500,
           }
         },
         grid: {
-          color: 'rgba(108, 112, 134, 0.3)',
+          color: '#6c708650',
         },
       },
       y: {
@@ -127,11 +127,11 @@ const ChartComponent: React.FC<ChartProps> = ({ data, title, type }) => {
           font: {
             family: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif',
             size: 11,
-            weight: '500',
+            weight: 500,
           }
         },
         grid: {
-          color: 'rgba(108, 112, 134, 0.3)',
+          color: '#6c708650',
         },
       },
     } : {},

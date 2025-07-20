@@ -406,7 +406,7 @@ export default function Home() {
                     </Link>
                   ))}
                   {filteredCollection.length === 0 && !loading && (
-                    <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '40px', color: '#a6adc8' }}>
+                    <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '40px', color: 'var(--ctp-subtext0)' }}>
                       No vinyl records found matching your filters.
                     </div>
                   )}

@@ -50,6 +50,11 @@ export default function Navbar() {
                 </Link>
               </li>
               <li className={styles.navItem}>
+                <Link href="/add" className={pathname === '/add' ? styles.activeLink : ''}>
+                  Add Vinyl
+                </Link>
+              </li>
+              <li className={styles.navItem}>
                 <Link href="/collections" className={pathname === '/collections' ? styles.activeLink : ''}>
                   Collections
                 </Link>

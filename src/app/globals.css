@@ -30,6 +30,16 @@
   --ctp-crust: #11111b;
 }
 
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+}
+
 body {
   background: var(--ctp-base);
   color: var(--ctp-text);
@@ -124,19 +134,70 @@ h1, h2, h3, h4, h5, h6 {
   line-height: 1.2;
 }
 
-h1 { font-size: 2rem; color: var(--ctp-mauve); }
-h2 { font-size: 1.5rem; color: var(--ctp-pink); }
-h3 { font-size: 1.125rem; color: var(--ctp-text); }
+h1 { font-size: 2rem; color: var(--ctp-text); }
+h2 { font-size: 1.5rem; color: var(--ctp-text); }
+h3 { font-size: 1.125rem; color: var(--ctp-subtext1); }
 
 a {
   color: var(--ctp-blue);
   text-decoration: none;
-  transition: color 0.2s ease;
+  transition: all 0.2s ease;
+  border-bottom: 1px solid transparent;
 }
 
 a:hover {
   color: var(--ctp-sky);
-  text-decoration: underline;
+  border-bottom: 1px solid var(--ctp-sky);
+}
+
+a.viewButton:hover, 
+a.manageButton:hover, 
+a.editButton:hover, 
+a.deleteButton:hover,
+a.createButton:hover,
+a.cancelButton:hover,
+a.backButton:hover,
+a.exportButton:hover,
+a.importButton:hover,
+a.setDefaultButton:hover,
+a.addButton:hover,
+a.statsButton:hover {
+  color: var(--ctp-base) !important;
+  border-bottom: none !important;
+}
+
+button, 
+.viewButton, 
+.manageButton, 
+.editButton, 
+.deleteButton,
+.delete-btn,
+.createButton,
+.cancelButton,
+.backButton,
+.exportButton,
+.importButton,
+.navItem a,
+.profileLink,
+.authLink {
+  border-bottom: none !important;
+}
+
+.viewButton:hover, 
+.manageButton:hover, 
+.editButton:hover, 
+.deleteButton:hover,
+.delete-btn:hover,
+.createButton:hover,
+.cancelButton:hover,
+.backButton:hover,
+.exportButton:hover,
+.importButton:hover,
+.setDefaultButton:hover,
+.addButton:hover,
+.statsButton:hover {
+  color: inherit !important;
+  border-bottom: none !important;
 }
 
 button {
@@ -154,8 +215,24 @@ button {
   box-shadow: 0 2px 8px rgba(17, 17, 27, 0.3);
 }
 
+button:hover, 
+.viewButton:hover, 
+.manageButton:hover, 
+.editButton:hover, 
+.deleteButton:hover,
+.delete-btn:hover,
+.createButton:hover,
+.cancelButton:hover,
+.backButton:hover,
+.exportButton:hover,
+.importButton:hover,
+.navItem a:hover,
+.profileLink:hover,
+.authLink:hover {
+  border-bottom: none !important;
+}
+
 button:hover {
-  background: var(--ctp-pink);
   transform: translateY(-1px);
   box-shadow: 0 4px 16px rgba(17, 17, 27, 0.4);
 }
@@ -168,6 +245,28 @@ button.delete-btn {
 button.delete-btn:hover {
   background: var(--ctp-maroon);
   box-shadow: 0 4px 16px rgba(243, 139, 168, 0.3);
+}
+
+/* Force button text colors on hover - nuclear approach */
+a.editButton:hover,
+a.manageButton:hover,
+a.addButton:hover,
+a.statsButton:hover,
+a.createButton:hover,
+a.setDefaultButton:hover,
+a.viewButton:hover,
+a.cancelButton:hover,
+a.backButton:hover,
+.editButton:hover,
+.manageButton:hover,
+.addButton:hover,
+.statsButton:hover,
+.createButton:hover,
+.setDefaultButton:hover,
+.viewButton:hover,
+.cancelButton:hover,
+.backButton:hover {
+  color: #1e1e2e !important;
 }
 
 input, textarea, select {
@@ -186,8 +285,8 @@ input, textarea, select {
 
 input:focus, textarea:focus, select:focus {
   outline: none;
-  border-color: var(--ctp-mauve);
-  box-shadow: 0 0 0 2px rgba(203, 166, 247, 0.2);
+  border-color: var(--ctp-lavender);
+  box-shadow: 0 0 0 2px rgba(180, 190, 254, 0.2);
   background-color: var(--ctp-surface0);
 }
 

@@ -21,7 +21,17 @@
       "Bash(npx tsc:*)",
       "Bash(npm run dev:*)",
       "Bash(del favicon.ico)",
-      "Bash(del apple-touch-icon.png)"
+      "Bash(del apple-touch-icon.png)",
+      "WebFetch(domain:catppuccin.com)",
+      "WebFetch(domain:github.com)",
+      "Bash(find:*)",
+      "Bash(npx prisma generate:*)",
+      "Bash(taskkill:*)",
+      "Bash(mkdir:*)",
+      "Bash(wc:*)",
+      "Bash(tail:*)",
+      "Bash(cp:*)",
+      "Bash(grep:*)"
     ],
     "deny": []
   }

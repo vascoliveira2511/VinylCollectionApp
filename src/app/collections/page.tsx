@@ -9,6 +9,9 @@ interface Collection {
   id: number
   title: string
   description?: string
+  imageUrl?: string
+  color?: string
+  isPublic?: boolean
   isDefault: boolean
   createdAt: string
   _count: {
@@ -26,6 +29,9 @@ export default function Collections() {
   // Form state
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
+  const [imageUrl, setImageUrl] = useState('')
+  const [color, setColor] = useState('#6c7ce7')
+  const [isPublic, setIsPublic] = useState(false)
   const [formLoading, setFormLoading] = useState(false)
   
   const router = useRouter()
@@ -68,7 +74,13 @@ export default function Collections() {
       const res = await fetch('/api/collections', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title, description })
+        body: JSON.stringify({ 
+          title, 
+          description: description || null,
+          imageUrl: imageUrl || null,
+          color: color || null,
+          isPublic 
+        })
       })
       
       if (!res.ok) {
@@ -79,6 +91,9 @@ export default function Collections() {
       // Reset form and refresh collections
       setTitle('')
       setDescription('')
+      setImageUrl('')
+      setColor('#6c7ce7')
+      setIsPublic(false)
       setShowCreateForm(false)
       await fetchCollections()
     } catch (err) {
@@ -103,7 +118,13 @@ export default function Collections() {
       const res = await fetch(`/api/collections/${editingCollection.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title, description })
+        body: JSON.stringify({ 
+          title, 
+          description: description || null,
+          imageUrl: imageUrl || null,
+          color: color || null,
+          isPublic 
+        })
       })
       
       if (!res.ok) {
@@ -114,6 +135,9 @@ export default function Collections() {
       // Reset form and refresh collections
       setTitle('')
       setDescription('')
+      setImageUrl('')
+      setColor('#6c7ce7')
+      setIsPublic(false)
       setEditingCollection(null)
       await fetchCollections()
     } catch (err) {
@@ -150,21 +174,49 @@ export default function Collections() {
   }
 
   const startEditing = (collection: Collection) => {
-    if (collection.isDefault) {
-      setError('Cannot edit default collection')
-      return
-    }
-    
     setEditingCollection(collection)
     setTitle(collection.title)
     setDescription(collection.description || '')
+    setImageUrl(collection.imageUrl || '')
+    setColor(collection.color || '#6c7ce7')
+    setIsPublic(collection.isPublic || false)
     setShowCreateForm(false)
+  }
+
+  const handleSetDefault = async (collection: Collection) => {
+    if (collection.isDefault) {
+      return // Already default
+    }
+    
+    if (!confirm(`Set "${collection.title}" as your default collection?`)) {
+      return
+    }
+    
+    try {
+      const res = await fetch('/api/collections/set-default', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ collectionId: collection.id })
+      })
+      
+      if (!res.ok) {
+        const data = await res.json()
+        throw new Error(data.error || 'Failed to set default collection')
+      }
+      
+      await fetchCollections()
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An error occurred')
+    }
   }
 
   const cancelEditing = () => {
     setEditingCollection(null)
     setTitle('')
     setDescription('')
+    setImageUrl('')
+    setColor('#6c7ce7')
+    setIsPublic(false)
     setError(null)
   }
 
@@ -222,6 +274,38 @@ export default function Collections() {
                     rows={3}
                     maxLength={500}
                   />
+                  
+                  <input
+                    type="url"
+                    placeholder="Cover Image URL (optional)"
+                    value={imageUrl}
+                    onChange={(e) => setImageUrl(e.target.value)}
+                  />
+                  
+                  <div className={styles.formRow}>
+                    <div className={styles.colorSection}>
+                      <label htmlFor="collection-color">🎨 Theme Color:</label>
+                      <input
+                        id="collection-color"
+                        type="color"
+                        value={color}
+                        onChange={(e) => setColor(e.target.value)}
+                        className={styles.colorPicker}
+                      />
+                    </div>
+                    
+                    <div className={styles.checkboxSection}>
+                      <label className={styles.checkboxLabel}>
+                        <input
+                          type="checkbox"
+                          checked={isPublic}
+                          onChange={(e) => setIsPublic(e.target.checked)}
+                        />
+                        <span>🌐 Make collection public</span>
+                      </label>
+                    </div>
+                  </div>
+                  
                   <div className={styles.formActions}>
                     <button type="submit" disabled={formLoading}>
                       {formLoading ? 'Saving...' : (editingCollection ? 'Update' : 'Create')}
@@ -253,12 +337,25 @@ export default function Collections() {
             {/* Collections Grid */}
             <div className={styles.collectionsGrid}>
               {collections.map((collection) => (
-                <div key={collection.id} className={styles.collectionCard}>
+                <div 
+                  key={collection.id} 
+                  className={`${styles.collectionCard} ${collection.color ? styles.hasCustomColor : ''}`}
+                  style={collection.color ? { '--collection-color': collection.color } as React.CSSProperties : {}}
+                >
+                  {collection.imageUrl && (
+                    <img 
+                      src={collection.imageUrl} 
+                      alt={`${collection.title} cover`}
+                      className={styles.collectionCover}
+                    />
+                  )}
+                  
                   <div className={styles.collectionHeader}>
                     <h3>
                       <Link href={`/collections/${collection.id}`}>
                         {collection.title}
                         {collection.isDefault && <span className={styles.defaultBadge}>Default</span>}
+                        {collection.isPublic && <span className={styles.publicBadge}>🌐 Public</span>}
                       </Link>
                     </h3>
                     <div className={styles.collectionMeta}>
@@ -275,13 +372,19 @@ export default function Collections() {
                       View Collection
                     </Link>
                     
+                    <button 
+                      onClick={() => startEditing(collection)}
+                      className={styles.editButton}
+                    >
+                      Edit
+                    </button>
                     {!collection.isDefault && (
                       <>
                         <button 
-                          onClick={() => startEditing(collection)}
-                          className={styles.editButton}
+                          onClick={() => handleSetDefault(collection)}
+                          className={styles.setDefaultButton}
                         >
-                          Edit
+                          Set as Default
                         </button>
                         <button 
                           onClick={() => handleDeleteCollection(collection)}

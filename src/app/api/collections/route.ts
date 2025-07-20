@@ -36,7 +36,7 @@ export async function POST(request: Request) {
   }
 
   try {
-    const { title, description } = await request.json()
+    const { title, description, imageUrl, color, isPublic } = await request.json()
     
     if (!title || title.trim().length === 0) {
       return NextResponse.json({ error: 'Collection title is required' }, { status: 400 })
@@ -46,6 +46,9 @@ export async function POST(request: Request) {
       data: {
         title: title.trim(),
         description: description?.trim() || null,
+        imageUrl: imageUrl?.trim() || null,
+        color: color || null,
+        isPublic: isPublic || false,
         userId: parseInt(userId),
         isDefault: false
       },

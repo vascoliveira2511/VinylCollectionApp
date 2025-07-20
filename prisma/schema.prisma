@@ -13,10 +13,21 @@ datasource db {
 model User {
   id              Int      @id @default(autoincrement())
   username        String   @unique
-  password        String
+  password        String?  // Optional for Google OAuth users
+  email           String?  @unique // For Google OAuth
+  googleId        String?  @unique // Google OAuth ID
   discogsUsername String?
   avatar          String?  // URL or avatar identifier
   avatarType      String   @default("generated") // "generated", "uploaded", "url"
+  
+  // User preferences
+  displayView     String   @default("grid") // "grid" or "list"
+  recordsPerPage  Int      @default(20)
+  showGenreChart  Boolean  @default(true)
+  showDecadeChart Boolean  @default(true)
+  showArtistChart Boolean  @default(true)
+  discogsEnabled  Boolean  @default(true)
+  
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
   
@@ -29,6 +40,9 @@ model Collection {
   id          Int      @id @default(autoincrement())
   title       String
   description String?
+  imageUrl    String?  // Collection cover image
+  color       String?  // Theme color (hex)
+  isPublic    Boolean  @default(false) // Public/private collection
   isDefault   Boolean  @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -51,6 +65,20 @@ model Vinyl {
   year         Int?
   imageUrl     String?
   genres       String   // JSON array stored as string
+  
+  // New manual fields
+  trackList    String?  // JSON array stored as string
+  description  String?  // Personal notes/description
+  label        String?  // Record label
+  format       String?  // LP, EP, 12", etc.
+  condition    String?  // Mint, VG+, VG, etc.
+  rating       Int?     // Personal rating 1-5
+  purchaseDate DateTime?
+  purchasePrice Float?
+  purchaseLocation String?
+  catalogNumber String?
+  country      String?  // Country of release
+  
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
   

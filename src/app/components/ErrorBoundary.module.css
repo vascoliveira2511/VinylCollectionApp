@@ -5,8 +5,8 @@
   justify-content: center;
   padding: 40px 20px;
   text-align: center;
-  background-color: #1e1e2e;
-  border: 1px solid #f38ba8;
+  background-color: var(--ctp-base);
+  border: 1px solid var(--ctp-red);
   border-radius: 8px;
   margin: 20px 0;
 }
@@ -17,14 +17,14 @@
 }
 
 .errorTitle {
-  color: #f38ba8;
+  color: var(--ctp-red);
   font-size: 24px;
   margin-bottom: 12px;
   font-weight: 600;
 }
 
 .errorMessage {
-  color: #a6adc8;
+  color: var(--ctp-subtext0);
   font-size: 16px;
   margin-bottom: 24px;
   max-width: 500px;
@@ -33,8 +33,8 @@
 
 .retryButton {
   padding: 12px 24px;
-  background-color: #89b4fa;
-  color: #1e1e2e;
+  background-color: var(--ctp-blue);
+  color: var(--ctp-base);
   border: none;
   border-radius: 6px;
   cursor: pointer;
@@ -44,5 +44,5 @@
 }
 
 .retryButton:hover {
-  background-color: #74c7ec;
+  background-color: var(--ctp-sapphire);
 }

@@ -191,7 +191,7 @@ export default function CollectionView({ params }: { params: { id: string } }) {
             {filteredVinyls.length > 0 ? (
               <div className={styles.collectionGrid}>
                 {filteredVinyls.map((vinyl) => (
-                  <Link href={`/collection/${vinyl.id}`} key={vinyl.id} className={styles.card}>
+                  <Link href={`/vinyl/${vinyl.id}`} key={vinyl.id} className={styles.card}>
                     <img 
                       src={`/api/image-proxy?url=${encodeURIComponent(vinyl.imageUrl || 'https://via.placeholder.com/150')}`} 
                       alt={`${vinyl.title} cover`} 

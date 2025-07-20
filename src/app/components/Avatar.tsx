@@ -13,16 +13,16 @@ interface AvatarProps {
 }
 
 const AVATAR_COLORS = [
-  '#f38ba8', // red
-  '#fab387', // peach  
-  '#f9e2af', // yellow
-  '#a6e3a1', // green
-  '#94e2d5', // teal
-  '#89dceb', // sky
-  '#89b4fa', // blue
-  '#cba6f7', // mauve
-  '#f5c2e7', // pink
-  '#eba0ac', // maroon
+  'var(--ctp-red)', // red
+  'var(--ctp-peach)', // peach  
+  'var(--ctp-yellow)', // yellow
+  'var(--ctp-green)', // green
+  'var(--ctp-teal)', // teal
+  'var(--ctp-sky)', // sky
+  'var(--ctp-blue)', // blue
+  'var(--ctp-mauve)', // mauve
+  'var(--ctp-pink)', // pink
+  'var(--ctp-maroon)', // maroon
 ]
 
 const AVATAR_EMOJIS = [

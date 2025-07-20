@@ -25,6 +25,13 @@ interface User {
   createdAt: string
   avatar?: string
   avatarType?: string
+  // Preferences
+  displayView?: string
+  recordsPerPage?: number
+  showGenreChart?: boolean
+  showDecadeChart?: boolean
+  showArtistChart?: boolean
+  discogsEnabled?: boolean
 }
 
 export default function Profile() {
@@ -45,6 +52,16 @@ export default function Profile() {
   const [deleteConfirm, setDeleteConfirm] = useState('')
   const [deleteLoading, setDeleteLoading] = useState(false)
   
+  // Preferences state
+  const [displayView, setDisplayView] = useState('grid')
+  const [recordsPerPage, setRecordsPerPage] = useState(24)
+  const [showGenreChart, setShowGenreChart] = useState(true)
+  const [showDecadeChart, setShowDecadeChart] = useState(true)
+  const [showArtistChart, setShowArtistChart] = useState(false)
+  const [discogsEnabled, setDiscogsEnabled] = useState(true)
+  const [preferencesLoading, setPreferencesLoading] = useState(false)
+  const [preferencesSuccess, setPreferencesSuccess] = useState(false)
+  
   const router = useRouter()
 
   const fetchUserData = async () => {
@@ -59,6 +76,14 @@ export default function Profile() {
       }
       const userData = await res.json()
       setUser(userData)
+      
+      // Set preferences from user data
+      setDisplayView(userData.displayView || 'grid')
+      setRecordsPerPage(userData.recordsPerPage || 24)
+      setShowGenreChart(userData.showGenreChart !== undefined ? userData.showGenreChart : true)
+      setShowDecadeChart(userData.showDecadeChart !== undefined ? userData.showDecadeChart : true)
+      setShowArtistChart(userData.showArtistChart !== undefined ? userData.showArtistChart : false)
+      setDiscogsEnabled(userData.discogsEnabled !== undefined ? userData.discogsEnabled : true)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred')
     } finally {
@@ -140,6 +165,41 @@ export default function Profile() {
       setError(err instanceof Error ? err.message : 'An error occurred')
     } finally {
       setPasswordChangeLoading(false)
+    }
+  }
+
+  const savePreferences = async () => {
+    setPreferencesLoading(true)
+    setError(null)
+    setPreferencesSuccess(false)
+    
+    try {
+      const preferences = {
+        displayView,
+        recordsPerPage,
+        showGenreChart,
+        showDecadeChart,
+        showArtistChart,
+        discogsEnabled
+      }
+      
+      const res = await fetch('/api/auth/preferences', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(preferences)
+      })
+      
+      if (!res.ok) {
+        const data = await res.json()
+        throw new Error(data.error || 'Failed to save preferences')
+      }
+      
+      setPreferencesSuccess(true)
+      setTimeout(() => setPreferencesSuccess(false), 3000)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An error occurred')
+    } finally {
+      setPreferencesLoading(false)
     }
   }
 
@@ -291,7 +351,7 @@ export default function Profile() {
                     <h3>Recent Additions</h3>
                     <div className={styles.recentVinyls}>
                       {user.recentVinyls.slice(0, 5).map((vinyl) => (
-                        <Link key={vinyl.id} href={`/collection/${vinyl.id}`} className={styles.recentVinyl}>
+                        <Link key={vinyl.id} href={`/vinyl/${vinyl.id}`} className={styles.recentVinyl}>
                           <span className={styles.vinylTitle}>{vinyl.title}</span>
                           <span className={styles.vinylArtist}>{vinyl.artist}</span>
                         </Link>
@@ -316,13 +376,23 @@ export default function Profile() {
               <div className={styles.tabContent}>
                 <h2>Display Preferences</h2>
                 
+                {preferencesSuccess && (
+                  <div className={styles.successMessage}>
+                    ✅ Preferences saved successfully!
+                  </div>
+                )}
+                
                 <div className={styles.preferencesGrid}>
                   <div className={styles.preferenceCard}>
                     <h3>Collection Display</h3>
                     <div className={styles.preferenceSection}>
                       <label className={styles.preferenceLabel}>
                         <span>Default Collection View</span>
-                        <select className={styles.preferenceSelect}>
+                        <select 
+                          className={styles.preferenceSelect}
+                          value={displayView}
+                          onChange={(e) => setDisplayView(e.target.value)}
+                        >
                           <option value="grid">Grid View</option>
                           <option value="list">List View</option>
                           <option value="compact">Compact View</option>
@@ -330,11 +400,15 @@ export default function Profile() {
                       </label>
                       <label className={styles.preferenceLabel}>
                         <span>Records per Page</span>
-                        <select className={styles.preferenceSelect}>
-                          <option value="12">12 records</option>
-                          <option value="24">24 records</option>
-                          <option value="48">48 records</option>
-                          <option value="96">96 records</option>
+                        <select 
+                          className={styles.preferenceSelect}
+                          value={recordsPerPage}
+                          onChange={(e) => setRecordsPerPage(parseInt(e.target.value))}
+                        >
+                          <option value={12}>12 records</option>
+                          <option value={24}>24 records</option>
+                          <option value={48}>48 records</option>
+                          <option value={96}>96 records</option>
                         </select>
                       </label>
                     </div>
@@ -344,20 +418,32 @@ export default function Profile() {
                     <h3>Statistics</h3>
                     <div className={styles.preferenceSection}>
                       <label className={styles.checkboxLabel}>
-                        <input type="checkbox" defaultChecked />
+                        <input 
+                          type="checkbox" 
+                          checked={showGenreChart}
+                          onChange={(e) => setShowGenreChart(e.target.checked)}
+                        />
                         <span>Show genre charts by default</span>
                       </label>
                       <label className={styles.checkboxLabel}>
-                        <input type="checkbox" defaultChecked />
+                        <input 
+                          type="checkbox" 
+                          checked={showDecadeChart}
+                          onChange={(e) => setShowDecadeChart(e.target.checked)}
+                        />
                         <span>Show year distribution</span>
                       </label>
                       <label className={styles.checkboxLabel}>
-                        <input type="checkbox" />
+                        <input 
+                          type="checkbox" 
+                          checked={showArtistChart}
+                          onChange={(e) => setShowArtistChart(e.target.checked)}
+                        />
                         <span>Show artist statistics</span>
                       </label>
                       <label className={styles.checkboxLabel}>
-                        <input type="checkbox" />
-                        <span>Show country breakdown</span>
+                        <input type="checkbox" disabled />
+                        <span>Show country breakdown (Coming Soon)</span>
                       </label>
                     </div>
                   </div>
@@ -366,19 +452,33 @@ export default function Profile() {
                     <h3>Discogs Integration</h3>
                     <div className={styles.preferenceSection}>
                       <label className={styles.checkboxLabel}>
-                        <input type="checkbox" defaultChecked />
-                        <span>Auto-fetch release data</span>
+                        <input 
+                          type="checkbox" 
+                          checked={discogsEnabled}
+                          onChange={(e) => setDiscogsEnabled(e.target.checked)}
+                        />
+                        <span>Enable Discogs integration</span>
                       </label>
                       <label className={styles.checkboxLabel}>
-                        <input type="checkbox" defaultChecked />
-                        <span>Include high-resolution images</span>
+                        <input type="checkbox" defaultChecked disabled />
+                        <span>Include high-resolution images (Coming Soon)</span>
                       </label>
                       <label className={styles.checkboxLabel}>
-                        <input type="checkbox" />
-                        <span>Show marketplace prices</span>
+                        <input type="checkbox" disabled />
+                        <span>Show marketplace prices (Coming Soon)</span>
                       </label>
                     </div>
                   </div>
+                </div>
+                
+                <div className={styles.formActions} style={{ marginTop: '30px' }}>
+                  <button 
+                    onClick={savePreferences} 
+                    disabled={preferencesLoading}
+                    className={styles.primaryButton}
+                  >
+                    {preferencesLoading ? '💾 Saving...' : '💾 Save Preferences'}
+                  </button>
                 </div>
               </div>
             )}

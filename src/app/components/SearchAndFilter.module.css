@@ -11,23 +11,23 @@
 .searchInput {
   flex: 1;
   padding: 12px;
-  border: 1px solid #45475a;
+  border: 1px solid var(--ctp-surface1);
   border-radius: 8px;
-  background-color: #313244;
-  color: #cdd6f4;
+  background-color: var(--ctp-surface0);
+  color: var(--ctp-text);
   font-size: 16px;
 }
 
 .searchInput:focus {
   outline: none;
-  border-color: #89b4fa;
-  box-shadow: 0 0 0 2px rgba(137, 180, 250, 0.2);
+  border-color: var(--ctp-lavender);
+  box-shadow: 0 0 0 2px rgba(180, 190, 254, 0.2);
 }
 
 .advancedToggle {
   padding: 12px 20px;
-  background-color: #45475a;
-  color: #cdd6f4;
+  background-color: var(--ctp-surface1);
+  color: var(--ctp-text);
   border: none;
   border-radius: 8px;
   cursor: pointer;
@@ -36,12 +36,12 @@
 }
 
 .advancedToggle:hover {
-  background-color: #585b70;
+  background-color: var(--ctp-surface2);
 }
 
 .advancedFilters {
-  background-color: #1e1e2e;
-  border: 1px solid #45475a;
+  background-color: var(--ctp-base);
+  border: 1px solid var(--ctp-surface1);
   border-radius: 8px;
   padding: 20px;
   margin-bottom: 15px;
@@ -61,24 +61,24 @@
 .filterRow input,
 .filterRow select {
   padding: 10px;
-  border: 1px solid #45475a;
+  border: 1px solid var(--ctp-surface1);
   border-radius: 6px;
-  background-color: #313244;
-  color: #cdd6f4;
+  background-color: var(--ctp-surface0);
+  color: var(--ctp-text);
   font-size: 14px;
 }
 
 .filterRow input:focus,
 .filterRow select:focus {
   outline: none;
-  border-color: #89b4fa;
-  box-shadow: 0 0 0 2px rgba(137, 180, 250, 0.2);
+  border-color: var(--ctp-lavender);
+  box-shadow: 0 0 0 2px rgba(180, 190, 254, 0.2);
 }
 
 .clearButton {
   padding: 10px 16px;
-  background-color: #f38ba8;
-  color: #1e1e2e;
+  background-color: var(--ctp-red);
+  color: var(--ctp-base);
   border: none;
   border-radius: 6px;
   cursor: pointer;
@@ -88,12 +88,12 @@
 }
 
 .clearButton:hover {
-  background-color: #eba0ac;
+  background-color: var(--ctp-maroon);
 }
 
 .resultsSummary {
   font-size: 14px;
-  color: #a6adc8;
+  color: var(--ctp-subtext0);
   text-align: right;
   margin-top: 10px;
 }
