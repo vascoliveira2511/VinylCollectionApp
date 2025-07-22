@@ -54,10 +54,10 @@ export default function Profile() {
   
   // Preferences state
   const [displayView, setDisplayView] = useState('grid')
-  const [recordsPerPage, setRecordsPerPage] = useState(24)
+  const [recordsPerPage, setRecordsPerPage] = useState(20)
   const [showGenreChart, setShowGenreChart] = useState(true)
   const [showDecadeChart, setShowDecadeChart] = useState(true)
-  const [showArtistChart, setShowArtistChart] = useState(false)
+  const [showArtistChart, setShowArtistChart] = useState(true)
   const [discogsEnabled, setDiscogsEnabled] = useState(true)
   const [preferencesLoading, setPreferencesLoading] = useState(false)
   const [preferencesSuccess, setPreferencesSuccess] = useState(false)
@@ -77,12 +77,12 @@ export default function Profile() {
       const userData = await res.json()
       setUser(userData)
       
-      // Set preferences from user data
+          // Set preferences from user data
       setDisplayView(userData.displayView || 'grid')
-      setRecordsPerPage(userData.recordsPerPage || 24)
+      setRecordsPerPage(userData.recordsPerPage || 20)
       setShowGenreChart(userData.showGenreChart !== undefined ? userData.showGenreChart : true)
       setShowDecadeChart(userData.showDecadeChart !== undefined ? userData.showDecadeChart : true)
-      setShowArtistChart(userData.showArtistChart !== undefined ? userData.showArtistChart : false)
+      setShowArtistChart(userData.showArtistChart !== undefined ? userData.showArtistChart : true)
       setDiscogsEnabled(userData.discogsEnabled !== undefined ? userData.discogsEnabled : true)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred')
@@ -122,6 +122,9 @@ export default function Profile() {
           avatarType
         })
       }
+      
+      // Force a page refresh to update navbar
+      window.location.reload()
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred')
     }
@@ -183,6 +186,8 @@ export default function Profile() {
         discogsEnabled
       }
       
+      console.log('Saving preferences:', preferences)
+      
       const res = await fetch('/api/auth/preferences', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
@@ -195,7 +200,19 @@ export default function Profile() {
       }
       
       setPreferencesSuccess(true)
-      setTimeout(() => setPreferencesSuccess(false), 3000)
+      
+      // Update local user state with saved preferences
+      if (user) {
+        setUser({
+          ...user,
+          displayView,
+          recordsPerPage,
+          showGenreChart,
+          showDecadeChart,
+          showArtistChart,
+          discogsEnabled
+        })
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred')
     } finally {
@@ -406,6 +423,7 @@ export default function Profile() {
                           onChange={(e) => setRecordsPerPage(parseInt(e.target.value))}
                         >
                           <option value={12}>12 records</option>
+                          <option value={20}>20 records</option>
                           <option value={24}>24 records</option>
                           <option value={48}>48 records</option>
                           <option value={96}>96 records</option>

@@ -243,31 +243,13 @@ button.delete-btn {
 }
 
 button.delete-btn:hover {
-  background: var(--ctp-maroon);
-  box-shadow: 0 4px 16px rgba(243, 139, 168, 0.3);
+  background: var(--ctp-red);
+  transform: translateY(-1px);
+  color: var(--ctp-base) !important;
+  border-bottom: none !important;
 }
 
-/* Force button text colors on hover - nuclear approach */
-a.editButton:hover,
-a.manageButton:hover,
-a.addButton:hover,
-a.statsButton:hover,
-a.createButton:hover,
-a.setDefaultButton:hover,
-a.viewButton:hover,
-a.cancelButton:hover,
-a.backButton:hover,
-.editButton:hover,
-.manageButton:hover,
-.addButton:hover,
-.statsButton:hover,
-.createButton:hover,
-.setDefaultButton:hover,
-.viewButton:hover,
-.cancelButton:hover,
-.backButton:hover {
-  color: #1e1e2e !important;
-}
+
 
 input, textarea, select {
   background-color: var(--ctp-surface1);

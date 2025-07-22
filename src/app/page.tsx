@@ -64,7 +64,8 @@ export default function Home() {
   const [filterGenre, setFilterGenre] = useState('')
   const [filterYear, setFilterYear] = useState('')
   const [filterCollection, setFilterCollection] = useState<string>('all')
-  const [displayLimit, setDisplayLimit] = useState(24)
+  const [displayLimit, setDisplayLimit] = useState(20)
+  const [displayView, setDisplayView] = useState('grid')
 
   const router = useRouter()
 
@@ -82,6 +83,17 @@ export default function Home() {
         }
         const userData = await userRes.json()
         setUserProfile(userData)
+        
+        // Set user preferences
+        console.log('User data loaded:', userData)
+        if (userData.displayView) {
+          console.log('Setting displayView to:', userData.displayView)
+          setDisplayView(userData.displayView)
+        }
+        if (userData.recordsPerPage) {
+          console.log('Setting displayLimit to:', userData.recordsPerPage)
+          setDisplayLimit(userData.recordsPerPage)
+        }
 
         // Fetch collections
         const collectionsRes = await fetch('/api/collections')
@@ -266,14 +278,25 @@ export default function Home() {
                   onChange={(e) => setDisplayLimit(parseInt(e.target.value))}
                 >
                   <option value={12}>Show 12</option>
+                  <option value={20}>Show 20</option>
                   <option value={24}>Show 24</option>
                   <option value={48}>Show 48</option>
                   <option value={vinyls.length}>Show All</option>
                 </select>
+                <select
+                  value={displayView}
+                  onChange={(e) => setDisplayView(e.target.value)}
+                  title="View Type (from your preferences)"
+                >
+                  <option value="grid">Grid View</option>
+                  <option value="list">List View</option>
+                  <option value="compact">Compact View</option>
+                </select>
               </div>
             </div>
 
-            <div className={styles.collectionGrid}>
+            <div className={displayView === 'list' ? styles.collectionList : displayView === 'compact' ? styles.collectionCompact : styles.collectionGrid}>
+              {console.log('Current displayView:', displayView, 'CSS class:', displayView === 'list' ? 'collectionList' : displayView === 'compact' ? 'collectionCompact' : 'collectionGrid')}
               {filteredVinyls.map((vinyl) => (
                 <div key={vinyl.id} className={styles.card}>
                   <Link href={`/vinyl/${vinyl.id}`}>

@@ -28,10 +28,30 @@ export default function Stats() {
   // State for chart visibility
   const [showGenreChart, setShowGenreChart] = useState(true)
   const [showYearChart, setShowYearChart] = useState(true)
-  const [showArtistChart, setShowArtistChart] = useState(true)
+  const [showArtistChart, setShowArtistChart] = useState(false)
   const [showCountryChart, setShowCountryChart] = useState(true)
   const [showStyleChart, setShowStyleChart] = useState(true)
+  const [userPreferences, setUserPreferences] = useState<any>(null)
   const router = useRouter()
+
+  useEffect(() => {
+    const fetchUserPreferences = async () => {
+      try {
+        const userRes = await fetch('/api/auth/user')
+        if (userRes.ok) {
+          const userData = await userRes.json()
+          setUserPreferences(userData)
+          setShowGenreChart(userData.showGenreChart !== undefined ? userData.showGenreChart : true)
+          setShowYearChart(userData.showDecadeChart !== undefined ? userData.showDecadeChart : true)
+          setShowArtistChart(userData.showArtistChart !== undefined ? userData.showArtistChart : false)
+        }
+      } catch (error) {
+        console.error("Error fetching user preferences:", error)
+      }
+    }
+    
+    fetchUserPreferences()
+  }, [])
 
   useEffect(() => {
     const fetchData = async () => {

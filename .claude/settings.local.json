@@ -31,7 +31,8 @@
       "Bash(wc:*)",
       "Bash(tail:*)",
       "Bash(cp:*)",
-      "Bash(grep:*)"
+      "Bash(grep:*)",
+      "Bash(curl:*)"
     ],
     "deny": []
   }

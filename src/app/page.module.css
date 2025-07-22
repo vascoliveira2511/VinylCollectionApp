@@ -15,6 +15,22 @@
   margin: 0;
 }
 
+.collectionList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  margin: 0;
+}
+
+.collectionCompact {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 12px;
+  width: 100%;
+  margin: 0;
+}
+
 .card {
   background: var(--ctp-surface0);
   border-radius: 12px;
@@ -25,6 +41,43 @@
   border: 1px solid var(--ctp-surface1);
   position: relative;
   overflow: hidden;
+}
+
+.collectionList .card {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  text-align: left;
+  padding: 16px;
+  gap: 16px;
+}
+
+.collectionList .card .albumArt {
+  width: 80px;
+  height: 80px;
+  margin: 0;
+  flex-shrink: 0;
+}
+
+.collectionCompact .card {
+  padding: 12px;
+  text-align: center;
+}
+
+.collectionCompact .card .albumArt {
+  width: 100%;
+  height: auto;
+  margin-bottom: 8px;
+}
+
+.collectionCompact .card h3 {
+  font-size: 0.9em;
+  margin: 8px 0 4px 0;
+}
+
+.collectionCompact .card p {
+  font-size: 0.8em;
+  margin: 2px 0;
 }
 
 .card:hover {
@@ -637,48 +690,6 @@
   min-height: 80px;
 }
 
-.editButton {
-  background: var(--ctp-blue);
-  color: var(--ctp-base);
-  border: none;
-  padding: 8px 16px;
-  border-radius: 6px;
-  text-decoration: none;
-  font-size: 0.9em;
-  font-weight: 500;
-  transition: all 0.2s ease;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  border-bottom: none;
-}
-
-.editButton:hover {
-  transform: translateY(-1px);
-}
-
-.deleteButton {
-  background: var(--ctp-red);
-  color: var(--ctp-base);
-  border: none;
-  padding: 8px 16px;
-  border-radius: 6px;
-  font-size: 0.9em;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  border-bottom: none;
-}
-
-.deleteButton:hover {
-  background: var(--ctp-maroon);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(243, 139, 168, 0.3);
-}
-
 .setDefaultButton {
   background: var(--ctp-lavender);
   color: var(--ctp-base);
@@ -697,6 +708,54 @@
 
 .setDefaultButton:hover {
   transform: translateY(-1px);
+  color: var(--ctp-base) !important;
+  border-bottom: none !important;
+}
+
+.editButton {
+  background: var(--ctp-blue);
+  color: var(--ctp-base);
+  border: none;
+  border-radius: 6px;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-size: 0.9em;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border-bottom: none;
+  text-decoration: none;
+}
+
+.editButton:hover {
+  background: var(--ctp-blue);
+  transform: translateY(-1px);
+  color: var(--ctp-base) !important;
+  border-bottom: none !important;
+}
+
+.deleteButton {
+  background: var(--ctp-red);
+  color: var(--ctp-base);
+  border: none;
+  border-radius: 6px;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-size: 0.9em;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border-bottom: none;
+}
+
+.deleteButton:hover {
+  transform: translateY(-1px);
+  color: var(--ctp-base) !important;
+  border-bottom: none !important;
 }
 
 .cancelButton {
@@ -718,7 +777,8 @@
 .cancelButton:hover {
   background: var(--ctp-surface2);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(88, 91, 112, 0.3);
+  color: var(--ctp-text) !important;
+  border-bottom: none !important;
 }
 
 .backButton {
@@ -733,6 +793,152 @@
 
 .backButton:hover {
   background: var(--ctp-surface2);
+  color: var(--ctp-text) !important;
+  border-bottom: none !important;
+}
+
+.viewButton {
+  background: var(--ctp-mauve);
+  color: var(--ctp-base);
+  border: none;
+  border-radius: 6px;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-size: 0.9em;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border-bottom: none;
+  text-decoration: none;
+}
+
+.viewButton:hover {
+  background: var(--ctp-mauve);
+  transform: translateY(-1px);
+  color: var(--ctp-base) !important;
+  border-bottom: none !important;
+}
+
+.manageButton {
+  background: var(--ctp-blue);
+  color: var(--ctp-base);
+  border: none;
+  border-radius: 6px;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-size: 0.9em;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border-bottom: none;
+  text-decoration: none;
+}
+
+.manageButton:hover {
+  background: var(--ctp-blue);
+  transform: translateY(-1px);
+  color: var(--ctp-base) !important;
+  border-bottom: none !important;
+}
+
+.createButton {
+  background: var(--ctp-green);
+  color: var(--ctp-base);
+  border: none;
+  border-radius: 6px;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-size: 0.9em;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border-bottom: none;
+}
+
+.createButton:hover {
+  background: var(--ctp-green);
+  transform: translateY(-1px);
+  color: var(--ctp-base) !important;
+  border-bottom: none !important;
+}
+
+.addButton {
+  background: var(--ctp-green);
+  color: var(--ctp-base);
+  border: none;
+  border-radius: 6px;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-size: 0.9em;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border-bottom: none;
+  text-decoration: none;
+}
+
+.addButton:hover {
+  background: var(--ctp-green);
+  transform: translateY(-1px);
+  color: var(--ctp-base) !important;
+  border-bottom: none !important;
+}
+
+.statsButton {
+  background: var(--ctp-blue);
+  color: var(--ctp-base);
+  border: none;
+  border-radius: 6px;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-size: 0.9em;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border-bottom: none;
+  text-decoration: none;
+}
+
+.statsButton:hover {
+  background: var(--ctp-blue);
+  transform: translateY(-1px);
+  color: var(--ctp-base) !important;
+  border-bottom: none !important;
+}
+
+.exportButton {
+  background: var(--ctp-surface2);
+  color: var(--ctp-text);
+  border: 1px solid var(--ctp-surface1);
+  border-radius: 6px;
+  padding: 10px 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.exportButton:hover {
+  background: var(--ctp-mauve);
+  color: var(--ctp-base);
+}
+
+.importButton {
+  background: var(--ctp-surface2);
+  border: 1px solid var(--ctp-surface1);
+  border-radius: 6px;
+  padding: 10px 16px;
+  color: var(--ctp-subtext0);
+  font-weight: 500;
+  cursor: not-allowed;
 }
 
 .externalLink {
@@ -1184,14 +1390,6 @@
   margin: 0;
 }
 
-.deleteButton {
-  background: var(--ctp-red);
-  color: var(--ctp-base);
-}
-
-.deleteButton:hover:not(:disabled) {
-  background: var(--ctp-maroon);
-}
 
 .deleteButton:disabled {
   opacity: 0.5;

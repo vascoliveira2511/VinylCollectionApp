@@ -1,58 +1,83 @@
 import { NextResponse } from 'next/server'
+import { NextRequest } from 'next/server'
+import * as jose from 'jose'
 import { prisma } from '@/lib/db'
 
-export async function GET(request: Request) {
-  const userId = request.headers.get('x-user-id')
-  if (!userId) {
+const secret = new TextEncoder().encode(process.env.JWT_SECRET)
+
+export async function GET(request: NextRequest) {
+  const token = request.cookies.get('token')?.value
+  
+  if (!token) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  const user = await prisma.user.findUnique({
-    where: { id: parseInt(userId) },
-    select: {
-      displayView: true,
-      recordsPerPage: true,
-      showGenreChart: true,
-      showDecadeChart: true,
-      showArtistChart: true,
-      discogsEnabled: true
+  try {
+    const { payload } = await jose.jwtVerify(token, secret)
+    const userId = payload.userId as string
+
+    const user = await prisma.user.findUnique({
+      where: { id: parseInt(userId) },
+      select: {
+        displayView: true,
+        recordsPerPage: true,
+        showGenreChart: true,
+        showDecadeChart: true,
+        showArtistChart: true,
+        discogsEnabled: true
+      }
+    })
+
+    if (!user) {
+      return NextResponse.json({ error: 'User not found' }, { status: 404 })
     }
-  })
 
-  if (!user) {
-    return NextResponse.json({ error: 'User not found' }, { status: 404 })
+    return NextResponse.json(user)
+  } catch (error) {
+    return NextResponse.json({ error: 'Invalid token' }, { status: 401 })
   }
-
-  return NextResponse.json(user)
 }
 
-export async function PUT(request: Request) {
-  const userId = request.headers.get('x-user-id')
-  if (!userId) {
+export async function PUT(request: NextRequest) {
+  const token = request.cookies.get('token')?.value
+  
+  if (!token) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  const preferences = await request.json()
+  try {
+    const { payload } = await jose.jwtVerify(token, secret)
+    const userId = payload.userId as string
 
-  const updatedUser = await prisma.user.update({
-    where: { id: parseInt(userId) },
-    data: {
-      displayView: preferences.displayView,
-      recordsPerPage: preferences.recordsPerPage ? parseInt(preferences.recordsPerPage) : undefined,
-      showGenreChart: preferences.showGenreChart,
-      showDecadeChart: preferences.showDecadeChart,
-      showArtistChart: preferences.showArtistChart,
-      discogsEnabled: preferences.discogsEnabled
-    },
-    select: {
-      displayView: true,
-      recordsPerPage: true,
-      showGenreChart: true,
-      showDecadeChart: true,
-      showArtistChart: true,
-      discogsEnabled: true
-    }
-  })
+    const preferences = await request.json()
+    console.log('Received preferences:', preferences)
 
-  return NextResponse.json(updatedUser)
+    const updatedUser = await prisma.user.update({
+      where: { id: parseInt(userId) },
+      data: {
+        displayView: preferences.displayView,
+        recordsPerPage: typeof preferences.recordsPerPage === 'number' 
+          ? preferences.recordsPerPage 
+          : parseInt(preferences.recordsPerPage),
+        showGenreChart: Boolean(preferences.showGenreChart),
+        showDecadeChart: Boolean(preferences.showDecadeChart),
+        showArtistChart: Boolean(preferences.showArtistChart),
+        discogsEnabled: Boolean(preferences.discogsEnabled)
+      },
+      select: {
+        displayView: true,
+        recordsPerPage: true,
+        showGenreChart: true,
+        showDecadeChart: true,
+        showArtistChart: true,
+        discogsEnabled: true
+      }
+    })
+
+    console.log('Updated user preferences:', updatedUser)
+    return NextResponse.json(updatedUser)
+  } catch (error) {
+    console.log('Error updating preferences:', error)
+    return NextResponse.json({ error: 'Invalid token' }, { status: 401 })
+  }
 }

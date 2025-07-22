@@ -25,7 +25,13 @@ export async function GET(request: NextRequest) {
         username: true, 
         createdAt: true,
         avatar: true,
-        avatarType: true
+        avatarType: true,
+        displayView: true,
+        recordsPerPage: true,
+        showGenreChart: true,
+        showDecadeChart: true,
+        showArtistChart: true,
+        discogsEnabled: true
       }
     })
 
