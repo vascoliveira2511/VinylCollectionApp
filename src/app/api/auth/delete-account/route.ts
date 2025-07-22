@@ -1,10 +1,23 @@
 import { NextResponse } from 'next/server'
+import { NextRequest } from 'next/server'
 import bcrypt from 'bcryptjs'
+import * as jose from 'jose'
 import { prisma } from '@/lib/db'
 
-export async function POST(request: Request) {
-  const userId = request.headers.get('x-user-id')
-  if (!userId) {
+const secret = new TextEncoder().encode(process.env.JWT_SECRET)
+
+export async function POST(request: NextRequest) {
+  const token = request.cookies.get('token')?.value
+  
+  if (!token) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
+
+  let userId: string
+  try {
+    const { payload } = await jose.jwtVerify(token, secret)
+    userId = payload.userId as string
+  } catch (error) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 

@@ -196,7 +196,6 @@ button,
 .setDefaultButton:hover,
 .addButton:hover,
 .statsButton:hover {
-  color: inherit !important;
   border-bottom: none !important;
 }
 

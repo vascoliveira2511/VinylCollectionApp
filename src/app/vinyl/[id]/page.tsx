@@ -368,13 +368,10 @@ export default function VinylDetailPage({ params }: { params: { id: string } }) 
             )}
 
             {/* Navigation */}
-            <div style={{ textAlign: 'center', marginTop: '30px', display: 'flex', gap: '15px', justifyContent: 'center' }}>
+            <div style={{ textAlign: 'center', marginTop: '30px' }}>
               <button onClick={() => router.back()} className={styles.backButton}>
                 ← Back
               </button>
-              <Link href="/" className={styles.backButton}>
-                🏠 Home
-              </Link>
             </div>
           </div>
         </div>

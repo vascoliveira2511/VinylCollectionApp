@@ -1,180 +1,186 @@
-'use client'
+"use client";
 
-import { useState, useEffect } from 'react'
-import Link from 'next/link'
-import { useRouter } from 'next/navigation'
-import styles from './page.module.css'
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import styles from "./page.module.css";
 
 interface Vinyl {
-  id: number
-  artist: string
-  title: string
-  year: number
-  imageUrl: string
-  genre: string[]
-  discogsId?: number
-  createdAt?: string
-  updatedAt?: string
+  id: number;
+  artist: string;
+  title: string;
+  year: number;
+  imageUrl: string;
+  genre: string[];
+  discogsId?: number;
+  createdAt?: string;
+  updatedAt?: string;
   collection?: {
-    id: number
-    title: string
-    isDefault: boolean
-  }
+    id: number;
+    title: string;
+    isDefault: boolean;
+  };
   // New manual fields
-  trackList?: string[]
-  description?: string
-  label?: string
-  format?: string
-  condition?: string
-  rating?: number
-  purchaseDate?: string
-  purchasePrice?: number
-  purchaseLocation?: string
-  catalogNumber?: string
-  country?: string
+  trackList?: string[];
+  description?: string;
+  label?: string;
+  format?: string;
+  condition?: string;
+  rating?: number;
+  purchaseDate?: string;
+  purchasePrice?: number;
+  purchaseLocation?: string;
+  catalogNumber?: string;
+  country?: string;
 }
 
 interface Collection {
-  id: number
-  title: string
-  description?: string
-  isDefault: boolean
+  id: number;
+  title: string;
+  description?: string;
+  isDefault: boolean;
   _count: {
-    vinyls: number
-  }
+    vinyls: number;
+  };
 }
 
 interface UserProfile {
-  username: string
-  totalRecords: number
-  genreStats: Record<string, number>
-  recentVinyls: Vinyl[]
+  username: string;
+  totalRecords: number;
+  genreStats: Record<string, number>;
+  recentVinyls: Vinyl[];
 }
 
 export default function Home() {
-  const [vinyls, setVinyls] = useState<Vinyl[]>([])
-  const [collections, setCollections] = useState<Collection[]>([])
-  const [userProfile, setUserProfile] = useState<UserProfile | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  
-  // Filter states
-  const [filterArtist, setFilterArtist] = useState('')
-  const [filterTitle, setFilterTitle] = useState('')
-  const [filterGenre, setFilterGenre] = useState('')
-  const [filterYear, setFilterYear] = useState('')
-  const [filterCollection, setFilterCollection] = useState<string>('all')
-  const [displayLimit, setDisplayLimit] = useState(20)
-  const [displayView, setDisplayView] = useState('grid')
+  const [vinyls, setVinyls] = useState<Vinyl[]>([]);
+  const [collections, setCollections] = useState<Collection[]>([]);
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const router = useRouter()
+  // Filter states
+  const [filterArtist, setFilterArtist] = useState("");
+  const [filterTitle, setFilterTitle] = useState("");
+  const [filterGenre, setFilterGenre] = useState("");
+  const [filterYear, setFilterYear] = useState("");
+  const [filterCollection, setFilterCollection] = useState<string>("all");
+  const [displayLimit, setDisplayLimit] = useState(20);
+  const [displayView, setDisplayView] = useState("grid");
+
+  const router = useRouter();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         // Fetch user profile
-        const userRes = await fetch('/api/auth/user')
+        const userRes = await fetch("/api/auth/user");
         if (!userRes.ok) {
           if (userRes.status === 401) {
-            router.push('/login')
-            return
+            router.push("/login");
+            return;
           }
-          throw new Error('Failed to fetch user profile')
+          throw new Error("Failed to fetch user profile");
         }
-        const userData = await userRes.json()
-        setUserProfile(userData)
-        
+        const userData = await userRes.json();
+        setUserProfile(userData);
+
         // Set user preferences
-        console.log('User data loaded:', userData)
         if (userData.displayView) {
-          console.log('Setting displayView to:', userData.displayView)
-          setDisplayView(userData.displayView)
+          setDisplayView(userData.displayView);
         }
         if (userData.recordsPerPage) {
-          console.log('Setting displayLimit to:', userData.recordsPerPage)
-          setDisplayLimit(userData.recordsPerPage)
+          setDisplayLimit(userData.recordsPerPage);
         }
 
         // Fetch collections
-        const collectionsRes = await fetch('/api/collections')
+        const collectionsRes = await fetch("/api/collections");
         if (!collectionsRes.ok) {
           if (collectionsRes.status === 401) {
-            router.push('/login')
-            return
+            router.push("/login");
+            return;
           }
-          throw new Error('Failed to fetch collections')
+          throw new Error("Failed to fetch collections");
         }
-        const collectionsData = await collectionsRes.json()
-        setCollections(collectionsData)
+        const collectionsData = await collectionsRes.json();
+        setCollections(collectionsData);
 
         // Fetch vinyls
-        await fetchVinyls()
+        await fetchVinyls();
       } catch (error) {
-        console.error('Error fetching data:', error)
-        setError(error instanceof Error ? error.message : 'An error occurred')
+        setError(error instanceof Error ? error.message : "An error occurred");
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
+    };
 
-    fetchData()
-  }, [router])
+    fetchData();
+  }, [router]);
 
   const fetchVinyls = async (collectionFilter?: string) => {
     try {
-      let url = '/api/collection'
-      if (collectionFilter && collectionFilter !== 'all') {
-        url += `?collectionId=${collectionFilter}`
+      let url = "/api/collection";
+      if (collectionFilter && collectionFilter !== "all") {
+        url += `?collectionId=${collectionFilter}`;
       }
-      
-      const vinylsRes = await fetch(url)
+
+      const vinylsRes = await fetch(url);
       if (!vinylsRes.ok) {
-        throw new Error('Failed to fetch vinyls')
+        throw new Error("Failed to fetch vinyls");
       }
-      const vinylsData = await vinylsRes.json()
-      setVinyls(vinylsData)
+      const vinylsData = await vinylsRes.json();
+      setVinyls(vinylsData);
     } catch (error) {
-      console.error('Error fetching vinyls:', error)
-      setError(error instanceof Error ? error.message : 'An error occurred')
+      setError(error instanceof Error ? error.message : "An error occurred");
     }
-  }
+  };
 
   useEffect(() => {
     if (collections.length > 0) {
-      fetchVinyls(filterCollection)
+      fetchVinyls(filterCollection);
     }
-  }, [filterCollection, collections])
+  }, [filterCollection, collections]);
 
   const deleteVinyl = async (id: number) => {
     try {
-      setError(null)
-      const res = await fetch(`/api/collection/${id}`, { method: 'DELETE' })
-      if (!res.ok) throw new Error('Failed to delete vinyl')
-      
+      setError(null);
+      const res = await fetch(`/api/collection/${id}`, { method: "DELETE" });
+      if (!res.ok) throw new Error("Failed to delete vinyl");
+
       // Refresh data
-      const collectionRes = await fetch('/api/collection')
+      const collectionRes = await fetch("/api/collection");
       if (collectionRes.ok) {
-        const collectionData = await collectionRes.json()
-        setVinyls(collectionData)
+        const collectionData = await collectionRes.json();
+        setVinyls(collectionData);
       }
-      
-      const userRes = await fetch('/api/auth/user')
+
+      const userRes = await fetch("/api/auth/user");
       if (userRes.ok) {
-        const userData = await userRes.json()
-        setUserProfile(userData)
+        const userData = await userRes.json();
+        setUserProfile(userData);
       }
     } catch (error) {
-      setError(error instanceof Error ? error.message : 'An error occurred')
+      setError(error instanceof Error ? error.message : "An error occurred");
     }
-  }
+  };
 
-  const filteredVinyls = vinyls.filter((vinyl) => {
-    const matchesArtist = filterArtist === '' || vinyl.artist.toLowerCase().includes(filterArtist.toLowerCase())
-    const matchesTitle = filterTitle === '' || vinyl.title.toLowerCase().includes(filterTitle.toLowerCase())
-    const matchesGenre = filterGenre === '' || vinyl.genre.some(g => g.toLowerCase().includes(filterGenre.toLowerCase()))
-    const matchesYear = filterYear === '' || vinyl.year.toString().includes(filterYear)
-    return matchesArtist && matchesTitle && matchesGenre && matchesYear
-  }).slice(0, displayLimit)
+  const filteredVinyls = vinyls
+    .filter((vinyl) => {
+      const matchesArtist =
+        filterArtist === "" ||
+        vinyl.artist.toLowerCase().includes(filterArtist.toLowerCase());
+      const matchesTitle =
+        filterTitle === "" ||
+        vinyl.title.toLowerCase().includes(filterTitle.toLowerCase());
+      const matchesGenre =
+        filterGenre === "" ||
+        vinyl.genre.some((g) =>
+          g.toLowerCase().includes(filterGenre.toLowerCase())
+        );
+      const matchesYear =
+        filterYear === "" || vinyl.year.toString().includes(filterYear);
+      return matchesArtist && matchesTitle && matchesGenre && matchesYear;
+    })
+    .slice(0, displayLimit);
 
   if (loading) {
     return (
@@ -188,7 +194,7 @@ export default function Home() {
           </div>
         </div>
       </main>
-    )
+    );
   }
 
   if (error) {
@@ -198,13 +204,15 @@ export default function Home() {
           <div className="window">
             <div className="title-bar">Error</div>
             <div className={styles.contentSection}>
-              <p style={{ color: 'var(--ctp-red)' }}>{error}</p>
-              <button onClick={() => window.location.reload()}>Try Again</button>
+              <p style={{ color: "var(--ctp-red)" }}>{error}</p>
+              <button onClick={() => window.location.reload()}>
+                Try Again
+              </button>
             </div>
           </div>
         </div>
       </main>
-    )
+    );
   }
 
   return (
@@ -215,7 +223,10 @@ export default function Home() {
           <div className={styles.contentSection}>
             <div className={styles.browseIntro}>
               <h2>Your Vinyl Records ({vinyls.length} total)</h2>
-              <p>Browse, filter, and manage your entire vinyl collection. Click any record to view details or edit information.</p>
+              <p>
+                Browse, filter, and manage your entire vinyl collection. Click
+                any record to view details or edit information.
+              </p>
               <div className={styles.browseActions}>
                 <Link href="/collections" className={styles.manageButton}>
                   📚 Manage Collections
@@ -229,11 +240,7 @@ export default function Home() {
               </div>
             </div>
 
-            {error && (
-              <div className={styles.errorMessage}>
-                {error}
-              </div>
-            )}
+            {error && <div className={styles.errorMessage}>{error}</div>}
 
             <div className={styles.filterSection}>
               <h3>Filter Records</h3>
@@ -268,7 +275,10 @@ export default function Home() {
                 >
                   <option value="all">All Collections</option>
                   {collections.map((collection) => (
-                    <option key={collection.id} value={collection.id.toString()}>
+                    <option
+                      key={collection.id}
+                      value={collection.id.toString()}
+                    >
                       {collection.title} ({collection._count.vinyls})
                     </option>
                   ))}
@@ -295,30 +305,52 @@ export default function Home() {
               </div>
             </div>
 
-            <div className={displayView === 'list' ? styles.collectionList : displayView === 'compact' ? styles.collectionCompact : styles.collectionGrid}>
-              {console.log('Current displayView:', displayView, 'CSS class:', displayView === 'list' ? 'collectionList' : displayView === 'compact' ? 'collectionCompact' : 'collectionGrid')}
+            <div
+              className={
+                displayView === "list"
+                  ? styles.collectionList
+                  : displayView === "compact"
+                  ? styles.collectionCompact
+                  : styles.collectionGrid
+              }
+            >
               {filteredVinyls.map((vinyl) => (
                 <div key={vinyl.id} className={styles.card}>
                   <Link href={`/vinyl/${vinyl.id}`}>
-                    <img 
-                      src={`/api/image-proxy?url=${encodeURIComponent(vinyl.imageUrl || 'https://via.placeholder.com/150')}`} 
-                      alt={`${vinyl.title} cover`} 
-                      className={styles.albumArt} 
+                    <img
+                      src={`/api/image-proxy?url=${encodeURIComponent(
+                        vinyl.imageUrl || "https://via.placeholder.com/150"
+                      )}`}
+                      alt={`${vinyl.title} cover`}
+                      className={styles.albumArt}
                     />
-                    <h3>{vinyl.title}</h3>
-                    <p>{vinyl.artist}</p>
-                    <p>{vinyl.year}</p>
-                    <div className={styles.genrePills}>
-                      {vinyl.genre.map((g, idx) => (
-                        <span key={idx} className={styles.genrePill}>{g}</span>
-                      ))}
+                    <div className={styles.cardInfo}>
+                      <h3>{vinyl.title}</h3>
+                      <p>{vinyl.artist}</p>
+                      <p>{vinyl.year}</p>
+                      <div className={styles.genrePills}>
+                        {vinyl.genre.map((g, idx) => (
+                          <span key={idx} className={styles.genrePill}>
+                            {g}
+                          </span>
+                        ))}
+                      </div>
                     </div>
                   </Link>
                   <div className={styles.buttonGroup}>
-                    <Link href={`/vinyl/${vinyl.id}/edit`} className={styles.editButton}>
+                    <Link
+                      href={`/vinyl/${vinyl.id}/edit`}
+                      className={styles.editButton}
+                    >
                       ✏️ Edit
                     </Link>
-                    <button className="delete-btn" onClick={(e) => { e.preventDefault(); deleteVinyl(vinyl.id); }}>
+                    <button
+                      className={styles.deleteButton}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        deleteVinyl(vinyl.id);
+                      }}
+                    >
                       🗑️ Delete
                     </button>
                   </div>
@@ -328,12 +360,15 @@ export default function Home() {
 
             {filteredVinyls.length === 0 && (
               <div className={styles.emptyState}>
-                <p>No vinyl records found. Try adjusting your filters or <Link href="/add">add some records</Link>!</p>
+                <p>
+                  No vinyl records found. Try adjusting your filters or{" "}
+                  <Link href="/add">add some records</Link>!
+                </p>
               </div>
             )}
           </div>
         </div>
       </div>
     </main>
-  )
+  );
 }

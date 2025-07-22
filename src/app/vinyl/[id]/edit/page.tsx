@@ -29,6 +29,7 @@ interface Vinyl {
   rating?: number
   purchaseDate?: string
   purchasePrice?: number
+  purchaseCurrency?: string
   purchaseLocation?: string
   catalogNumber?: string
   country?: string
@@ -65,6 +66,7 @@ export default function EditVinylPage({ params }: { params: { id: string } }) {
   const [rating, setRating] = useState<number | undefined>(undefined)
   const [purchaseDate, setPurchaseDate] = useState('')
   const [purchasePrice, setPurchasePrice] = useState<number | undefined>(undefined)
+  const [purchaseCurrency, setPurchaseCurrency] = useState('USD')
   const [purchaseLocation, setPurchaseLocation] = useState('')
   const [catalogNumber, setCatalogNumber] = useState('')
   const [country, setCountry] = useState('')
@@ -108,6 +110,7 @@ export default function EditVinylPage({ params }: { params: { id: string } }) {
         setRating(vinyl.rating)
         setPurchaseDate(vinyl.purchaseDate || '')
         setPurchasePrice(vinyl.purchasePrice)
+        setPurchaseCurrency(vinyl.purchaseCurrency || 'USD')
         setPurchaseLocation(vinyl.purchaseLocation || '')
         setCatalogNumber(vinyl.catalogNumber || '')
         setCountry(vinyl.country || '')
@@ -160,6 +163,7 @@ export default function EditVinylPage({ params }: { params: { id: string } }) {
         rating: rating || null,
         purchaseDate: purchaseDate || null,
         purchasePrice: purchasePrice || null,
+        purchaseCurrency: purchaseCurrency || null,
         purchaseLocation: purchaseLocation || null,
         catalogNumber: catalogNumber || null,
         country: country || null
@@ -337,20 +341,39 @@ export default function EditVinylPage({ params }: { params: { id: string } }) {
                       value={purchaseDate}
                       onChange={(e) => setPurchaseDate(e.target.value)}
                     />
-                    <input
-                      type="number"
-                      step="0.01"
-                      placeholder="Purchase Price ($)"
-                      value={purchasePrice || ''}
-                      onChange={(e) => setPurchasePrice(e.target.value ? parseFloat(e.target.value) : undefined)}
-                    />
+                    <div className={styles.priceInputGroup}>
+                      <select
+                        value={purchaseCurrency}
+                        onChange={(e) => setPurchaseCurrency(e.target.value)}
+                      >
+                        <option value="USD">USD $</option>
+                        <option value="EUR">EUR €</option>
+                        <option value="GBP">GBP £</option>
+                        <option value="CAD">CAD $</option>
+                        <option value="AUD">AUD $</option>
+                        <option value="JPY">JPY ¥</option>
+                        <option value="CHF">CHF ₣</option>
+                        <option value="SEK">SEK kr</option>
+                        <option value="NOK">NOK kr</option>
+                        <option value="DKK">DKK kr</option>
+                      </select>
+                      <input
+                        type="number"
+                        step="0.01"
+                        placeholder="Price"
+                        value={purchasePrice || ''}
+                        onChange={(e) => setPurchasePrice(e.target.value ? parseFloat(e.target.value) : undefined)}
+                      />
+                    </div>
+                  </div>
+                  <div className={styles.editFormGrid} style={{ marginTop: '10px' }}>
                     <input
                       type="text"
                       placeholder="Purchase Location"
                       value={purchaseLocation}
                       onChange={(e) => setPurchaseLocation(e.target.value)}
-                      style={{ gridColumn: 'span 2' }}
                     />
+                    <div></div>
                   </div>
                 </div>
               </div>

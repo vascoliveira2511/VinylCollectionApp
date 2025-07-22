@@ -43,7 +43,7 @@ export default function Stats() {
           setUserPreferences(userData)
           setShowGenreChart(userData.showGenreChart !== undefined ? userData.showGenreChart : true)
           setShowYearChart(userData.showDecadeChart !== undefined ? userData.showDecadeChart : true)
-          setShowArtistChart(userData.showArtistChart !== undefined ? userData.showArtistChart : false)
+          setShowArtistChart(false)
         }
       } catch (error) {
         console.error("Error fetching user preferences:", error)

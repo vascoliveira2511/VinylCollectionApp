@@ -15,6 +15,22 @@
   margin: 0;
 }
 
+.collectionGrid .card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.collectionGrid .card > a {
+  flex: 0 0 auto;
+  display: block;
+}
+
+.collectionGrid .card .buttonGroup {
+  margin-top: auto;
+  padding-top: 16px;
+}
+
 .collectionList {
   display: flex;
   flex-direction: column;
@@ -43,6 +59,30 @@
   overflow: hidden;
 }
 
+.card > a,
+.card a {
+  text-decoration: none !important;
+  color: inherit !important;
+  border-bottom: none !important;
+}
+
+.card > a:hover,
+.card a:hover {
+  text-decoration: none !important;
+  border-bottom: none !important;
+  color: inherit !important;
+}
+
+/* Override any global link styling */
+a.card,
+a.card:hover,
+a.card:focus,
+a.card:visited {
+  text-decoration: none !important;
+  border-bottom: none !important;
+  color: inherit !important;
+}
+
 .collectionList .card {
   display: flex;
   flex-direction: row;
@@ -52,16 +92,119 @@
   gap: 16px;
 }
 
+.collectionList .card > a {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  text-decoration: none !important;
+  border-bottom: none !important;
+}
+
+.collectionList .card > a:hover {
+  border-bottom: none !important;
+  text-decoration: none !important;
+  color: inherit !important;
+}
+
+.cardInfo {
+  flex: 1;
+}
+
+.collectionList .cardInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.collectionList .cardInfo h3 {
+  margin: 0 0 4px 0;
+  font-size: 1.1em;
+  font-weight: 600;
+}
+
+.collectionList .cardInfo p {
+  margin: 2px 0;
+  font-size: 0.9em;
+  color: var(--ctp-subtext1);
+}
+
+.collectionList .genrePills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 6px;
+  justify-content: flex-start;
+}
+
+.collectionList .card .buttonGroup {
+  margin: 0;
+  margin-left: 16px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 100px;
+}
+
 .collectionList .card .albumArt {
   width: 80px;
   height: 80px;
   margin: 0;
   flex-shrink: 0;
+  object-fit: cover;
+  border-radius: 8px;
 }
 
 .collectionCompact .card {
   padding: 12px;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.collectionCompact .card > a {
+  flex: 0 0 auto;
+  display: block;
+}
+
+.collectionCompact .card > a,
+.collectionCompact .card a {
+  text-decoration: none !important;
+  border-bottom: none !important;
+  color: inherit !important;
+}
+
+.collectionCompact .card > a:hover,
+.collectionCompact .card a:hover {
+  text-decoration: none !important;
+  border-bottom: none !important;
+  color: inherit !important;
+}
+
+.collectionCompact .card .buttonGroup {
+  margin-top: auto;
+  gap: 6px;
+}
+
+.collectionCompact .buttonGroup button,
+.collectionCompact .buttonGroup a {
+  padding: 6px 12px;
+  font-size: 0.8em;
+}
+
+.collectionCompact .buttonGroup .editButton,
+.collectionCompact .buttonGroup a.editButton {
+  background: var(--ctp-blue) !important;
+  color: #000000 !important;
+}
+
+.collectionCompact .buttonGroup .editButton:hover,
+.collectionCompact .buttonGroup a.editButton:hover {
+  background: var(--ctp-sky) !important;
+  color: #000000 !important;
 }
 
 .collectionCompact .card .albumArt {
@@ -78,6 +221,10 @@
 .collectionCompact .card p {
   font-size: 0.8em;
   margin: 2px 0;
+}
+
+.collectionCompact .genrePills {
+  display: none;
 }
 
 .card:hover {
@@ -111,6 +258,8 @@
   border: 1px solid var(--ctp-surface2);
   position: relative;
   z-index: 2;
+  object-fit: cover;
+  aspect-ratio: 1;
 }
 
 .albumArt:hover {
@@ -153,7 +302,8 @@
   gap: 12px;
 }
 
-.buttonGroup button {
+.buttonGroup button,
+.buttonGroup a {
   padding: 8px 16px;
   font-size: 0.9em;
   font-weight: 500;
@@ -164,8 +314,8 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  text-decoration: none;
-  border-bottom: none;
+  text-decoration: none !important;
+  border-bottom: none !important;
 }
 
 .form {
@@ -184,7 +334,7 @@
   display: flex;
   justify-content: flex-end;
   gap: 12px;
-  margin-top: 8px;
+  margin-top: 24px;
 }
 
 .contentSection {
@@ -470,6 +620,85 @@
   cursor: pointer;
 }
 
+.viewSelector {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.viewOption {
+  background: var(--ctp-surface0);
+  border: 2px solid var(--ctp-surface2);
+  border-radius: 8px;
+  padding: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+  position: relative;
+}
+
+.viewOption:hover {
+  border-color: var(--ctp-mauve);
+  transform: translateY(-2px);
+}
+
+.viewOption.selected {
+  border-color: var(--ctp-mauve);
+  background: var(--ctp-surface1);
+  box-shadow: 0 0 0 2px rgba(203, 166, 247, 0.2);
+}
+
+.viewIcon {
+  font-size: 2rem;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.viewTitle {
+  font-weight: 600;
+  color: var(--ctp-text);
+  margin-bottom: 4px;
+  font-size: 0.9rem;
+}
+
+.viewDescription {
+  font-size: 0.8rem;
+  color: var(--ctp-subtext1);
+  line-height: 1.3;
+}
+
+.recordsPerPageSelector {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.recordsOption {
+  background: var(--ctp-surface0);
+  border: 2px solid var(--ctp-surface2);
+  border-radius: 6px;
+  padding: 12px 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+  font-weight: 500;
+  color: var(--ctp-text);
+  font-size: 0.9rem;
+}
+
+.recordsOption:hover {
+  border-color: var(--ctp-blue);
+  transform: translateY(-1px);
+}
+
+.recordsOption.selected {
+  border-color: var(--ctp-blue);
+  background: var(--ctp-blue);
+  color: var(--ctp-base);
+}
+
 /* Data & Privacy Styles */
 .dataGrid {
   display: grid;
@@ -712,9 +941,11 @@
   border-bottom: none !important;
 }
 
-.editButton {
-  background: var(--ctp-blue);
-  color: var(--ctp-base);
+.editButton,
+a.editButton,
+Link.editButton {
+  background: var(--ctp-blue) !important;
+  color: #000000 !important;
   border: none;
   border-radius: 6px;
   padding: 8px 16px;
@@ -725,15 +956,18 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  border-bottom: none;
-  text-decoration: none;
+  border-bottom: none !important;
+  text-decoration: none !important;
 }
 
-.editButton:hover {
-  background: var(--ctp-blue);
+.editButton:hover,
+a.editButton:hover,
+Link.editButton:hover {
+  background: var(--ctp-sky) !important;
   transform: translateY(-1px);
-  color: var(--ctp-base) !important;
+  color: #000000 !important;
   border-bottom: none !important;
+  text-decoration: none !important;
 }
 
 .deleteButton {
@@ -753,9 +987,11 @@
 }
 
 .deleteButton:hover {
+  background: var(--ctp-maroon);
   transform: translateY(-1px);
   color: var(--ctp-base) !important;
   border-bottom: none !important;
+  text-decoration: none !important;
 }
 
 .cancelButton {
@@ -957,6 +1193,24 @@
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 15px;
   margin-bottom: 10px;
+}
+
+.priceInputGroup {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  width: 100%;
+}
+
+.priceInputGroup input {
+  flex: 1;
+  min-width: 0;
+  width: auto !important;
+}
+
+.priceInputGroup select {
+  width: 110px !important;
+  flex-shrink: 0;
 }
 
 .editFormGrid input,

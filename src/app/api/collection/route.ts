@@ -13,7 +13,6 @@ export async function GET(request: Request) {
   const yearTo = searchParams.get('yearTo')
   const collectionId = searchParams.get('collectionId')
   
-  console.log('API Collection GET: userId', userId)
   if (!userId) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
@@ -82,7 +81,6 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   const userId = request.headers.get('x-user-id')
-  console.log('API Collection POST: userId', userId)
   if (!userId) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }

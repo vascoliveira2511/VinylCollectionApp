@@ -30,7 +30,6 @@ interface User {
   recordsPerPage?: number
   showGenreChart?: boolean
   showDecadeChart?: boolean
-  showArtistChart?: boolean
   discogsEnabled?: boolean
 }
 
@@ -57,7 +56,6 @@ export default function Profile() {
   const [recordsPerPage, setRecordsPerPage] = useState(20)
   const [showGenreChart, setShowGenreChart] = useState(true)
   const [showDecadeChart, setShowDecadeChart] = useState(true)
-  const [showArtistChart, setShowArtistChart] = useState(true)
   const [discogsEnabled, setDiscogsEnabled] = useState(true)
   const [preferencesLoading, setPreferencesLoading] = useState(false)
   const [preferencesSuccess, setPreferencesSuccess] = useState(false)
@@ -82,7 +80,6 @@ export default function Profile() {
       setRecordsPerPage(userData.recordsPerPage || 20)
       setShowGenreChart(userData.showGenreChart !== undefined ? userData.showGenreChart : true)
       setShowDecadeChart(userData.showDecadeChart !== undefined ? userData.showDecadeChart : true)
-      setShowArtistChart(userData.showArtistChart !== undefined ? userData.showArtistChart : true)
       setDiscogsEnabled(userData.discogsEnabled !== undefined ? userData.discogsEnabled : true)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred')
@@ -182,11 +179,9 @@ export default function Profile() {
         recordsPerPage,
         showGenreChart,
         showDecadeChart,
-        showArtistChart,
         discogsEnabled
       }
       
-      console.log('Saving preferences:', preferences)
       
       const res = await fetch('/api/auth/preferences', {
         method: 'PUT',
@@ -209,7 +204,6 @@ export default function Profile() {
           recordsPerPage,
           showGenreChart,
           showDecadeChart,
-          showArtistChart,
           discogsEnabled
         })
       }
@@ -405,30 +399,48 @@ export default function Profile() {
                     <div className={styles.preferenceSection}>
                       <label className={styles.preferenceLabel}>
                         <span>Default Collection View</span>
-                        <select 
-                          className={styles.preferenceSelect}
-                          value={displayView}
-                          onChange={(e) => setDisplayView(e.target.value)}
-                        >
-                          <option value="grid">Grid View</option>
-                          <option value="list">List View</option>
-                          <option value="compact">Compact View</option>
-                        </select>
                       </label>
+                      <div className={styles.viewSelector}>
+                        <div 
+                          className={`${styles.viewOption} ${displayView === 'grid' ? styles.selected : ''}`}
+                          onClick={() => setDisplayView('grid')}
+                        >
+                          <span className={styles.viewIcon}>⊞</span>
+                          <div className={styles.viewTitle}>Grid</div>
+                          <div className={styles.viewDescription}>Cards in a grid layout</div>
+                        </div>
+                        <div 
+                          className={`${styles.viewOption} ${displayView === 'list' ? styles.selected : ''}`}
+                          onClick={() => setDisplayView('list')}
+                        >
+                          <span className={styles.viewIcon}>☰</span>
+                          <div className={styles.viewTitle}>List</div>
+                          <div className={styles.viewDescription}>Horizontal list layout</div>
+                        </div>
+                        <div 
+                          className={`${styles.viewOption} ${displayView === 'compact' ? styles.selected : ''}`}
+                          onClick={() => setDisplayView('compact')}
+                        >
+                          <span className={styles.viewIcon}>▦</span>
+                          <div className={styles.viewTitle}>Compact</div>
+                          <div className={styles.viewDescription}>Smaller grid, no genres</div>
+                        </div>
+                      </div>
+                      
                       <label className={styles.preferenceLabel}>
                         <span>Records per Page</span>
-                        <select 
-                          className={styles.preferenceSelect}
-                          value={recordsPerPage}
-                          onChange={(e) => setRecordsPerPage(parseInt(e.target.value))}
-                        >
-                          <option value={12}>12 records</option>
-                          <option value={20}>20 records</option>
-                          <option value={24}>24 records</option>
-                          <option value={48}>48 records</option>
-                          <option value={96}>96 records</option>
-                        </select>
                       </label>
+                      <div className={styles.recordsPerPageSelector}>
+                        {[12, 20, 24, 48, 96].map((count) => (
+                          <div
+                            key={count}
+                            className={`${styles.recordsOption} ${recordsPerPage === count ? styles.selected : ''}`}
+                            onClick={() => setRecordsPerPage(count)}
+                          >
+                            {count}
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   </div>
                   
@@ -450,14 +462,6 @@ export default function Profile() {
                           onChange={(e) => setShowDecadeChart(e.target.checked)}
                         />
                         <span>Show year distribution</span>
-                      </label>
-                      <label className={styles.checkboxLabel}>
-                        <input 
-                          type="checkbox" 
-                          checked={showArtistChart}
-                          onChange={(e) => setShowArtistChart(e.target.checked)}
-                        />
-                        <span>Show artist statistics</span>
                       </label>
                       <label className={styles.checkboxLabel}>
                         <input type="checkbox" disabled />
@@ -489,7 +493,7 @@ export default function Profile() {
                   </div>
                 </div>
                 
-                <div className={styles.formActions} style={{ marginTop: '30px' }}>
+                <div className={styles.formActions}>
                   <button 
                     onClick={savePreferences} 
                     disabled={preferencesLoading}
@@ -539,9 +543,11 @@ export default function Profile() {
                       </div>
                     )}
                     
-                    <button type="submit" disabled={passwordChangeLoading}>
-                      {passwordChangeLoading ? 'Changing...' : 'Change Password'}
-                    </button>
+                    <div className={styles.formActions}>
+                      <button type="submit" disabled={passwordChangeLoading} className={styles.primaryButton}>
+                        {passwordChangeLoading ? 'Changing...' : 'Change Password'}
+                      </button>
+                    </div>
                   </form>
                 </div>
               </div>
@@ -658,13 +664,15 @@ export default function Profile() {
                       required
                     />
                     
-                    <button 
-                      type="submit" 
-                      disabled={deleteLoading || deleteConfirm !== 'DELETE'}
-                      className={styles.deleteButton}
-                    >
-                      {deleteLoading ? 'Deleting...' : 'Delete Account'}
-                    </button>
+                    <div className={styles.formActions}>
+                      <button 
+                        type="submit" 
+                        disabled={deleteLoading || deleteConfirm !== 'DELETE'}
+                        className={styles.deleteButton}
+                      >
+                        {deleteLoading ? 'Deleting...' : 'Delete Account'}
+                      </button>
+                    </div>
                   </form>
                 </div>
               </div>

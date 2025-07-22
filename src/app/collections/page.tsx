@@ -1,224 +1,230 @@
-'use client'
+"use client";
 
-import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
-import Link from 'next/link'
-import styles from '../page.module.css'
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import styles from "../page.module.css";
 
 interface Collection {
-  id: number
-  title: string
-  description?: string
-  imageUrl?: string
-  color?: string
-  isPublic?: boolean
-  isDefault: boolean
-  createdAt: string
+  id: number;
+  title: string;
+  description?: string;
+  imageUrl?: string;
+  color?: string;
+  isPublic?: boolean;
+  isDefault: boolean;
+  createdAt: string;
   _count: {
-    vinyls: number
-  }
+    vinyls: number;
+  };
 }
 
 export default function Collections() {
-  const [collections, setCollections] = useState<Collection[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  const [showCreateForm, setShowCreateForm] = useState(false)
-  const [editingCollection, setEditingCollection] = useState<Collection | null>(null)
-  
+  const [collections, setCollections] = useState<Collection[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [showCreateForm, setShowCreateForm] = useState(false);
+  const [editingCollection, setEditingCollection] = useState<Collection | null>(
+    null
+  );
+
   // Form state
-  const [title, setTitle] = useState('')
-  const [description, setDescription] = useState('')
-  const [imageUrl, setImageUrl] = useState('')
-  const [color, setColor] = useState('#6c7ce7')
-  const [isPublic, setIsPublic] = useState(false)
-  const [formLoading, setFormLoading] = useState(false)
-  
-  const router = useRouter()
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [imageUrl, setImageUrl] = useState("");
+  const [color, setColor] = useState("#6c7ce7");
+  const [isPublic, setIsPublic] = useState(false);
+  const [formLoading, setFormLoading] = useState(false);
+
+  const router = useRouter();
 
   const fetchCollections = async () => {
     try {
-      const res = await fetch('/api/collections')
+      const res = await fetch("/api/collections");
       if (!res.ok) {
         if (res.status === 401) {
-          router.push('/login')
-          return
+          router.push("/login");
+          return;
         }
-        throw new Error('Failed to fetch collections')
+        throw new Error("Failed to fetch collections");
       }
-      const data = await res.json()
-      setCollections(data)
+      const data = await res.json();
+      setCollections(data);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred')
+      setError(err instanceof Error ? err.message : "An error occurred");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   useEffect(() => {
-    fetchCollections()
-  }, [router])
+    fetchCollections();
+  }, [router]);
 
   const handleCreateCollection = async (e: React.FormEvent) => {
-    e.preventDefault()
-    
+    e.preventDefault();
+
     if (!title.trim()) {
-      setError('Collection title is required')
-      return
+      setError("Collection title is required");
+      return;
     }
-    
-    setFormLoading(true)
-    setError(null)
-    
+
+    setFormLoading(true);
+    setError(null);
+
     try {
-      const res = await fetch('/api/collections', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          title, 
+      const res = await fetch("/api/collections", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title,
           description: description || null,
           imageUrl: imageUrl || null,
           color: color || null,
-          isPublic 
-        })
-      })
-      
+          isPublic,
+        }),
+      });
+
       if (!res.ok) {
-        const data = await res.json()
-        throw new Error(data.error || 'Failed to create collection')
+        const data = await res.json();
+        throw new Error(data.error || "Failed to create collection");
       }
-      
+
       // Reset form and refresh collections
-      setTitle('')
-      setDescription('')
-      setImageUrl('')
-      setColor('#6c7ce7')
-      setIsPublic(false)
-      setShowCreateForm(false)
-      await fetchCollections()
+      setTitle("");
+      setDescription("");
+      setImageUrl("");
+      setColor("#6c7ce7");
+      setIsPublic(false);
+      setShowCreateForm(false);
+      await fetchCollections();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred')
+      setError(err instanceof Error ? err.message : "An error occurred");
     } finally {
-      setFormLoading(false)
+      setFormLoading(false);
     }
-  }
+  };
 
   const handleEditCollection = async (e: React.FormEvent) => {
-    e.preventDefault()
-    
+    e.preventDefault();
+
     if (!editingCollection || !title.trim()) {
-      setError('Collection title is required')
-      return
+      setError("Collection title is required");
+      return;
     }
-    
-    setFormLoading(true)
-    setError(null)
-    
+
+    setFormLoading(true);
+    setError(null);
+
     try {
       const res = await fetch(`/api/collections/${editingCollection.id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          title, 
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title,
           description: description || null,
           imageUrl: imageUrl || null,
           color: color || null,
-          isPublic 
-        })
-      })
-      
+          isPublic,
+        }),
+      });
+
       if (!res.ok) {
-        const data = await res.json()
-        throw new Error(data.error || 'Failed to update collection')
+        const data = await res.json();
+        throw new Error(data.error || "Failed to update collection");
       }
-      
+
       // Reset form and refresh collections
-      setTitle('')
-      setDescription('')
-      setImageUrl('')
-      setColor('#6c7ce7')
-      setIsPublic(false)
-      setEditingCollection(null)
-      await fetchCollections()
+      setTitle("");
+      setDescription("");
+      setImageUrl("");
+      setColor("#6c7ce7");
+      setIsPublic(false);
+      setEditingCollection(null);
+      await fetchCollections();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred')
+      setError(err instanceof Error ? err.message : "An error occurred");
     } finally {
-      setFormLoading(false)
+      setFormLoading(false);
     }
-  }
+  };
 
   const handleDeleteCollection = async (collection: Collection) => {
     if (collection.isDefault) {
-      setError('Cannot delete default collection')
-      return
+      setError("Cannot delete default collection");
+      return;
     }
-    
-    if (!confirm(`Are you sure you want to delete "${collection.title}"? All vinyls will be moved to your default collection.`)) {
-      return
+
+    if (
+      !confirm(
+        `Are you sure you want to delete "${collection.title}"? All vinyls will be moved to your default collection.`
+      )
+    ) {
+      return;
     }
-    
+
     try {
       const res = await fetch(`/api/collections/${collection.id}`, {
-        method: 'DELETE'
-      })
-      
+        method: "DELETE",
+      });
+
       if (!res.ok) {
-        const data = await res.json()
-        throw new Error(data.error || 'Failed to delete collection')
+        const data = await res.json();
+        throw new Error(data.error || "Failed to delete collection");
       }
-      
-      await fetchCollections()
+
+      await fetchCollections();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred')
+      setError(err instanceof Error ? err.message : "An error occurred");
     }
-  }
+  };
 
   const startEditing = (collection: Collection) => {
-    setEditingCollection(collection)
-    setTitle(collection.title)
-    setDescription(collection.description || '')
-    setImageUrl(collection.imageUrl || '')
-    setColor(collection.color || '#6c7ce7')
-    setIsPublic(collection.isPublic || false)
-    setShowCreateForm(false)
-  }
+    setEditingCollection(collection);
+    setTitle(collection.title);
+    setDescription(collection.description || "");
+    setImageUrl(collection.imageUrl || "");
+    setColor(collection.color || "#6c7ce7");
+    setIsPublic(collection.isPublic || false);
+    setShowCreateForm(false);
+  };
 
   const handleSetDefault = async (collection: Collection) => {
     if (collection.isDefault) {
-      return // Already default
+      return; // Already default
     }
-    
+
     if (!confirm(`Set "${collection.title}" as your default collection?`)) {
-      return
+      return;
     }
-    
+
     try {
-      const res = await fetch('/api/collections/set-default', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ collectionId: collection.id })
-      })
-      
+      const res = await fetch("/api/collections/set-default", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ collectionId: collection.id }),
+      });
+
       if (!res.ok) {
-        const data = await res.json()
-        throw new Error(data.error || 'Failed to set default collection')
+        const data = await res.json();
+        throw new Error(data.error || "Failed to set default collection");
       }
-      
-      await fetchCollections()
+
+      await fetchCollections();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred')
+      setError(err instanceof Error ? err.message : "An error occurred");
     }
-  }
+  };
 
   const cancelEditing = () => {
-    setEditingCollection(null)
-    setTitle('')
-    setDescription('')
-    setImageUrl('')
-    setColor('#6c7ce7')
-    setIsPublic(false)
-    setError(null)
-  }
+    setEditingCollection(null);
+    setTitle("");
+    setDescription("");
+    setImageUrl("");
+    setColor("#6c7ce7");
+    setIsPublic(false);
+    setError(null);
+  };
 
   if (loading) {
     return (
@@ -231,7 +237,7 @@ export default function Collections() {
           </div>
         </div>
       </main>
-    )
+    );
   }
 
   return (
@@ -243,22 +249,30 @@ export default function Collections() {
             <div className={styles.collectionsIntro}>
               <h2>Organize Your Vinyl Records</h2>
               <p>
-                Collections help you organize your vinyl records into groups like "Jazz Classics", "Want List", "80s Hits", etc. 
-                You can create unlimited collections and move records between them easily.
+                Collections help you organize your vinyl records into groups
+                like "Jazz Classics", "Want List", "80s Hits", etc. You can
+                create unlimited collections and move records between them
+                easily.
               </p>
             </div>
 
-            {error && (
-              <div className={styles.errorMessage}>
-                {error}
-              </div>
-            )}
+            {error && <div className={styles.errorMessage}>{error}</div>}
 
             {/* Create/Edit Form */}
             {(showCreateForm || editingCollection) && (
               <div className={styles.collectionForm}>
-                <h3>{editingCollection ? 'Edit Collection' : 'Create New Collection'}</h3>
-                <form onSubmit={editingCollection ? handleEditCollection : handleCreateCollection}>
+                <h3>
+                  {editingCollection
+                    ? "Edit Collection"
+                    : "Create New Collection"}
+                </h3>
+                <form
+                  onSubmit={
+                    editingCollection
+                      ? handleEditCollection
+                      : handleCreateCollection
+                  }
+                >
                   <input
                     type="text"
                     placeholder="Collection Title"
@@ -274,14 +288,14 @@ export default function Collections() {
                     rows={3}
                     maxLength={500}
                   />
-                  
+
                   <input
                     type="url"
                     placeholder="Cover Image URL (optional)"
                     value={imageUrl}
                     onChange={(e) => setImageUrl(e.target.value)}
                   />
-                  
+
                   <div className={styles.formRow}>
                     <div className={styles.colorSection}>
                       <label htmlFor="collection-color">🎨 Theme Color:</label>
@@ -293,7 +307,7 @@ export default function Collections() {
                         className={styles.colorPicker}
                       />
                     </div>
-                    
+
                     <div className={styles.checkboxSection}>
                       <label className={styles.checkboxLabel}>
                         <input
@@ -305,14 +319,22 @@ export default function Collections() {
                       </label>
                     </div>
                   </div>
-                  
+
                   <div className={styles.formActions}>
                     <button type="submit" disabled={formLoading}>
-                      {formLoading ? 'Saving...' : (editingCollection ? 'Update' : 'Create')}
+                      {formLoading
+                        ? "Saving..."
+                        : editingCollection
+                        ? "Update"
+                        : "Create"}
                     </button>
-                    <button 
-                      type="button" 
-                      onClick={editingCollection ? cancelEditing : () => setShowCreateForm(false)}
+                    <button
+                      type="button"
+                      onClick={
+                        editingCollection
+                          ? cancelEditing
+                          : () => setShowCreateForm(false)
+                      }
                       className={styles.cancelButton}
                     >
                       Cancel
@@ -325,7 +347,7 @@ export default function Collections() {
             {/* Action Buttons */}
             {!showCreateForm && !editingCollection && (
               <div className={styles.collectionActions}>
-                <button 
+                <button
                   onClick={() => setShowCreateForm(true)}
                   className={styles.createButton}
                 >
@@ -337,42 +359,61 @@ export default function Collections() {
             {/* Collections Grid */}
             <div className={styles.collectionsGrid}>
               {collections.map((collection) => (
-                <div 
-                  key={collection.id} 
-                  className={`${styles.collectionCard} ${collection.color ? styles.hasCustomColor : ''}`}
-                  style={collection.color ? { '--collection-color': collection.color } as React.CSSProperties : {}}
+                <div
+                  key={collection.id}
+                  className={`${styles.collectionCard} ${
+                    collection.color ? styles.hasCustomColor : ""
+                  }`}
+                  style={
+                    collection.color
+                      ? ({
+                          "--collection-color": collection.color,
+                        } as React.CSSProperties)
+                      : {}
+                  }
                 >
                   {collection.imageUrl && (
-                    <img 
-                      src={collection.imageUrl} 
+                    <img
+                      src={collection.imageUrl}
                       alt={`${collection.title} cover`}
                       className={styles.collectionCover}
                     />
                   )}
-                  
+
                   <div className={styles.collectionHeader}>
                     <h3>
                       <Link href={`/collections/${collection.id}`}>
                         {collection.title}
-                        {collection.isDefault && <span className={styles.defaultBadge}>Default</span>}
-                        {collection.isPublic && <span className={styles.publicBadge}>🌐 Public</span>}
+                        {collection.isDefault && (
+                          <span className={styles.defaultBadge}>Default</span>
+                        )}
+                        {collection.isPublic && (
+                          <span className={styles.publicBadge}>🌐 Public</span>
+                        )}
                       </Link>
                     </h3>
                     <div className={styles.collectionMeta}>
-                      <span className={styles.vinylCount}>{collection._count.vinyls} records</span>
+                      <span className={styles.vinylCount}>
+                        {collection._count.vinyls} records
+                      </span>
                     </div>
                   </div>
-                  
+
                   {collection.description && (
-                    <p className={styles.collectionDescription}>{collection.description}</p>
+                    <p className={styles.collectionDescription}>
+                      {collection.description}
+                    </p>
                   )}
-                  
+
                   <div className={styles.collectionActions}>
-                    <Link href={`/collections/${collection.id}`} className={styles.viewButton}>
+                    <Link
+                      href={`/collections/${collection.id}`}
+                      className={styles.viewButton}
+                    >
                       View Collection
                     </Link>
-                    
-                    <button 
+
+                    <button
                       onClick={() => startEditing(collection)}
                       className={styles.editButton}
                     >
@@ -380,13 +421,13 @@ export default function Collections() {
                     </button>
                     {!collection.isDefault && (
                       <>
-                        <button 
+                        <button
                           onClick={() => handleSetDefault(collection)}
                           className={styles.setDefaultButton}
                         >
                           Set as Default
                         </button>
-                        <button 
+                        <button
                           onClick={() => handleDeleteCollection(collection)}
                           className={styles.deleteButton}
                         >
@@ -401,12 +442,15 @@ export default function Collections() {
 
             {collections.length === 0 && (
               <div className={styles.emptyState}>
-                <p>No collections found. Create your first collection to get started!</p>
+                <p>
+                  No collections found. Create your first collection to get
+                  started!
+                </p>
               </div>
             )}
           </div>
         </div>
       </div>
     </main>
-  )
+  );
 }

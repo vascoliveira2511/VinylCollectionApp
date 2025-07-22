@@ -23,7 +23,6 @@ export async function GET(request: NextRequest) {
         recordsPerPage: true,
         showGenreChart: true,
         showDecadeChart: true,
-        showArtistChart: true,
         discogsEnabled: true
       }
     })
@@ -50,7 +49,6 @@ export async function PUT(request: NextRequest) {
     const userId = payload.userId as string
 
     const preferences = await request.json()
-    console.log('Received preferences:', preferences)
 
     const updatedUser = await prisma.user.update({
       where: { id: parseInt(userId) },
@@ -61,7 +59,6 @@ export async function PUT(request: NextRequest) {
           : parseInt(preferences.recordsPerPage),
         showGenreChart: Boolean(preferences.showGenreChart),
         showDecadeChart: Boolean(preferences.showDecadeChart),
-        showArtistChart: Boolean(preferences.showArtistChart),
         discogsEnabled: Boolean(preferences.discogsEnabled)
       },
       select: {
@@ -69,15 +66,12 @@ export async function PUT(request: NextRequest) {
         recordsPerPage: true,
         showGenreChart: true,
         showDecadeChart: true,
-        showArtistChart: true,
         discogsEnabled: true
       }
     })
 
-    console.log('Updated user preferences:', updatedUser)
     return NextResponse.json(updatedUser)
   } catch (error) {
-    console.log('Error updating preferences:', error)
     return NextResponse.json({ error: 'Invalid token' }, { status: 401 })
   }
 }

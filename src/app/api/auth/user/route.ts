@@ -30,7 +30,6 @@ export async function GET(request: NextRequest) {
         recordsPerPage: true,
         showGenreChart: true,
         showDecadeChart: true,
-        showArtistChart: true,
         discogsEnabled: true
       }
     })
@@ -66,6 +65,11 @@ export async function GET(request: NextRequest) {
       createdAt: user.createdAt,
       avatar: user.avatar,
       avatarType: user.avatarType,
+      displayView: user.displayView,
+      recordsPerPage: user.recordsPerPage,
+      showGenreChart: user.showGenreChart,
+      showDecadeChart: user.showDecadeChart,
+      discogsEnabled: user.discogsEnabled,
       totalRecords, 
       genreStats, 
       recentVinyls 

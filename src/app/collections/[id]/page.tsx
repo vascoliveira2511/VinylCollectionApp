@@ -41,6 +41,7 @@ export default function CollectionView({ params }: { params: { id: string } }) {
   const [filterGenre, setFilterGenre] = useState('')
   const [filterYear, setFilterYear] = useState('')
   const [displayLimit, setDisplayLimit] = useState(12)
+  const [displayView, setDisplayView] = useState('grid')
   
   const router = useRouter()
 
@@ -64,6 +65,21 @@ export default function CollectionView({ params }: { params: { id: string } }) {
       setError(err instanceof Error ? err.message : 'An error occurred')
     } finally {
       setLoading(false)
+    }
+  }
+
+  const deleteVinyl = async (vinylId: number) => {
+    try {
+      const res = await fetch(`/api/collection/${vinylId}`, {
+        method: 'DELETE'
+      })
+      if (!res.ok) {
+        throw new Error('Failed to delete vinyl')
+      }
+      // Refresh the collection to show updated list
+      await fetchCollection()
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to delete vinyl')
     }
   }
 
@@ -171,6 +187,14 @@ export default function CollectionView({ params }: { params: { id: string } }) {
                   onChange={(e) => setFilterYear(e.target.value)}
                 />
                 <select
+                  value={displayView}
+                  onChange={(e) => setDisplayView(e.target.value)}
+                >
+                  <option value="grid">Grid View</option>
+                  <option value="list">List View</option>
+                  <option value="compact">Compact View</option>
+                </select>
+                <select
                   value={displayLimit}
                   onChange={(e) => setDisplayLimit(parseInt(e.target.value))}
                 >
@@ -189,23 +213,50 @@ export default function CollectionView({ params }: { params: { id: string } }) {
           <div className="title-bar">Records ({filteredVinyls.length})</div>
           <div className={styles.contentSection}>
             {filteredVinyls.length > 0 ? (
-              <div className={styles.collectionGrid}>
+              <div className={
+                displayView === "list"
+                  ? styles.collectionList
+                  : displayView === "compact"
+                  ? styles.collectionCompact
+                  : styles.collectionGrid
+              }>
                 {filteredVinyls.map((vinyl) => (
-                  <Link href={`/vinyl/${vinyl.id}`} key={vinyl.id} className={styles.card}>
-                    <img 
-                      src={`/api/image-proxy?url=${encodeURIComponent(vinyl.imageUrl || 'https://via.placeholder.com/150')}`} 
-                      alt={`${vinyl.title} cover`} 
-                      className={styles.albumArt} 
-                    />
-                    <h3>{vinyl.title}</h3>
-                    <p>{vinyl.artist}</p>
-                    <p>{vinyl.year}</p>
-                    <div className={styles.genrePills}>
-                      {vinyl.genre.map((g, idx) => (
-                        <span key={idx} className={styles.genrePill}>{g}</span>
-                      ))}
+                  <div key={vinyl.id} className={styles.card}>
+                    <Link href={`/vinyl/${vinyl.id}`}>
+                      <img 
+                        src={`/api/image-proxy?url=${encodeURIComponent(vinyl.imageUrl || 'https://via.placeholder.com/150')}`} 
+                        alt={`${vinyl.title} cover`} 
+                        className={styles.albumArt} 
+                      />
+                      <div className={styles.cardInfo}>
+                        <h3>{vinyl.title}</h3>
+                        <p>{vinyl.artist}</p>
+                        <p>{vinyl.year}</p>
+                        <div className={styles.genrePills}>
+                          {vinyl.genre.map((g, idx) => (
+                            <span key={idx} className={styles.genrePill}>{g}</span>
+                          ))}
+                        </div>
+                      </div>
+                    </Link>
+                    <div className={styles.buttonGroup}>
+                      <Link
+                        href={`/vinyl/${vinyl.id}/edit`}
+                        className={styles.editButton}
+                      >
+                        ✏️ Edit
+                      </Link>
+                      <button
+                        className={styles.deleteButton}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          deleteVinyl(vinyl.id);
+                        }}
+                      >
+                        🗑️ Delete
+                      </button>
                     </div>
-                  </Link>
+                  </div>
                 ))}
               </div>
             ) : (
