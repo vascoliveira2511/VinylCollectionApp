@@ -32,7 +32,12 @@
       "Bash(tail:*)",
       "Bash(cp:*)",
       "Bash(grep:*)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "Bash(vercel login:*)",
+      "Bash(vercel postgres create:*)",
+      "Bash(vercel:*)",
+      "WebFetch(domain:vercel.com)",
+      "Bash(npx prisma:*)"
     ],
     "deny": []
   }
