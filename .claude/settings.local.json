@@ -38,7 +38,8 @@
       "Bash(vercel:*)",
       "WebFetch(domain:vercel.com)",
       "Bash(npx prisma:*)",
-      "Bash(DATABASE_URL=\"postgres://cdb11e87a87e8d0caa9839357b3bb6006015b4ed15f9c0cdfc8284318c9e61b0:sk_qbmOblbqDwKm5WueJ0Pq0@db.prisma.io:5432/?sslmode=require\" npx prisma db push)"
+      "Bash(DATABASE_URL=\"postgres://cdb11e87a87e8d0caa9839357b3bb6006015b4ed15f9c0cdfc8284318c9e61b0:sk_qbmOblbqDwKm5WueJ0Pq0@db.prisma.io:5432/?sslmode=require\" npx prisma db push)",
+      "Bash(timeout 15 npm run dev)"
     ],
     "deny": []
   }

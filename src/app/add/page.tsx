@@ -179,9 +179,14 @@ export default function AddVinyl() {
   const addVinyl = async (e: React.FormEvent) => {
     e.preventDefault()
     
-    if (!artist || !title || !year) {
-      setError('Please fill in all required fields')
+    if (!artist || !title) {
+      setError('Please fill in Artist and Title fields')
       return
+    }
+    
+    // Clear any previous errors if we have the minimum required fields
+    if (artist && title) {
+      setError(null)
     }
 
     try {
@@ -190,7 +195,7 @@ export default function AddVinyl() {
       const vinylData = { 
         artist, 
         title, 
-        year: parseInt(year), 
+        year: year ? parseInt(year) : null, 
         imageUrl, 
         genre,
         discogsId,
@@ -310,11 +315,35 @@ export default function AddVinyl() {
       
       if (res.ok) {
         const data = await res.json()
-        if (data.year) setYear(data.year.toString())
+        // Handle potentially missing fields from Discogs
+        if (data.year) {
+          setYear(data.year.toString())
+        } else {
+          setYear('') // Clear year if not found
+        }
         if (data.imageUrl) setImageUrl(data.imageUrl)
-        if (data.genre) setGenre(data.genre)
+        if (data.genre && data.genre.length > 0) {
+          setGenre(data.genre)
+        } else {
+          setGenre([]) // Clear genres if not found
+        }
         if (data.discogsId) setDiscogsId(data.discogsId)
         setDataFetched(true)
+        
+        // Show info about missing fields
+        const missingFields = []
+        if (!data.year) missingFields.push('year')
+        if (!data.genre || data.genre.length === 0) missingFields.push('genre')
+        
+        if (missingFields.length > 0) {
+          setError(`ℹ️ Note: ${missingFields.join(', ')} not found in Discogs - you can add these manually if needed`)
+          // Clear error after 5 seconds since this is just informational
+          setTimeout(() => {
+            setError(null)
+          }, 5000)
+        } else {
+          setError(null) // Clear any previous errors
+        }
       }
     } catch (error) {
       console.error('Error fetching album data:', error)
@@ -478,33 +507,34 @@ export default function AddVinyl() {
               ) : (
                 /* Manual Entry Mode */
                 <div className={styles.manualContainer}>
+                  <div className={styles.requiredFieldsNote}>
+                    <small>* Required fields: Artist and Title only</small>
+                  </div>
                   <input
                     type="text"
-                    placeholder="Artist"
+                    placeholder="Artist *"
                     value={artist}
                     onChange={(e) => setArtist(e.target.value)}
                     required
                   />
                   <input
                     type="text"
-                    placeholder="Title"
+                    placeholder="Title *"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                     required
                   />
                   <input
                     type="number"
-                    placeholder="Year"
+                    placeholder="Year (optional)"
                     value={year}
                     onChange={(e) => setYear(e.target.value)}
-                    required
                   />
                   <input
                     type="text"
-                    placeholder="Genre (comma-separated)"
+                    placeholder="Genre (comma-separated, optional)"
                     value={genre.join(', ')}
                     onChange={(e) => setGenre(e.target.value.split(',').map(g => g.trim()).filter(g => g))}
-                    required
                   />
                   <input
                     type="text"

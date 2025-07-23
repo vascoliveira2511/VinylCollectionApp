@@ -34,6 +34,15 @@ model User {
   // Relations
   vinyls          Vinyl[]
   collections     Collection[]
+  
+  // Friend relationships
+  sentFriendRequests     Friend[] @relation("SentFriendRequests")
+  receivedFriendRequests Friend[] @relation("ReceivedFriendRequests")
+  
+  // Social features
+  favoriteVinyls  FavoriteVinyl[]
+  recommendations Recommendation[] @relation("RecommendationSender")
+  receivedRecommendations Recommendation[] @relation("RecommendationReceiver")
 }
 
 model Collection {
@@ -88,6 +97,64 @@ model Vinyl {
   collectionId Int?
   collection   Collection? @relation(fields: [collectionId], references: [id], onDelete: SetNull)
   
+  // Social features
+  favorites    FavoriteVinyl[]
+  recommendations Recommendation[]
+  
   @@index([userId])
   @@index([collectionId])
+}
+
+// Friends system
+model Friend {
+  id          Int      @id @default(autoincrement())
+  status      String   // "pending", "accepted", "blocked"
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Friend relationship
+  senderId    Int
+  sender      User     @relation("SentFriendRequests", fields: [senderId], references: [id], onDelete: Cascade)
+  receiverId  Int  
+  receiver    User     @relation("ReceivedFriendRequests", fields: [receiverId], references: [id], onDelete: Cascade)
+  
+  @@unique([senderId, receiverId])
+  @@index([senderId])
+  @@index([receiverId])
+}
+
+// User's favorite vinyls
+model FavoriteVinyl {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  
+  // Foreign keys
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  vinylId   Int
+  vinyl     Vinyl    @relation(fields: [vinylId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId, vinylId])
+  @@index([userId])
+  @@index([vinylId])
+}
+
+// Recommendations between friends
+model Recommendation {
+  id          Int      @id @default(autoincrement())
+  message     String?  // Optional message with the recommendation
+  isRead      Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  
+  // Foreign keys
+  senderId    Int
+  sender      User     @relation("RecommendationSender", fields: [senderId], references: [id], onDelete: Cascade)
+  receiverId  Int
+  receiver    User     @relation("RecommendationReceiver", fields: [receiverId], references: [id], onDelete: Cascade)
+  vinylId     Int
+  vinyl       Vinyl    @relation(fields: [vinylId], references: [id], onDelete: Cascade)
+  
+  @@index([senderId])
+  @@index([receiverId])
+  @@index([vinylId])
 }

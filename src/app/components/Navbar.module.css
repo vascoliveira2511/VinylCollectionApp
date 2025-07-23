@@ -121,3 +121,195 @@
   background: var(--ctp-surface2);
   border-color: var(--ctp-mauve);
 }
+
+/* Hamburger menu styles */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: space-around;
+  width: 24px;
+  height: 24px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  z-index: 10;
+}
+
+.hamburgerLine {
+  width: 24px;
+  height: 3px;
+  background: var(--ctp-text);
+  border-radius: 3px;
+  transition: all 0.3s linear;
+  position: relative;
+  transform-origin: 1px;
+}
+
+.hamburgerLineOpen:nth-child(1) {
+  transform: rotate(45deg);
+}
+
+.hamburgerLineOpen:nth-child(2) {
+  opacity: 0;
+  transform: translateX(20px);
+}
+
+.hamburgerLineOpen:nth-child(3) {
+  transform: rotate(-45deg);
+}
+
+.menuOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  display: none;
+}
+
+/* Mobile Responsive Navbar */
+@media (max-width: 768px) {
+  .navbar {
+    padding: 12px 16px;
+    position: relative;
+  }
+
+  .navContent {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .navBrand {
+    justify-content: flex-start;
+    padding: 8px 0;
+  }
+
+  .brandText {
+    font-size: 1.1rem;
+  }
+
+  .brandIcon {
+    font-size: 1.3rem;
+  }
+
+  /* Show hamburger menu on mobile */
+  .hamburger {
+    display: flex;
+  }
+
+  /* Hide nav list by default on mobile */
+  .navList {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--ctp-surface0);
+    flex-direction: column;
+    gap: 0;
+    width: 100%;
+    border-top: 1px solid var(--ctp-surface1);
+    box-shadow: 0 4px 16px rgba(17, 17, 27, 0.3);
+    transform: translateY(-100%);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    z-index: 1000;
+    padding: 0;
+    margin: 0;
+  }
+
+  /* Show nav list when menu is open */
+  .navListOpen {
+    transform: translateY(0);
+    opacity: 1;
+    visibility: visible;
+  }
+
+  /* Show overlay on mobile when menu is open */
+  .menuOverlay {
+    display: block;
+  }
+
+  .navItem {
+    width: 100%;
+    border-bottom: 1px solid var(--ctp-surface1);
+  }
+
+  .navItem:last-child {
+    border-bottom: none;
+  }
+
+  .navItem a {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 16px 20px;
+    font-size: 1rem;
+    border-radius: 0;
+    background: transparent;
+    border: none;
+  }
+
+  .navItem a:hover {
+    background: var(--ctp-surface1);
+  }
+
+  .profileLink {
+    justify-content: flex-start;
+    padding: 16px 20px;
+    border-radius: 0;
+    background: transparent;
+    border: none;
+  }
+
+  .profileLink:hover {
+    background: var(--ctp-surface1);
+  }
+
+  .username {
+    font-size: 1rem;
+  }
+
+  .authLink {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 16px 20px;
+    font-size: 1rem;
+    border-radius: 0;
+    background: transparent;
+    border: none;
+  }
+
+  .authLink:hover {
+    background: var(--ctp-surface1) !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar {
+    padding: 10px 12px;
+  }
+
+  .brandText {
+    font-size: 1rem;
+  }
+
+  .navItem a {
+    padding: 14px 16px;
+    font-size: 0.95rem;
+  }
+
+  .profileLink {
+    padding: 14px 16px;
+  }
+
+  .authLink {
+    padding: 14px 16px;
+    font-size: 0.95rem;
+  }
+}

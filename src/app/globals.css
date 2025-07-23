@@ -292,3 +292,62 @@ input::placeholder, textarea::placeholder {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--ctp-surface2);
 }
+
+/* Mobile Responsive Styles */
+@media (max-width: 768px) {
+  .container {
+    padding: 20px 12px !important;
+  }
+
+  .window {
+    margin-bottom: 20px;
+    border-radius: 8px;
+  }
+
+  .title-bar {
+    padding: 12px 16px;
+    font-size: 1rem;
+  }
+
+  /* Input improvements for mobile */
+  input,
+  textarea,
+  select {
+    font-size: 16px; /* Prevents zoom on iOS */
+    padding: 14px 16px;
+  }
+
+  /* Touch targets */
+  button {
+    min-height: 44px; /* Apple recommended touch target size */
+    padding: 12px 20px;
+  }
+
+  /* Focus handling for mobile */
+  button:focus,
+  input:focus,
+  select:focus,
+  textarea:focus {
+    outline: 2px solid var(--ctp-lavender);
+    outline-offset: 2px;
+  }
+}
+
+/* Small mobile devices */
+@media (max-width: 480px) {
+  .container {
+    padding: 16px 8px !important;
+  }
+
+  h1 {
+    font-size: 1.6rem;
+  }
+
+  h2 {
+    font-size: 1.3rem;
+  }
+
+  h3 {
+    font-size: 1.1rem;
+  }
+}

@@ -14,6 +14,7 @@ interface User {
 
 export default function Navbar() {
   const [user, setUser] = useState<User | null>(null)
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
   const pathname = usePathname()
 
   useEffect(() => {
@@ -33,39 +34,62 @@ export default function Navbar() {
     fetchUser()
   }, [])
 
+  const closeMenu = () => {
+    setIsMenuOpen(false)
+  }
+
   return (
     <nav className={styles.navbar}>
       <div className={styles.navContent}>
-        <Link href="/" className={styles.navBrand}>
+        <Link href="/" className={styles.navBrand} onClick={closeMenu}>
           <span className={styles.brandIcon}>🎵</span>
           <span className={styles.brandText}>Vinyl Collection</span>
         </Link>
         
-        <ul className={styles.navList}>
+        {/* Hamburger menu button for mobile */}
+        <button 
+          className={styles.hamburger}
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+          aria-label="Toggle menu"
+        >
+          <span className={`${styles.hamburgerLine} ${isMenuOpen ? styles.hamburgerLineOpen : ''}`}></span>
+          <span className={`${styles.hamburgerLine} ${isMenuOpen ? styles.hamburgerLineOpen : ''}`}></span>
+          <span className={`${styles.hamburgerLine} ${isMenuOpen ? styles.hamburgerLineOpen : ''}`}></span>
+        </button>
+        
+        {/* Mobile menu overlay */}
+        {isMenuOpen && <div className={styles.menuOverlay} onClick={closeMenu}></div>}
+        
+        <ul className={`${styles.navList} ${isMenuOpen ? styles.navListOpen : ''}`}>
           {user && (
             <>
               <li className={styles.navItem}>
-                <Link href="/" className={pathname === '/' ? styles.activeLink : ''}>
+                <Link href="/" className={pathname === '/' ? styles.activeLink : ''} onClick={closeMenu}>
                   Home
                 </Link>
               </li>
               <li className={styles.navItem}>
-                <Link href="/add" className={pathname === '/add' ? styles.activeLink : ''}>
+                <Link href="/add" className={pathname === '/add' ? styles.activeLink : ''} onClick={closeMenu}>
                   Add Vinyl
                 </Link>
               </li>
               <li className={styles.navItem}>
-                <Link href="/collections" className={pathname === '/collections' ? styles.activeLink : ''}>
+                <Link href="/collections" className={pathname === '/collections' ? styles.activeLink : ''} onClick={closeMenu}>
                   Collections
                 </Link>
               </li>
               <li className={styles.navItem}>
-                <Link href="/stats" className={pathname === '/stats' ? styles.activeLink : ''}>
+                <Link href="/stats" className={pathname === '/stats' ? styles.activeLink : ''} onClick={closeMenu}>
                   Stats
                 </Link>
               </li>
               <li className={styles.navItem}>
-                <Link href="/profile" className={`${styles.profileLink} ${pathname === '/profile' ? styles.activeProfile : ''}`}>
+                <Link href="/friends" className={pathname === '/friends' ? styles.activeLink : ''} onClick={closeMenu}>
+                  Friends
+                </Link>
+              </li>
+              <li className={styles.navItem}>
+                <Link href="/profile" className={`${styles.profileLink} ${pathname === '/profile' ? styles.activeProfile : ''}`} onClick={closeMenu}>
                   <Avatar 
                     username={user.username}
                     avatar={user.avatar}
@@ -81,10 +105,10 @@ export default function Navbar() {
           {!user && (
             <>
               <li className={styles.navItem}>
-                <Link href="/login" className={styles.authLink}>Login</Link>
+                <Link href="/login" className={styles.authLink} onClick={closeMenu}>Login</Link>
               </li>
               <li className={styles.navItem}>
-                <Link href="/signup" className={styles.authLink}>Sign Up</Link>
+                <Link href="/signup" className={styles.authLink} onClick={closeMenu}>Sign Up</Link>
               </li>
             </>
           )}
