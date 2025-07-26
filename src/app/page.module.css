@@ -3016,3 +3016,261 @@ Link.editButton:hover {
     font-size: 0.9rem !important;
   }
 }
+
+/* Discogs Integration Styles */
+.discogsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.discogsCard {
+  background: var(--ctp-surface1);
+  border: 1px solid var(--ctp-surface2);
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.discogsCard h3 {
+  margin: 0 0 16px 0;
+  color: var(--ctp-text);
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.connectedStatus,
+.disconnectedStatus {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.statusIndicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+}
+
+.statusDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--ctp-green);
+  flex-shrink: 0;
+}
+
+.statusDotDisconnected {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--ctp-overlay0);
+  flex-shrink: 0;
+}
+
+.statusDescription {
+  color: var(--ctp-subtext1);
+  font-size: 14px;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.connectButton,
+.syncButton {
+  background: var(--ctp-blue);
+  color: var(--ctp-base);
+  border: none;
+  padding: 12px 20px;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.connectButton:hover,
+.syncButton:hover {
+  background: var(--ctp-sky);
+  transform: translateY(-1px);
+}
+
+.syncActions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.cleanupButton {
+  background: var(--ctp-mauve);
+  color: var(--ctp-base);
+  border: none;
+  padding: 12px 20px;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.cleanupButton:hover {
+  background: var(--ctp-pink);
+  transform: translateY(-1px);
+}
+
+.disconnectButton {
+  background: var(--ctp-overlay0);
+  color: var(--ctp-text);
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  font-size: 13px;
+  transition: all 0.2s ease;
+}
+
+.disconnectButton:hover {
+  background: var(--ctp-red);
+  color: var(--ctp-base);
+}
+
+.syncDescription {
+  color: var(--ctp-subtext1);
+  font-size: 14px;
+  margin: 0 0 16px 0;
+  line-height: 1.5;
+}
+
+.syncInfo {
+  background: var(--ctp-surface0);
+  padding: 12px;
+  border-radius: 6px;
+  margin: 12px 0;
+  border: 1px solid var(--ctp-surface2);
+}
+
+.syncStat {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.syncLabel {
+  color: var(--ctp-subtext1);
+  font-size: 13px;
+}
+
+.syncValue {
+  font-weight: 600;
+  color: var(--ctp-text);
+  background: var(--ctp-blue);
+  color: var(--ctp-base);
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.85em;
+}
+
+.syncNote {
+  margin: 12px 0 0 0;
+  color: var(--ctp-overlay1);
+}
+
+.featureList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.feature {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.featureIcon {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.featureContent {
+  flex: 1;
+}
+
+.featureTitle {
+  font-weight: 500;
+  color: var(--ctp-text);
+  font-size: 14px;
+  margin: 0 0 2px 0;
+}
+
+.featureDescription {
+  color: var(--ctp-subtext1);
+  font-size: 13px;
+  margin: 0;
+}
+
+.privacyInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.privacyDescription {
+  color: var(--ctp-subtext1);
+  font-size: 14px;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.privacyDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.privacyItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  background: var(--ctp-surface0);
+  border-radius: 4px;
+  border: 1px solid var(--ctp-surface2);
+}
+
+.privacyLabel {
+  color: var(--ctp-subtext1);
+  font-size: 13px;
+}
+
+.privacyValue {
+  color: var(--ctp-text);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+/* Mobile responsive for Discogs */
+@media (max-width: 768px) {
+  .discogsGrid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  
+  .discogsCard {
+    padding: 16px;
+  }
+  
+  .connectButton,
+  .syncButton,
+  .cleanupButton,
+  .disconnectButton {
+    width: 100%;
+    text-align: center;
+  }
+  
+  .syncActions {
+    flex-direction: column;
+    gap: 8px;
+  }
+}

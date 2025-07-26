@@ -31,6 +31,9 @@ interface User {
   showGenreChart?: boolean
   showDecadeChart?: boolean
   discogsEnabled?: boolean
+  // Discogs integration
+  discogsUsername?: string
+  discogsAccessToken?: string
 }
 
 export default function Profile() {
@@ -59,6 +62,13 @@ export default function Profile() {
   const [discogsEnabled, setDiscogsEnabled] = useState(true)
   const [preferencesLoading, setPreferencesLoading] = useState(false)
   const [preferencesSuccess, setPreferencesSuccess] = useState(false)
+
+  // Discogs sync state
+  const [syncLoading, setSyncLoading] = useState(false)
+  const [syncSuccess, setSyncSuccess] = useState(false)
+  const [syncError, setSyncError] = useState<string | null>(null)
+  const [disconnectLoading, setDisconnectLoading] = useState(false)
+  const [cleanupLoading, setCleanupLoading] = useState(false)
   
   const router = useRouter()
 
@@ -245,6 +255,126 @@ export default function Profile() {
     }
   }
 
+  const connectDiscogs = () => {
+    window.location.href = '/api/auth/discogs'
+  }
+
+  const disconnectDiscogs = async () => {
+    setDisconnectLoading(true)
+    setSyncError(null)
+    
+    try {
+      const res = await fetch('/api/auth/discogs/disconnect', {
+        method: 'POST',
+      })
+      
+      if (!res.ok) {
+        const data = await res.json()
+        throw new Error(data.error || 'Failed to disconnect Discogs')
+      }
+      
+      // Update user state
+      if (user) {
+        setUser({
+          ...user,
+          discogsUsername: undefined,
+          discogsAccessToken: undefined,
+        })
+      }
+      
+      setSyncSuccess(false)
+    } catch (err) {
+      setSyncError(err instanceof Error ? err.message : 'An error occurred')
+    } finally {
+      setDisconnectLoading(false)
+    }
+  }
+
+  const syncDiscogsCollection = async () => {
+    setSyncLoading(true)
+    setSyncError(null)
+    setSyncSuccess(false)
+    
+    try {
+      const res = await fetch('/api/discogs/sync-collection', {
+        method: 'POST',
+      })
+      
+      if (!res.ok) {
+        const data = await res.json()
+        throw new Error(data.error || 'Failed to sync collection')
+      }
+      
+      const result = await res.json()
+      setSyncSuccess(true)
+      
+      // Refresh user data to get updated collection count
+      await fetchUserData()
+      
+      // Show success message with details
+      if (result.syncedCount > 0) {
+        setSyncError(null)
+      } else {
+        setSyncError('No new records were synced. Your collection may already be up to date.')
+      }
+      
+    } catch (err) {
+      setSyncError(err instanceof Error ? err.message : 'An error occurred')
+    } finally {
+      setSyncLoading(false)
+    }
+  }
+
+  const cleanupDuplicates = async () => {
+    setCleanupLoading(true)
+    setSyncError(null)
+    setSyncSuccess(false)
+    
+    try {
+      const res = await fetch('/api/discogs/cleanup-duplicates', {
+        method: 'POST',
+      })
+      
+      if (!res.ok) {
+        const data = await res.json()
+        throw new Error(data.error || 'Failed to cleanup duplicates')
+      }
+      
+      const result = await res.json()
+      setSyncSuccess(true)
+      
+      // Refresh user data to get updated collection count
+      await fetchUserData()
+      
+      // Show success message with details
+      if (result.mergedCount > 0) {
+        setSyncError(`Successfully merged ${result.mergedCount} duplicate records and removed ${result.removedCount} duplicates.`)
+      } else {
+        setSyncError('No duplicates found to merge.')
+      }
+      
+    } catch (err) {
+      setSyncError(err instanceof Error ? err.message : 'An error occurred')
+    } finally {
+      setCleanupLoading(false)
+    }
+  }
+
+  // Check for OAuth callback messages
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search)
+    if (urlParams.get('discogs') === 'connected') {
+      setSyncSuccess(true)
+      // Clean up URL
+      window.history.replaceState({}, '', '/profile')
+      // Refresh user data
+      fetchUserData()
+    } else if (urlParams.get('error')) {
+      setSyncError(urlParams.get('error') || 'OAuth failed')
+      window.history.replaceState({}, '', '/profile')
+    }
+  }, [])
+
   if (loading) {
     return (
       <main className={styles.main}>
@@ -298,6 +428,12 @@ export default function Profile() {
                 onClick={() => setActiveTab('security')}
               >
                 Security
+              </button>
+              <button 
+                className={activeTab === 'discogs' ? styles.tabActive : styles.tabInactive}
+                onClick={() => setActiveTab('discogs')}
+              >
+                Discogs
               </button>
               <button 
                 className={activeTab === 'data' ? styles.tabActive : styles.tabInactive}
@@ -549,6 +685,160 @@ export default function Profile() {
                       </button>
                     </div>
                   </form>
+                </div>
+              </div>
+            )}
+
+            {/* Discogs Integration Tab */}
+            {activeTab === 'discogs' && (
+              <div className={styles.tabContent}>
+                <h2>Discogs Integration</h2>
+                
+                {syncSuccess && (
+                  <div className={styles.successMessage}>
+                    ✅ {user?.discogsUsername ? 'Discogs account connected successfully!' : 'Collection synced successfully!'}
+                  </div>
+                )}
+                
+                {syncError && (
+                  <div className={styles.errorMessage}>
+                    {syncError}
+                  </div>
+                )}
+                
+                <div className={styles.discogsGrid}>
+                  <div className={styles.discogsCard}>
+                    <h3>Connection Status</h3>
+                    {user?.discogsUsername ? (
+                      <div className={styles.connectedStatus}>
+                        <div className={styles.statusIndicator}>
+                          <span className={styles.statusDot}></span>
+                          <span>Connected as <strong>{user.discogsUsername}</strong></span>
+                        </div>
+                        <p className={styles.statusDescription}>
+                          Your Discogs account is connected and ready to sync.
+                        </p>
+                        <button 
+                          onClick={disconnectDiscogs}
+                          disabled={disconnectLoading}
+                          className={styles.disconnectButton}
+                        >
+                          {disconnectLoading ? 'Disconnecting...' : 'Disconnect Account'}
+                        </button>
+                      </div>
+                    ) : (
+                      <div className={styles.disconnectedStatus}>
+                        <div className={styles.statusIndicator}>
+                          <span className={styles.statusDotDisconnected}></span>
+                          <span>Not Connected</span>
+                        </div>
+                        <p className={styles.statusDescription}>
+                          Connect your Discogs account to sync your collection and access advanced features.
+                        </p>
+                        <button 
+                          onClick={connectDiscogs}
+                          className={styles.connectButton}
+                        >
+                          Connect Discogs Account
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                  
+                  {user?.discogsUsername && (
+                    <div className={styles.discogsCard}>
+                      <h3>Collection Sync</h3>
+                      <p className={styles.syncDescription}>
+                        Sync your Discogs collection to import all your records automatically.
+                        This will add new records from your Discogs collection to your default collection.
+                      </p>
+                      <div className={styles.syncInfo}>
+                        <div className={styles.syncStat}>
+                          <span className={styles.syncLabel}>Current Records:</span>
+                          <span className={styles.syncValue}>{user.totalRecords}</span>
+                        </div>
+                      </div>
+                      <div className={styles.syncActions}>
+                        <button 
+                          onClick={syncDiscogsCollection}
+                          disabled={syncLoading || cleanupLoading}
+                          className={styles.syncButton}
+                        >
+                          {syncLoading ? '🔄 Syncing Collection...' : '🔄 Sync Collection'}
+                        </button>
+                        <button 
+                          onClick={cleanupDuplicates}
+                          disabled={syncLoading || cleanupLoading}
+                          className={styles.cleanupButton}
+                        >
+                          {cleanupLoading ? '🧹 Cleaning up...' : '🧹 Remove Duplicates'}
+                        </button>
+                      </div>
+                      <p className={styles.syncNote}>
+                        <small>
+                          ⚠️ Large collections may take several minutes to sync due to API rate limits.
+                          Use "Remove Duplicates" to merge existing records with Discogs data.
+                        </small>
+                      </p>
+                    </div>
+                  )}
+                  
+                  <div className={styles.discogsCard}>
+                    <h3>Features</h3>
+                    <div className={styles.featureList}>
+                      <div className={styles.feature}>
+                        <span className={styles.featureIcon}>📀</span>
+                        <div className={styles.featureContent}>
+                          <div className={styles.featureTitle}>Collection Sync</div>
+                          <div className={styles.featureDescription}>Import your entire Discogs collection</div>
+                        </div>
+                      </div>
+                      <div className={styles.feature}>
+                        <span className={styles.featureIcon}>🖼️</span>
+                        <div className={styles.featureContent}>
+                          <div className={styles.featureTitle}>High-Quality Images</div>
+                          <div className={styles.featureDescription}>Official release artwork and photos</div>
+                        </div>
+                      </div>
+                      <div className={styles.feature}>
+                        <span className={styles.featureIcon}>🏷️</span>
+                        <div className={styles.featureContent}>
+                          <div className={styles.featureTitle}>Rich Metadata</div>
+                          <div className={styles.featureDescription}>Complete release information and catalog numbers</div>
+                        </div>
+                      </div>
+                      <div className={styles.feature}>
+                        <span className={styles.featureIcon}>⭐</span>
+                        <div className={styles.featureContent}>
+                          <div className={styles.featureTitle}>Ratings & Notes</div>
+                          <div className={styles.featureDescription}>Sync your personal ratings and collection notes</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className={styles.discogsCard}>
+                    <h3>Privacy & Data</h3>
+                    <div className={styles.privacyInfo}>
+                      <p className={styles.privacyDescription}>
+                        We only access your Discogs collection data. We never modify your Discogs collection or access your personal information beyond what's necessary for syncing.
+                      </p>
+                      <div className={styles.privacyDetails}>
+                        <div className={styles.privacyItem}>
+                          <span className={styles.privacyLabel}>Data Access:</span>
+                          <span className={styles.privacyValue}>Read-only collection data</span>
+                        </div>
+                        <div className={styles.privacyItem}>
+                          <span className={styles.privacyLabel}>Rate Limit:</span>
+                          <span className={styles.privacyValue}>240 requests per minute</span>
+                        </div>
+                        <div className={styles.privacyItem}>
+                          <span className={styles.privacyLabel}>Token Storage:</span>
+                          <span className={styles.privacyValue}>Encrypted in our database</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             )}

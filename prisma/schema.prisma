@@ -20,6 +20,10 @@ model User {
   avatar          String?  // URL or avatar identifier
   avatarType      String   @default("generated") // "generated", "uploaded", "url"
   
+  // Discogs OAuth tokens
+  discogsAccessToken       String?
+  discogsAccessTokenSecret String?
+  
   // User preferences
   displayView     String   @default("grid") // "grid" or "list"
   recordsPerPage  Int      @default(20)
@@ -84,6 +88,7 @@ model Vinyl {
   rating       Int?     // Personal rating 1-5
   purchaseDate DateTime?
   purchasePrice Float?
+  purchaseCurrency String? // Currency code like USD, EUR, GBP
   purchaseLocation String?
   catalogNumber String?
   country      String?  // Country of release

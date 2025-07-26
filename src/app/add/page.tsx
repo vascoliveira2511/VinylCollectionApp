@@ -29,6 +29,7 @@ interface Vinyl {
   rating?: number
   purchaseDate?: string
   purchasePrice?: number
+  purchaseCurrency?: string
   purchaseLocation?: string
   catalogNumber?: string
   country?: string
@@ -84,6 +85,7 @@ export default function AddVinyl() {
   const [rating, setRating] = useState<number | undefined>(undefined)
   const [purchaseDate, setPurchaseDate] = useState('')
   const [purchasePrice, setPurchasePrice] = useState<number | undefined>(undefined)
+  const [purchaseCurrency, setPurchaseCurrency] = useState('USD')
   const [purchaseLocation, setPurchaseLocation] = useState('')
   const [catalogNumber, setCatalogNumber] = useState('')
   const [country, setCountry] = useState('')
@@ -199,7 +201,20 @@ export default function AddVinyl() {
         imageUrl, 
         genre,
         discogsId,
-        collectionId: selectedCollectionId
+        collectionId: selectedCollectionId,
+        // Manual fields
+        trackList,
+        description,
+        label,
+        format,
+        condition,
+        rating,
+        purchaseDate: purchaseDate || null,
+        purchasePrice: purchasePrice || null,
+        purchaseCurrency,
+        purchaseLocation,
+        catalogNumber,
+        country
       }
 
       const res = await fetch('/api/collection', {
@@ -221,6 +236,20 @@ export default function AddVinyl() {
       setSuggestions([])
       setSearchQuery('')
       setDataFetched(false)
+      
+      // Reset manual fields
+      setTrackList([])
+      setDescription('')
+      setLabel('')
+      setFormat('')
+      setCondition('')
+      setRating(undefined)
+      setPurchaseDate('')
+      setPurchasePrice(undefined)
+      setPurchaseCurrency('USD')
+      setPurchaseLocation('')
+      setCatalogNumber('')
+      setCountry('')
       
       // Keep the user in their preferred mode
       setSearchMode(currentSearchMode)
@@ -297,6 +326,19 @@ export default function AddVinyl() {
         setGenre([])
         setDiscogsId(undefined)
         setDataFetched(false)
+        // Reset manual fields
+        setTrackList([])
+        setDescription('')
+        setLabel('')
+        setFormat('')
+        setCondition('')
+        setRating(undefined)
+        setPurchaseDate('')
+        setPurchasePrice(undefined)
+        setPurchaseCurrency('USD')
+        setPurchaseLocation('')
+        setCatalogNumber('')
+        setCountry('')
       }
     }
   }
@@ -366,6 +408,19 @@ export default function AddVinyl() {
       setImageUrl('')
       setGenre([])
       setDiscogsId(undefined)
+      // Reset manual fields
+      setTrackList([])
+      setDescription('')
+      setLabel('')
+      setFormat('')
+      setCondition('')
+      setRating(undefined)
+      setPurchaseDate('')
+      setPurchasePrice(undefined)
+      setPurchaseCurrency('USD')
+      setPurchaseLocation('')
+      setCatalogNumber('')
+      setCountry('')
     }
   }
 
@@ -374,6 +429,19 @@ export default function AddVinyl() {
     setSuggestions([])
     setSearchQuery('')
     setDataFetched(false)
+    // Reset manual fields
+    setTrackList([])
+    setDescription('')
+    setLabel('')
+    setFormat('')
+    setCondition('')
+    setRating(undefined)
+    setPurchaseDate('')
+    setPurchasePrice(undefined)
+    setPurchaseCurrency('USD')
+    setPurchaseLocation('')
+    setCatalogNumber('')
+    setCountry('')
   }
 
 

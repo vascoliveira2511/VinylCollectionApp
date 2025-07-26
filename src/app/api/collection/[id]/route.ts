@@ -73,6 +73,7 @@ export async function PUT(request: Request, { params }: { params: { id: string }
       rating: updatedData.rating ? parseInt(updatedData.rating) : null,
       purchaseDate: updatedData.purchaseDate ? new Date(updatedData.purchaseDate) : null,
       purchasePrice: updatedData.purchasePrice ? parseFloat(updatedData.purchasePrice) : null,
+      purchaseCurrency: updatedData.purchaseCurrency || null,
       purchaseLocation: updatedData.purchaseLocation || null,
       catalogNumber: updatedData.catalogNumber || null,
       country: updatedData.country || null

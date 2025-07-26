@@ -29,6 +29,7 @@ interface Vinyl {
   rating?: number
   purchaseDate?: string
   purchasePrice?: number
+  purchaseCurrency?: string
   purchaseLocation?: string
   catalogNumber?: string
   country?: string
@@ -57,6 +58,37 @@ export default function VinylDetailPage({ params }: { params: { id: string } }) 
   // Helper function to render rating stars
   const renderRating = (rating: number) => {
     return '⭐'.repeat(rating) + '☆'.repeat(5 - rating)
+  }
+
+  // Helper function to get currency symbol
+  const getCurrencySymbol = (currency: string = 'USD') => {
+    const symbols: { [key: string]: string } = {
+      'USD': '$',
+      'EUR': '€',
+      'GBP': '£',
+      'JPY': '¥',
+      'CAD': 'C$',
+      'AUD': 'A$',
+      'CHF': 'CHF',
+      'CNY': '¥',
+      'SEK': 'kr',
+      'NOK': 'kr',
+      'DKK': 'kr',
+      'PLN': 'zł',
+      'CZK': 'Kč',
+      'HUF': 'Ft',
+      'RUB': '₽',
+      'BRL': 'R$',
+      'INR': '₹',
+      'KRW': '₩',
+      'SGD': 'S$',
+      'NZD': 'NZ$',
+      'ZAR': 'R',
+      'MXN': '$',
+      'THB': '฿',
+      'TRY': '₺',
+    }
+    return symbols[currency] || currency
   }
 
   useEffect(() => {
@@ -223,59 +255,84 @@ export default function VinylDetailPage({ params }: { params: { id: string } }) 
               </div>
             </div>
 
-            {/* User's manual details - only show if there's content */}
-            {(vinyl.label || vinyl.format || vinyl.condition || vinyl.country || vinyl.catalogNumber || 
-              vinyl.purchaseDate || vinyl.purchasePrice || vinyl.purchaseLocation || vinyl.collection) && (
-              <div className="window" style={{ marginBottom: '20px' }}>
-                <div className="title-bar">My Details</div>
-                <div className={styles.contentSection}>
-                  <div className={styles.vinylDetailsGrid}>
-                    
-                    {vinyl.label && (
-                      <p><strong>Label:</strong> <span>{vinyl.label}</span></p>
-                    )}
-                    
-                    {vinyl.format && (
-                      <p><strong>Format:</strong> <span>{vinyl.format}</span></p>
-                    )}
-                    
-                    {vinyl.condition && (
-                      <p><strong>Condition:</strong> <span>{vinyl.condition}</span></p>
-                    )}
-                    
-                    {vinyl.country && (
-                      <p><strong>Country:</strong> <span>{vinyl.country}</span></p>
-                    )}
-                    
-                    {vinyl.catalogNumber && (
-                      <p><strong>Catalog #:</strong> <span>{vinyl.catalogNumber}</span></p>
-                    )}
-                    
-                    {vinyl.purchaseDate && (
-                      <p><strong>Purchased:</strong> <span>{new Date(vinyl.purchaseDate).toLocaleDateString()}</span></p>
-                    )}
-                    
-                    {vinyl.purchasePrice && (
-                      <p><strong>Price:</strong> <span>${vinyl.purchasePrice.toFixed(2)}</span></p>
-                    )}
-                    
-                    {vinyl.purchaseLocation && (
-                      <p style={{ gridColumn: 'span 2' }}><strong>Purchased from:</strong> <span>{vinyl.purchaseLocation}</span></p>
-                    )}
-                    
-                    {vinyl.collection && (
-                      <p><strong>Collection:</strong> <span>{vinyl.collection.title}</span></p>
-                    )}
-                  </div>
+            {/* Combined Details Section */}
+            <div className="window" style={{ marginBottom: '20px' }}>
+              <div className="title-bar">Release Details</div>
+              <div className={styles.contentSection}>
+                <div className={styles.vinylDetailsGrid}>
+                  
+                  {/* Label */}
+                  {(vinyl.label || (discogsDetails?.labels && discogsDetails.labels.length > 0)) && (
+                    <p>
+                      <strong>Label:</strong> 
+                      <span>{vinyl.label || discogsDetails?.labels?.map((label: any) => label.name).join(', ')}</span>
+                    </p>
+                  )}
+                  
+                  {/* Format */}
+                  {(vinyl.format || (discogsDetails?.formats && discogsDetails.formats.length > 0)) && (
+                    <p>
+                      <strong>Format:</strong> 
+                      <span>{vinyl.format || discogsDetails?.formats?.map((format: any) => format.name).join(', ')}</span>
+                    </p>
+                  )}
+                  
+                  {/* Catalog Number */}
+                  {(vinyl.catalogNumber || (discogsDetails?.labels && discogsDetails.labels.some((l: any) => l.catno))) && (
+                    <p>
+                      <strong>Catalog #:</strong> 
+                      <span>{vinyl.catalogNumber || discogsDetails?.labels?.find((l: any) => l.catno)?.catno}</span>
+                    </p>
+                  )}
+                  
+                  {/* Country */}
+                  {(vinyl.country || discogsDetails?.country) && (
+                    <p>
+                      <strong>Country:</strong> 
+                      <span>{vinyl.country || discogsDetails?.country}</span>
+                    </p>
+                  )}
+                  
+                  {/* Release Date */}
+                  {discogsDetails?.released && (
+                    <p><strong>Released:</strong> <span>{discogsDetails.released}</span></p>
+                  )}
+                  
+                  {/* Styles */}
+                  {discogsDetails?.styles && discogsDetails.styles.length > 0 && (
+                    <p><strong>Style:</strong> <span>{discogsDetails.styles.join(', ')}</span></p>
+                  )}
+                  
+                  {/* Condition (only user data) */}
+                  {vinyl.condition && (
+                    <p><strong>Condition:</strong> <span>{vinyl.condition}</span></p>
+                  )}
+                  
+                  {/* Purchase info (only user data) */}
+                  {vinyl.purchaseDate && (
+                    <p><strong>Purchased:</strong> <span>{new Date(vinyl.purchaseDate).toLocaleDateString()}</span></p>
+                  )}
+                  
+                  {vinyl.purchasePrice && (
+                    <p><strong>Price:</strong> <span>{getCurrencySymbol(vinyl.purchaseCurrency)}{vinyl.purchasePrice.toFixed(2)}</span></p>
+                  )}
+                  
+                  {vinyl.purchaseLocation && (
+                    <p style={{ gridColumn: 'span 2' }}><strong>Purchased from:</strong> <span>{vinyl.purchaseLocation}</span></p>
+                  )}
+                  
+                  {vinyl.collection && (
+                    <p><strong>Collection:</strong> <span>{vinyl.collection.title}</span></p>
+                  )}
                 </div>
               </div>
-            )}
+            </div>
 
-            {/* User's track list */}
+            {/* Track list */}
             {vinyl.trackList && vinyl.trackList.length > 0 && (
               <div className="window" style={{ marginBottom: '20px' }}>
                 <div className="title-bar" style={{ cursor: 'pointer' }} onClick={() => setShowUserTracks(!showUserTracks)}>
-                  My Track List {showUserTracks ? '▲' : '▼'}
+                  Track List {showUserTracks ? '▲' : '▼'}
                 </div>
                 {showUserTracks && (
                   <div className={styles.contentSection}>
@@ -289,81 +346,58 @@ export default function VinylDetailPage({ params }: { params: { id: string } }) 
               </div>
             )}
 
-            {/* User's description */}
+            {/* Notes */}
             {vinyl.description && (
               <div className="window" style={{ marginBottom: '20px' }}>
-                <div className="title-bar">My Notes</div>
+                <div className="title-bar">Notes</div>
                 <div className={styles.contentSection}>
                   <p style={{ whiteSpace: 'pre-wrap' }}>{vinyl.description}</p>
                 </div>
               </div>
             )}
 
-            {/* Discogs details */}
+            {/* Additional Information */}
             {discogsDetails && (
               <>
-                <hr style={{ border: 'none', borderTop: '1px solid rgba(255, 255, 255, 0.1)', margin: '30px 0' }} />
-                <div className="window">
-                  <div className="title-bar">Discogs Information</div>
-                  <div className={styles.contentSection}>
-                    
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '15px', marginBottom: '20px' }}>
-                      {discogsDetails.labels && discogsDetails.labels.length > 0 && (
-                        <p><strong>Label:</strong> {discogsDetails.labels.map((label: any) => label.name).join(', ')}</p>
-                      )}
-                      {discogsDetails.formats && discogsDetails.formats.length > 0 && (
-                        <p><strong>Format:</strong> {discogsDetails.formats.map((format: any) => format.name).join(', ')}</p>
-                      )}
-                      {discogsDetails.country && (
-                        <p><strong>Country:</strong> {discogsDetails.country}</p>
-                      )}
-                      {discogsDetails.released && (
-                        <p><strong>Released:</strong> {discogsDetails.released}</p>
-                      )}
-                      {discogsDetails.styles && discogsDetails.styles.length > 0 && (
-                        <p><strong>Style:</strong> {discogsDetails.styles.join(', ')}</p>
-                      )}
+                {discogsDetails.notes && (
+                  <div className="window" style={{ marginBottom: '20px' }}>
+                    <div className="title-bar" style={{ cursor: 'pointer' }} onClick={() => setShowNotes(!showNotes)}>
+                      Release Notes {showNotes ? '▲' : '▼'}
                     </div>
-
-                    {discogsDetails.notes && (
-                      <div className="window" style={{ marginBottom: '15px' }}>
-                        <div className="title-bar" style={{ cursor: 'pointer' }} onClick={() => setShowNotes(!showNotes)}>
-                          Discogs Notes {showNotes ? '▲' : '▼'}
-                        </div>
-                        {showNotes && (
-                          <div className={styles.contentSection}>
-                            <p dangerouslySetInnerHTML={formatDiscogsNotes(discogsDetails.notes)}></p>
-                          </div>
-                        )}
+                    {showNotes && (
+                      <div className={styles.contentSection}>
+                        <p dangerouslySetInnerHTML={formatDiscogsNotes(discogsDetails.notes)}></p>
                       </div>
-                    )}
-
-                    {discogsDetails.tracklist && discogsDetails.tracklist.length > 0 && (
-                      <div className="window" style={{ marginBottom: '15px' }}>
-                        <div className="title-bar" style={{ cursor: 'pointer' }} onClick={() => setShowDiscogsTracks(!showDiscogsTracks)}>
-                          Discogs Tracklist {showDiscogsTracks ? '▲' : '▼'}
-                        </div>
-                        {showDiscogsTracks && (
-                          <div className={styles.contentSection}>
-                            <ul>
-                              {discogsDetails.tracklist.map((track: any, index: number) => (
-                                <li key={index}>{track.position} - {track.title} {track.duration && `(${track.duration})`}</li>
-                              ))}
-                            </ul>
-                          </div>
-                        )}
-                      </div>
-                    )}
-
-                    {discogsDetails.uri && (
-                      <p style={{ textAlign: 'center', marginTop: '20px' }}>
-                        <a href={discogsDetails.uri} target="_blank" rel="noopener noreferrer" className={styles.externalLink}>
-                          View on Discogs →
-                        </a>
-                      </p>
                     )}
                   </div>
-                </div>
+                )}
+
+                {discogsDetails.tracklist && discogsDetails.tracklist.length > 0 && !vinyl.trackList && (
+                  <div className="window" style={{ marginBottom: '20px' }}>
+                    <div className="title-bar" style={{ cursor: 'pointer' }} onClick={() => setShowDiscogsTracks(!showDiscogsTracks)}>
+                      Track List {showDiscogsTracks ? '▲' : '▼'}
+                    </div>
+                    {showDiscogsTracks && (
+                      <div className={styles.contentSection}>
+                        <ol>
+                          {discogsDetails.tracklist.map((track: any, index: number) => (
+                            <li key={index}>
+                              {track.title} {track.duration && <span style={{ color: 'var(--ctp-subtext1)' }}>({track.duration})</span>}
+                            </li>
+                          ))}
+                        </ol>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {discogsDetails.uri && (
+                  <p style={{ textAlign: 'center', marginTop: '20px' }}>
+                    <a href={discogsDetails.uri} target="_blank" rel="noopener noreferrer" className={styles.externalLink}>
+                      View Database Entry →
+                    </a>
+                  </p>
+                )}
               </>
             )}
 

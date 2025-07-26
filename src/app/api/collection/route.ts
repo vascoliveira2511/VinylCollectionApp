@@ -137,6 +137,7 @@ export async function POST(request: Request) {
       rating: newVinylData.rating ? parseInt(newVinylData.rating) : null,
       purchaseDate: newVinylData.purchaseDate ? new Date(newVinylData.purchaseDate) : null,
       purchasePrice: newVinylData.purchasePrice ? parseFloat(newVinylData.purchasePrice) : null,
+      purchaseCurrency: newVinylData.purchaseCurrency || null,
       purchaseLocation: newVinylData.purchaseLocation || null,
       catalogNumber: newVinylData.catalogNumber || null,
       country: newVinylData.country || null,

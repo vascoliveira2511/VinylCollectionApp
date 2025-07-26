@@ -30,7 +30,9 @@ export async function GET(request: NextRequest) {
         recordsPerPage: true,
         showGenreChart: true,
         showDecadeChart: true,
-        discogsEnabled: true
+        discogsEnabled: true,
+        discogsUsername: true,
+        discogsAccessToken: true
       }
     })
 
@@ -70,6 +72,8 @@ export async function GET(request: NextRequest) {
       showGenreChart: user.showGenreChart,
       showDecadeChart: user.showDecadeChart,
       discogsEnabled: user.discogsEnabled,
+      discogsUsername: user.discogsUsername,
+      discogsAccessToken: user.discogsAccessToken ? 'connected' : null, // Don't expose actual token
       totalRecords, 
       genreStats, 
       recentVinyls 
