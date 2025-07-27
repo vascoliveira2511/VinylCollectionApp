@@ -5,10 +5,15 @@
   justify-content: center;
   padding: 40px 20px;
   text-align: center;
-  background-color: var(--ctp-base);
-  border: 1px solid var(--ctp-red);
-  border-radius: 8px;
+  background: var(--surface-glass);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--error);
+  border-radius: 12px;
   margin: 20px 0;
+  box-shadow: 
+    0 8px 32px var(--shadow-subtle),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 .errorIcon {
@@ -17,32 +22,45 @@
 }
 
 .errorTitle {
-  color: var(--ctp-red);
+  color: var(--error);
   font-size: 24px;
   margin-bottom: 12px;
   font-weight: 600;
+  font-family: "Inter", sans-serif;
 }
 
 .errorMessage {
-  color: var(--ctp-subtext0);
+  color: var(--text-secondary);
   font-size: 16px;
   margin-bottom: 24px;
   max-width: 500px;
   line-height: 1.5;
+  font-family: "Inter", sans-serif;
 }
 
 .retryButton {
   padding: 12px 24px;
-  background-color: var(--ctp-blue);
-  color: var(--ctp-base);
-  border: none;
+  background: var(--yellow);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: var(--text-inverse);
+  border: 1px solid var(--yellow);
   border-radius: 6px;
   cursor: pointer;
   font-size: 14px;
   font-weight: 500;
-  transition: background-color 0.2s;
+  font-family: "Inter", sans-serif;
+  transition: all 0.3s ease;
+  box-shadow: 
+    0 4px 16px var(--shadow-yellow),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 .retryButton:hover {
-  background-color: var(--ctp-sapphire);
+  background: rgba(255, 215, 0, 0.9);
+  border-color: var(--yellow);
+  box-shadow: 
+    0 8px 24px var(--yellow-glow),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  transform: translateY(-1px);
 }

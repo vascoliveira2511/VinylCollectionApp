@@ -47,6 +47,10 @@ model User {
   favoriteVinyls  FavoriteVinyl[]
   recommendations Recommendation[] @relation("RecommendationSender")
   receivedRecommendations Recommendation[] @relation("RecommendationReceiver")
+  
+  // Community features
+  vinylComments   VinylComment[]
+  vinylStatuses   UserVinylStatus[]
 }
 
 model Collection {
@@ -57,6 +61,8 @@ model Collection {
   color       String?  // Theme color (hex)
   isPublic    Boolean  @default(false) // Public/private collection
   isDefault   Boolean  @default(false)
+  isProtected Boolean  @default(false) // Cannot be deleted (Collection, Wantlist)
+  type        String   @default("custom") // "collection", "wantlist", "custom"
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   
@@ -68,6 +74,7 @@ model Collection {
   vinyls      Vinyl[]
   
   @@index([userId])
+  @@index([userId, type])
 }
 
 model Vinyl {
@@ -79,13 +86,16 @@ model Vinyl {
   imageUrl     String?
   genres       String   // JSON array stored as string
   
-  // New manual fields
-  trackList    String?  // JSON array stored as string
+  // Personal collection fields (user editable)
+  condition    String?  // Media condition: Mint, VG+, VG, etc.
+  sleeveCondition String? // Sleeve condition: Mint, VG+, VG, etc.
+  rating       Int?     // Personal rating 1-5
   description  String?  // Personal notes/description
+  
+  // Legacy fields (kept for compatibility but not editable)
+  trackList    String?  // JSON array stored as string
   label        String?  // Record label
   format       String?  // LP, EP, 12", etc.
-  condition    String?  // Mint, VG+, VG, etc.
-  rating       Int?     // Personal rating 1-5
   purchaseDate DateTime?
   purchasePrice Float?
   purchaseCurrency String? // Currency code like USD, EUR, GBP
@@ -162,4 +172,41 @@ model Recommendation {
   @@index([senderId])
   @@index([receiverId])
   @@index([vinylId])
+}
+
+// User comments and reviews on vinyl releases
+model VinylComment {
+  id          Int      @id @default(autoincrement())
+  content     String   // Comment text
+  rating      Int?     // Optional rating 1-5
+  isReview    Boolean  @default(false) // true if this is a review, false if just a comment
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Foreign keys
+  userId      Int
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  discogsId   Int      // Discogs release ID (not vinyl record ID)
+  
+  @@index([userId])
+  @@index([discogsId])
+  @@index([discogsId, isReview])
+}
+
+// User status for vinyl releases (want/have/etc)
+model UserVinylStatus {
+  id          Int      @id @default(autoincrement())
+  status      String   // "want", "have", "owned", "sold"
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Foreign keys
+  userId      Int
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  discogsId   Int      // Discogs release ID
+  
+  @@unique([userId, discogsId])
+  @@index([userId])
+  @@index([discogsId])
+  @@index([userId, status])
 }

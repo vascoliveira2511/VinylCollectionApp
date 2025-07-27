@@ -1,0 +1,4 @@
+- Added first memory entry to the file
+- Noted the 'memorize' command instruction
+- Memorialized the 'memproze this convo' instruction
+- Added to memory

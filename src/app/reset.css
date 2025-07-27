@@ -6,12 +6,28 @@ html {
   font-size: 16px;
 }
 
-*, *:before, *:after {
+*,
+*:before,
+*:after {
   box-sizing: inherit;
 }
 
 /* Remove default margin and padding */
-body, h1, h2, h3, h4, h5, h6, p, ol, ul, figure, figcaption, blockquote, dl, dd {
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+ol,
+ul,
+figure,
+figcaption,
+blockquote,
+dl,
+dd {
   margin: 0;
   padding: 0;
 }
@@ -25,7 +41,8 @@ body {
 }
 
 /* Remove list styles on ul, ol elements with a class attribute */
-ul[class], ol[class] {
+ul[class],
+ol[class] {
   list-style: none;
 }
 
@@ -41,7 +58,10 @@ img {
 }
 
 /* Inherit fonts for inputs and buttons */
-input, button, textarea, select {
+input,
+button,
+textarea,
+select {
   font: inherit;
 }
 

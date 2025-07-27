@@ -43,7 +43,12 @@
       "Bash(git commit:*)",
       "Bash(git push:*)",
       "WebFetch(domain:www.discogs.com)",
-      "Bash(npm run:*)"
+      "Bash(npm run:*)",
+      "WebFetch(domain:gist.github.com)",
+      "WebFetch(domain:python3-discogs-client.readthedocs.io)",
+      "Bash(pkill:*)",
+      "WebFetch(domain:a24.com)",
+      "WebFetch(domain:a24films.com)"
     ],
     "deny": []
   }

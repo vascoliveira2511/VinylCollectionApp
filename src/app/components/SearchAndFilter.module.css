@@ -1,5 +1,10 @@
 .searchAndFilter {
   margin-bottom: 20px;
+  background: var(--surface);
+  border-radius: 12px;
+  padding: 20px;
+  border: 1px solid var(--border);
+  box-shadow: 0 2px 8px var(--shadow-subtle);
 }
 
 .mainSearch {
@@ -11,40 +16,49 @@
 .searchInput {
   flex: 1;
   padding: 12px;
-  border: 1px solid var(--ctp-surface1);
+  border: 1px solid var(--border);
   border-radius: 8px;
-  background-color: var(--ctp-surface0);
-  color: var(--ctp-text);
+  background-color: var(--surface-elevated);
+  color: var(--text);
   font-size: 16px;
+  transition: all 0.3s ease;
 }
 
 .searchInput:focus {
   outline: none;
-  border-color: var(--ctp-lavender);
-  box-shadow: 0 0 0 2px rgba(180, 190, 254, 0.2);
+  border-color: var(--yellow-border);
+  background-color: var(--surface-elevated);
+  box-shadow: 
+    0 0 0 2px var(--yellow-glow),
+    inset 0 2px 4px var(--shadow-subtle);
 }
 
 .advancedToggle {
   padding: 12px 20px;
-  background-color: var(--ctp-surface1);
-  color: var(--ctp-text);
-  border: none;
+  background: var(--surface-elevated);
+  color: var(--text);
+  border: 1px solid var(--yellow-border);
   border-radius: 8px;
   cursor: pointer;
   font-size: 14px;
-  transition: background-color 0.2s;
+  transition: all 0.3s ease;
+  font-weight: 500;
 }
 
 .advancedToggle:hover {
-  background-color: var(--ctp-surface2);
+  background: var(--yellow-hover);
+  border-color: var(--yellow);
+  box-shadow: 0 4px 16px var(--yellow-glow);
+  transform: translateY(-1px);
 }
 
 .advancedFilters {
-  background-color: var(--ctp-base);
-  border: 1px solid var(--ctp-surface1);
+  background: var(--surface-elevated);
+  border: 1px solid var(--yellow-border);
   border-radius: 8px;
   padding: 20px;
   margin-bottom: 15px;
+  box-shadow: 0 2px 8px var(--shadow-subtle);
 }
 
 .filterRow {
@@ -61,52 +75,60 @@
 .filterRow input,
 .filterRow select {
   padding: 10px;
-  border: 1px solid var(--ctp-surface1);
+  border: 1px solid var(--border);
   border-radius: 6px;
-  background-color: var(--ctp-surface0);
-  color: var(--ctp-text);
+  background-color: var(--surface-elevated);
+  color: var(--text);
   font-size: 14px;
+  transition: all 0.3s ease;
 }
 
 .filterRow input:focus,
 .filterRow select:focus {
   outline: none;
-  border-color: var(--ctp-lavender);
-  box-shadow: 0 0 0 2px rgba(180, 190, 254, 0.2);
+  border-color: var(--yellow-border);
+  background-color: var(--surface-elevated);
+  box-shadow: 
+    0 0 0 2px var(--yellow-glow),
+    inset 0 2px 4px var(--shadow-subtle);
 }
 
 .clearButton {
   padding: 10px 16px;
-  background-color: var(--ctp-red);
-  color: var(--ctp-base);
-  border: none;
+  background: var(--error);
+  color: var(--text-inverse);
+  border: 1px solid var(--error);
   border-radius: 6px;
   cursor: pointer;
   font-size: 14px;
   font-weight: 500;
-  transition: background-color 0.2s;
+  transition: all 0.3s ease;
 }
 
 .clearButton:hover {
-  background-color: var(--ctp-maroon);
+  background: #DC2626;
+  border-color: #DC2626;
+  box-shadow: 0 4px 16px rgba(239, 68, 68, 0.3);
+  transform: translateY(-1px);
 }
 
 .resultsSummary {
   font-size: 14px;
-  color: var(--ctp-subtext0);
+  color: var(--text-secondary);
   text-align: right;
   margin-top: 10px;
+  font-weight: 500;
 }
 
 @media (max-width: 768px) {
   .mainSearch {
     flex-direction: column;
   }
-  
+
   .filterRow {
     grid-template-columns: 1fr;
   }
-  
+
   .resultsSummary {
     text-align: center;
   }

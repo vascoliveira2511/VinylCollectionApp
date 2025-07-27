@@ -3,6 +3,8 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { apiClient } from "@/lib/api-client";
+import VinylCard from "./components/VinylCard";
 import styles from "./page.module.css";
 
 interface Vinyl {
@@ -45,6 +47,8 @@ interface Collection {
 }
 
 interface UserProfile {
+  recordsPerPage: any;
+  displayView: any;
   username: string;
   totalRecords: number;
   genreStats: Record<string, number>;
@@ -72,17 +76,9 @@ export default function Home() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Fetch user profile
-        const userRes = await fetch("/api/auth/user");
-        if (!userRes.ok) {
-          if (userRes.status === 401) {
-            router.push("/login");
-            return;
-          }
-          throw new Error("Failed to fetch user profile");
-        }
-        const userData = await userRes.json();
-        setUserProfile(userData);
+        // Fetch user profile with caching
+        const userData = (await apiClient.getCurrentUser()) as UserProfile;
+        setUserProfile(userData as UserProfile);
 
         // Set user preferences
         if (userData.displayView) {
@@ -92,16 +88,9 @@ export default function Home() {
           setDisplayLimit(userData.recordsPerPage);
         }
 
-        // Fetch collections
-        const collectionsRes = await fetch("/api/collections");
-        if (!collectionsRes.ok) {
-          if (collectionsRes.status === 401) {
-            router.push("/login");
-            return;
-          }
-          throw new Error("Failed to fetch collections");
-        }
-        const collectionsData = await collectionsRes.json();
+        // Fetch collections with caching
+        const collectionsData =
+          (await apiClient.getCollections()) as Collection[];
         setCollections(collectionsData);
 
         // Fetch vinyls
@@ -118,16 +107,14 @@ export default function Home() {
 
   const fetchVinyls = async (collectionFilter?: string) => {
     try {
-      let url = "/api/collection";
+      const filters: Record<string, string> = {};
       if (collectionFilter && collectionFilter !== "all") {
-        url += `?collectionId=${collectionFilter}`;
+        filters.collectionId = collectionFilter;
       }
 
-      const vinylsRes = await fetch(url);
-      if (!vinylsRes.ok) {
-        throw new Error("Failed to fetch vinyls");
-      }
-      const vinylsData = await vinylsRes.json();
+      const vinylsData = (await apiClient.getVinylCollection(
+        filters
+      )) as Vinyl[];
       setVinyls(vinylsData);
     } catch (error) {
       setError(error instanceof Error ? error.message : "An error occurred");
@@ -143,21 +130,18 @@ export default function Home() {
   const deleteVinyl = async (id: number) => {
     try {
       setError(null);
-      const res = await fetch(`/api/collection/${id}`, { method: "DELETE" });
-      if (!res.ok) throw new Error("Failed to delete vinyl");
+      await apiClient.deleteVinyl(id.toString());
 
-      // Refresh data
-      const collectionRes = await fetch("/api/collection");
-      if (collectionRes.ok) {
-        const collectionData = await collectionRes.json();
-        setVinyls(collectionData);
-      }
+      // Refresh data with cache invalidation
+      const [vinylsData, userData] = await Promise.all([
+        apiClient.getVinylCollection({}, { cache: "force-refresh" }) as Promise<
+          Vinyl[]
+        >,
+        apiClient.getCurrentUser({ cache: "force-refresh" }),
+      ]);
 
-      const userRes = await fetch("/api/auth/user");
-      if (userRes.ok) {
-        const userData = await userRes.json();
-        setUserProfile(userData);
-      }
+      setVinyls(vinylsData);
+      setUserProfile(userData as UserProfile);
     } catch (error) {
       setError(error instanceof Error ? error.message : "An error occurred");
     }
@@ -219,23 +203,24 @@ export default function Home() {
     <main className={styles.main}>
       <div className="container">
         <div className="window">
-          <div className="title-bar">Your Vinyl Collection</div>
+          <div className="title-bar">
+            Your Vinyl Collection
+          </div>
           <div className={styles.contentSection}>
             <div className={styles.browseIntro}>
-              <h2>Your Vinyl Records ({vinyls.length} total)</h2>
+              <h2>
+                Your Vinyl Records ({vinyls.length} total)
+              </h2>
               <p>
-                Browse, filter, and manage your entire vinyl collection. Click
-                any record to view details or edit information.
+                Browse, filter, and manage your entire vinyl collection. 
+                Click any record to view details or edit information.
               </p>
               <div className={styles.browseActions}>
+                <Link href="/browse" className={styles.addButton}>
+                  Discover Music
+                </Link>
                 <Link href="/collections" className={styles.manageButton}>
-                  📚 Manage Collections
-                </Link>
-                <Link href="/profile" className={styles.statsButton}>
-                  📊 View Statistics
-                </Link>
-                <Link href="/add" className={styles.addButton}>
-                  ➕ Add New Vinyl
+                  Manage Collections
                 </Link>
               </div>
             </div>
@@ -315,46 +300,13 @@ export default function Home() {
               }
             >
               {filteredVinyls.map((vinyl) => (
-                <div key={vinyl.id} className={styles.card}>
-                  <Link href={`/vinyl/${vinyl.id}`}>
-                    <img
-                      src={`/api/image-proxy?url=${encodeURIComponent(
-                        vinyl.imageUrl || "https://via.placeholder.com/150"
-                      )}`}
-                      alt={`${vinyl.title} cover`}
-                      className={styles.albumArt}
-                    />
-                    <div className={styles.cardInfo}>
-                      <h3>{vinyl.title}</h3>
-                      <p>{vinyl.artist}</p>
-                      <p>{vinyl.year}</p>
-                      <div className={styles.genrePills}>
-                        {vinyl.genre.map((g, idx) => (
-                          <span key={idx} className={styles.genrePill}>
-                            {g}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  </Link>
-                  <div className={styles.buttonGroup}>
-                    <Link
-                      href={`/vinyl/${vinyl.id}/edit`}
-                      className={styles.editButton}
-                    >
-                      ✏️ Edit
-                    </Link>
-                    <button
-                      className={styles.deleteButton}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        deleteVinyl(vinyl.id);
-                      }}
-                    >
-                      🗑️ Delete
-                    </button>
-                  </div>
-                </div>
+                <VinylCard
+                  key={vinyl.id}
+                  vinyl={vinyl}
+                  showDetails={true}
+                  onEdit={() => {}}
+                  onDelete={() => deleteVinyl(vinyl.id)}
+                />
               ))}
             </div>
 
@@ -362,7 +314,8 @@ export default function Home() {
               <div className={styles.emptyState}>
                 <p>
                   No vinyl records found. Try adjusting your filters or{" "}
-                  <Link href="/add">add some records</Link>!
+                  <Link href="/browse">discover music</Link> to add to your
+                  collection!
                 </p>
               </div>
             )}

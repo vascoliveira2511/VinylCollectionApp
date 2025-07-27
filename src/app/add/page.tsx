@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { apiClient } from '@/lib/api-client'
 import styles from '../page.module.css'
 
 interface Vinyl {
@@ -50,6 +51,12 @@ interface Suggestion {
   title: string
   genre: string[]
   style: string[]
+  year: number | null
+  format: string[]
+  label: string[]
+  thumb: string | null
+  country: string | null
+  catno: string | null
 }
 
 interface UserProfile {
@@ -110,28 +117,12 @@ export default function AddVinyl() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Fetch user profile
-        const userRes = await fetch('/api/auth/user')
-        if (!userRes.ok) {
-          if (userRes.status === 401) {
-            router.push('/login')
-            return
-          }
-          throw new Error('Failed to fetch user profile')
-        }
-        const userData = await userRes.json()
+        // Fetch user profile with caching
+        const userData = await apiClient.getCurrentUser()
         setUserProfile(userData)
 
-        // Fetch collections
-        const collectionsRes = await fetch('/api/collections')
-        if (!collectionsRes.ok) {
-          if (collectionsRes.status === 401) {
-            router.push('/login')
-            return
-          }
-          throw new Error('Failed to fetch collections')
-        }
-        const collectionsData = await collectionsRes.json()
+        // Fetch collections with caching
+        const collectionsData = await apiClient.getCollections()
         setCollections(collectionsData)
         
         // Set default collection as selected if available
@@ -155,16 +146,12 @@ export default function AddVinyl() {
 
   const fetchVinyls = async (collectionFilter?: string) => {
     try {
-      let url = '/api/collection'
+      const filters: Record<string, string> = {}
       if (collectionFilter && collectionFilter !== 'all') {
-        url += `?collectionId=${collectionFilter}`
+        filters.collectionId = collectionFilter
       }
       
-      const vinylsRes = await fetch(url)
-      if (!vinylsRes.ok) {
-        throw new Error('Failed to fetch vinyls')
-      }
-      const vinylsData = await vinylsRes.json()
+      const vinylsData = await apiClient.getVinylCollection(filters)
       setVinyls(vinylsData)
     } catch (error) {
       console.error('Error fetching vinyls:', error)
@@ -217,12 +204,7 @@ export default function AddVinyl() {
         country
       }
 
-      const res = await fetch('/api/collection', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(vinylData),
-      })
-      if (!res.ok) throw new Error('Failed to add vinyl')
+      await apiClient.addVinyl(vinylData)
       setSuccessMessage(`✅ "${title}" by ${artist} added to your collection!`)
 
       // Reset form but keep current search mode
@@ -259,14 +241,14 @@ export default function AddVinyl() {
         setSuccessMessage(null)
       }, 4000)
       
-      // Refresh vinyls
-      await fetchVinyls(filterCollection)
+      // Refresh vinyls and user data with cache invalidation
+      const [vinylsData, userData] = await Promise.all([
+        apiClient.getVinylCollection({}, { cache: 'force-refresh' }),
+        apiClient.getCurrentUser({ cache: 'force-refresh' })
+      ])
       
-      const userRes = await fetch('/api/auth/user')
-      if (userRes.ok) {
-        const userData = await userRes.json()
-        setUserProfile(userData)
-      }
+      setVinyls(vinylsData)
+      setUserProfile(userData)
     } catch (error) {
       setError(error instanceof Error ? error.message : 'An error occurred')
     }
@@ -275,21 +257,16 @@ export default function AddVinyl() {
   const deleteVinyl = async (id: number) => {
     try {
       setError(null)
-      const res = await fetch(`/api/collection/${id}`, { method: 'DELETE' })
-      if (!res.ok) throw new Error('Failed to delete vinyl')
+      await apiClient.deleteVinyl(id.toString())
       
-      // Refresh data
-      const collectionRes = await fetch('/api/collection')
-      if (collectionRes.ok) {
-        const collectionData = await collectionRes.json()
-        setVinyls(collectionData)
-      }
+      // Refresh data with cache invalidation
+      const [vinylsData, userData] = await Promise.all([
+        apiClient.getVinylCollection({}, { cache: 'force-refresh' }),
+        apiClient.getCurrentUser({ cache: 'force-refresh' })
+      ])
       
-      const userRes = await fetch('/api/auth/user')
-      if (userRes.ok) {
-        const userData = await userRes.json()
-        setUserProfile(userData)
-      }
+      setVinyls(vinylsData)
+      setUserProfile(userData)
     } catch (error) {
       setError(error instanceof Error ? error.message : 'An error occurred')
     }
@@ -303,13 +280,8 @@ export default function AddVinyl() {
     if (query.length > 2) {
       setIsSearching(true)
       try {
-        const res = await fetch(`/api/discogs-suggest?query=${encodeURIComponent(query)}`)
-        if (res.ok) {
-          const data = await res.json()
-          setSuggestions(data)
-        } else {
-          setSuggestions([])
-        }
+        const data = await apiClient.searchDiscogs(query)
+        setSuggestions(data)
       } catch (error) {
         setSuggestions([])
       } finally {
@@ -353,39 +325,36 @@ export default function AddVinyl() {
     
     try {
       setError(null)
-      const res = await fetch(`/api/discogs?artist=${encodeURIComponent(suggestion.artist)}&title=${encodeURIComponent(suggestion.title)}`)
+      const data = await apiClient.getDiscogsData(suggestion.artist, suggestion.title)
       
-      if (res.ok) {
-        const data = await res.json()
-        // Handle potentially missing fields from Discogs
-        if (data.year) {
-          setYear(data.year.toString())
-        } else {
-          setYear('') // Clear year if not found
-        }
-        if (data.imageUrl) setImageUrl(data.imageUrl)
-        if (data.genre && data.genre.length > 0) {
-          setGenre(data.genre)
-        } else {
-          setGenre([]) // Clear genres if not found
-        }
-        if (data.discogsId) setDiscogsId(data.discogsId)
-        setDataFetched(true)
-        
-        // Show info about missing fields
-        const missingFields = []
-        if (!data.year) missingFields.push('year')
-        if (!data.genre || data.genre.length === 0) missingFields.push('genre')
-        
-        if (missingFields.length > 0) {
-          setError(`ℹ️ Note: ${missingFields.join(', ')} not found in Discogs - you can add these manually if needed`)
-          // Clear error after 5 seconds since this is just informational
-          setTimeout(() => {
-            setError(null)
-          }, 5000)
-        } else {
-          setError(null) // Clear any previous errors
-        }
+      // Handle potentially missing fields from Discogs
+      if (data.year) {
+        setYear(data.year.toString())
+      } else {
+        setYear('') // Clear year if not found
+      }
+      if (data.imageUrl) setImageUrl(data.imageUrl)
+      if (data.genre && data.genre.length > 0) {
+        setGenre(data.genre)
+      } else {
+        setGenre([]) // Clear genres if not found
+      }
+      if (data.discogsId) setDiscogsId(data.discogsId)
+      setDataFetched(true)
+      
+      // Show info about missing fields
+      const missingFields = []
+      if (!data.year) missingFields.push('year')
+      if (!data.genre || data.genre.length === 0) missingFields.push('genre')
+      
+      if (missingFields.length > 0) {
+        setError(`ℹ️ Note: ${missingFields.join(', ')} not found in Discogs - you can add these manually if needed`)
+        // Clear error after 5 seconds since this is just informational
+        setTimeout(() => {
+          setError(null)
+        }, 5000)
+      } else {
+        setError(null) // Clear any previous errors
       }
     } catch (error) {
       console.error('Error fetching album data:', error)
@@ -489,14 +458,21 @@ export default function AddVinyl() {
       <div className="container">
 
         <div className="window">
-          <div className="title-bar">Add New Vinyl</div>
+          <div className="title-bar">Add Vinyl to Collection</div>
           <div className={styles.contentSection}>
-            <div className={styles.collectionsHelp}>
-              <h3>📚 Organize with Collections</h3>
+            <div className={styles.browseIntro}>
+              <h2>Add Music to Your Collection</h2>
               <p>
-                Create custom collections like "Jazz Classics", "Want List", or "Punk Rock" to organize your vinyls. 
-                <Link href="/collections" className={styles.helpLink}>Manage Collections →</Link>
+                Search our database or manually enter vinyl details. For the best experience, try <Link href="/browse" className={styles.helpLink}>Discover Music →</Link> to browse millions of releases.
               </p>
+              <div className={styles.browseActions}>
+                <Link href="/browse" className={styles.addButton}>
+                  🌍 Discover & Add
+                </Link>
+                <Link href="/collections" className={styles.manageButton}>
+                  📚 Manage Collections
+                </Link>
+              </div>
             </div>
             {/* Search Mode Toggle - Outside form to prevent expansion */}
             <div className={styles.searchModeToggle}>
@@ -543,12 +519,29 @@ export default function AddVinyl() {
                       <ul className={styles.suggestionsList}>
                         {suggestions.map((s, index) => (
                           <li key={index} onClick={() => handleSuggestionClick(s)} className={styles.suggestionItem}>
-                            <div className={styles.suggestionMain}>
-                              <strong>{s.artist}</strong> - {s.title}
-                            </div>
-                            <div className={styles.suggestionMeta}>
-                              {s.genre.length > 0 && s.genre.slice(0, 2).join(', ')}
-                              {s.style.length > 0 && ` • ${s.style.slice(0, 2).join(', ')}`}
+                            <div className={styles.suggestionContent}>
+                              {s.thumb && (
+                                <img 
+                                  src={`/api/image-proxy?url=${encodeURIComponent(s.thumb)}`}
+                                  alt={`${s.title} cover`}
+                                  className={styles.suggestionThumb}
+                                />
+                              )}
+                              <div className={styles.suggestionInfo}>
+                                <div className={styles.suggestionMain}>
+                                  <strong>{s.artist}</strong> - {s.title}
+                                </div>
+                                <div className={styles.suggestionMeta}>
+                                  {s.year && <span>{s.year}</span>}
+                                  {s.country && <span> • {s.country}</span>}
+                                  {s.format.length > 0 && <span> • {s.format[0]}</span>}
+                                  {s.label.length > 0 && <span> • {s.label[0]}</span>}
+                                </div>
+                                <div className={styles.suggestionGenres}>
+                                  {s.genre.length > 0 && s.genre.slice(0, 2).join(', ')}
+                                  {s.style.length > 0 && ` • ${s.style.slice(0, 2).join(', ')}`}
+                                </div>
+                              </div>
                             </div>
                           </li>
                         ))}
@@ -650,7 +643,10 @@ export default function AddVinyl() {
               <p>After adding your vinyl, you might want to organize it or view your collection.</p>
               <div className={styles.browseActions}>
                 <Link href="/" className={styles.manageButton}>
-                  🎧 Browse Collection
+                  🎧 My Collection
+                </Link>
+                <Link href="/browse" className={styles.browseButton}>
+                  🌍 Discover Music
                 </Link>
                 <Link href="/collections" className={styles.statsButton}>
                   📚 Manage Collections

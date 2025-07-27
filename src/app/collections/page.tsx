@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { apiClient } from "@/lib/api-client";
 import styles from "../page.module.css";
 
 interface Collection {
@@ -40,16 +41,8 @@ export default function Collections() {
 
   const fetchCollections = async () => {
     try {
-      const res = await fetch("/api/collections");
-      if (!res.ok) {
-        if (res.status === 401) {
-          router.push("/login");
-          return;
-        }
-        throw new Error("Failed to fetch collections");
-      }
-      const data = await res.json();
-      setCollections(data);
+      const data = await apiClient.getCollections();
+      setCollections(data as Collection[]);
     } catch (err) {
       setError(err instanceof Error ? err.message : "An error occurred");
     } finally {
@@ -73,22 +66,13 @@ export default function Collections() {
     setError(null);
 
     try {
-      const res = await fetch("/api/collections", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          title,
-          description: description || null,
-          imageUrl: imageUrl || null,
-          color: color || null,
-          isPublic,
-        }),
+      await apiClient.createCollection({
+        title,
+        description: description || null,
+        imageUrl: imageUrl || null,
+        color: color || null,
+        isPublic,
       });
-
-      if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.error || "Failed to create collection");
-      }
 
       // Reset form and refresh collections
       setTitle("");
@@ -97,7 +81,10 @@ export default function Collections() {
       setColor("#6c7ce7");
       setIsPublic(false);
       setShowCreateForm(false);
-      await fetchCollections();
+
+      // Force refresh collections after creation
+      const data = await apiClient.getCollections({ cache: "force-refresh" });
+      setCollections(data as Collection[]);
     } catch (err) {
       setError(err instanceof Error ? err.message : "An error occurred");
     } finally {
@@ -117,22 +104,13 @@ export default function Collections() {
     setError(null);
 
     try {
-      const res = await fetch(`/api/collections/${editingCollection.id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          title,
-          description: description || null,
-          imageUrl: imageUrl || null,
-          color: color || null,
-          isPublic,
-        }),
+      await apiClient.updateCollection(editingCollection.id.toString(), {
+        title,
+        description: description || null,
+        imageUrl: imageUrl || null,
+        color: color || null,
+        isPublic,
       });
-
-      if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.error || "Failed to update collection");
-      }
 
       // Reset form and refresh collections
       setTitle("");
@@ -141,7 +119,10 @@ export default function Collections() {
       setColor("#6c7ce7");
       setIsPublic(false);
       setEditingCollection(null);
-      await fetchCollections();
+
+      // Force refresh collections after update
+      const data = await apiClient.getCollections({ cache: "force-refresh" });
+      setCollections(data as Collection[]);
     } catch (err) {
       setError(err instanceof Error ? err.message : "An error occurred");
     } finally {
@@ -164,16 +145,11 @@ export default function Collections() {
     }
 
     try {
-      const res = await fetch(`/api/collections/${collection.id}`, {
-        method: "DELETE",
-      });
+      await apiClient.deleteCollection(collection.id.toString());
 
-      if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.error || "Failed to delete collection");
-      }
-
-      await fetchCollections();
+      // Force refresh collections after deletion
+      const data = await apiClient.getCollections({ cache: "force-refresh" });
+      setCollections(data as Collection[]);
     } catch (err) {
       setError(err instanceof Error ? err.message : "An error occurred");
     }
@@ -199,18 +175,11 @@ export default function Collections() {
     }
 
     try {
-      const res = await fetch("/api/collections/set-default", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ collectionId: collection.id }),
-      });
+      await apiClient.setDefaultCollection(collection.id);
 
-      if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.error || "Failed to set default collection");
-      }
-
-      await fetchCollections();
+      // Force refresh collections after setting default
+      const data = await apiClient.getCollections({ cache: "force-refresh" });
+      setCollections(data as Collection[]);
     } catch (err) {
       setError(err instanceof Error ? err.message : "An error occurred");
     }

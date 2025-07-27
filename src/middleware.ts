@@ -1,29 +1,29 @@
-import { NextResponse } from 'next/server'
-import type { NextRequest } from 'next/server'
-import * as jose from 'jose'
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
+import * as jose from "jose";
 
-const secret = new TextEncoder().encode(process.env.JWT_SECRET)
+const secret = new TextEncoder().encode(process.env.JWT_SECRET);
 
 export async function middleware(request: NextRequest) {
-  const token = request.cookies.get('token')?.value
+  const token = request.cookies.get("token")?.value;
 
   if (!token) {
-    return NextResponse.redirect(new URL('/login', request.url))
+    return NextResponse.redirect(new URL("/login", request.url));
   }
 
   try {
-    const { payload } = await jose.jwtVerify(token, secret)
-    const requestHeaders = new Headers(request.headers)
-    requestHeaders.set('x-user-id', payload.userId as string)
+    const { payload } = await jose.jwtVerify(token, secret);
+    const requestHeaders = new Headers(request.headers);
+    requestHeaders.set("x-user-id", payload.userId as string);
 
     return NextResponse.next({
       request: {
         headers: requestHeaders,
       },
-    })
+    });
   } catch (error) {
-    console.error('Middleware: JWT Verification Error', error)
-    return NextResponse.redirect(new URL('/login', request.url))
+    console.error("Middleware: JWT Verification Error", error);
+    return NextResponse.redirect(new URL("/login", request.url));
   }
 }
 
@@ -32,7 +32,7 @@ export const config = {
     /*
      * Match all request paths except for the ones starting with:
      * - api/auth/login (login endpoint)
-     * - api/auth/signup (signup endpoint) 
+     * - api/auth/signup (signup endpoint)
      * - api/auth/logout (logout endpoint)
      * - api/auth/discogs (discogs oauth endpoints)
      * - login (login page)
@@ -42,7 +42,6 @@ export const config = {
      * - favicon.svg (favicon file)
      * - favicon.ico (favicon file)
      */
-    '/((?!api/auth/login|api/auth/signup|api/auth/logout|api/auth/discogs|api/auth/google|login|signup|_next/static|_next/image|favicon).*)',
+    "/((?!api/auth/login|api/auth/signup|api/auth/logout|api/auth/discogs|api/auth/google|login|signup|_next/static|_next/image|favicon).*)",
   ],
-}
-
+};

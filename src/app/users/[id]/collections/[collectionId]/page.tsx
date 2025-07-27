@@ -1,83 +1,96 @@
-'use client'
+"use client";
 
-import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
-import Link from 'next/link'
-import Avatar from '../../../../components/Avatar'
-import styles from '../../../../page.module.css'
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import Avatar from "../../../../components/Avatar";
+import VinylCard from "../../../../components/VinylCard";
+import styles from "../../../../page.module.css";
 
 interface User {
-  id: number
-  username: string
-  avatar?: string
-  avatarType?: string
+  id: number;
+  username: string;
+  avatar?: string;
+  avatarType?: string;
 }
 
 interface Vinyl {
-  id: number
-  artist: string
-  title: string
-  year?: number
-  imageUrl?: string
-  genre: string[]
-  discogsId?: number
-  createdAt: string
+  id: number;
+  artist: string;
+  title: string;
+  year?: number;
+  imageUrl?: string;
+  genre: string[];
+  discogsId?: number;
+  createdAt: string;
+  // Additional metadata fields
+  label?: string;
+  format?: string;
+  condition?: string;
+  rating?: number;
+  purchaseDate?: string;
+  purchasePrice?: number;
+  purchaseLocation?: string;
+  catalogNumber?: string;
+  country?: string;
 }
 
 interface Collection {
-  id: number
-  title: string
-  description?: string
-  isPublic: boolean
-  createdAt: string
-  vinyls: Vinyl[]
-  user: User
+  id: number;
+  title: string;
+  description?: string;
+  isPublic: boolean;
+  createdAt: string;
+  vinyls: Vinyl[];
+  user: User;
 }
 
-export default function FriendCollectionPage({ 
-  params 
-}: { 
-  params: { id: string; collectionId: string } 
+export default function FriendCollectionPage({
+  params,
+}: {
+  params: { id: string; collectionId: string };
 }) {
-  const [collection, setCollection] = useState<Collection | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  const router = useRouter()
+  const [collection, setCollection] = useState<Collection | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
-    fetchCollection()
-  }, [params.id, params.collectionId])
+    fetchCollection();
+  }, [params.id, params.collectionId]);
 
   const fetchCollection = async () => {
     try {
-      setLoading(true)
-      const res = await fetch(`/api/users/${params.id}/collections/${params.collectionId}`)
-      
+      setLoading(true);
+      const res = await fetch(
+        `/api/users/${params.id}/collections/${params.collectionId}`
+      );
+
       if (!res.ok) {
         if (res.status === 401) {
-          router.push('/login')
-          return
+          router.push("/login");
+          return;
         }
         if (res.status === 403) {
-          setError('You are not authorized to view this collection')
-          return
+          setError("You are not authorized to view this collection");
+          return;
         }
         if (res.status === 404) {
-          setError('Collection not found')
-          return
+          setError("Collection not found");
+          return;
         }
-        throw new Error('Failed to fetch collection')
+        throw new Error("Failed to fetch collection");
       }
 
-      const data = await res.json()
-      setCollection(data)
+      const data = await res.json();
+      setCollection(data);
     } catch (error) {
-      console.error('Error fetching collection:', error)
-      setError('Failed to load collection')
+      console.error("Error fetching collection:", error);
+      setError("Failed to load collection");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   if (loading) {
     return (
@@ -91,7 +104,7 @@ export default function FriendCollectionPage({
           </div>
         </div>
       </main>
-    )
+    );
   }
 
   if (error || !collection) {
@@ -102,10 +115,13 @@ export default function FriendCollectionPage({
             <div className="title-bar">Error</div>
             <div className={styles.contentSection}>
               <div className={styles.errorMessage}>
-                {error || 'Collection not found'}
+                {error || "Collection not found"}
               </div>
               <div className={styles.formActions}>
-                <Link href={`/users/${params.id}`} className={styles.backButton}>
+                <Link
+                  href={`/users/${params.id}`}
+                  className={styles.backButton}
+                >
                   ← Back to User Profile
                 </Link>
               </div>
@@ -113,7 +129,7 @@ export default function FriendCollectionPage({
           </div>
         </div>
       </main>
-    )
+    );
   }
 
   return (
@@ -127,11 +143,13 @@ export default function FriendCollectionPage({
               <div className={styles.collectionInfo}>
                 <h1>{collection.title}</h1>
                 {collection.description && (
-                  <p className={styles.collectionDescription}>{collection.description}</p>
+                  <p className={styles.collectionDescription}>
+                    {collection.description}
+                  </p>
                 )}
                 <div className={styles.collectionMeta}>
                   <div className={styles.ownerInfo}>
-                    <Avatar 
+                    <Avatar
                       username={collection.user.username}
                       avatar={collection.user.avatar}
                       avatarType={collection.user.avatarType}
@@ -140,8 +158,11 @@ export default function FriendCollectionPage({
                     <span>by {collection.user.username}</span>
                   </div>
                   <div className={styles.collectionStats}>
-                    {collection.vinyls.length} records • Created {new Date(collection.createdAt).toLocaleDateString()}
-                    {collection.isPublic && <span className={styles.publicBadge}>Public</span>}
+                    {collection.vinyls.length} records • Created{" "}
+                    {new Date(collection.createdAt).toLocaleDateString()}
+                    {collection.isPublic && (
+                      <span className={styles.publicBadge}>Public</span>
+                    )}
                   </div>
                 </div>
               </div>
@@ -157,7 +178,9 @@ export default function FriendCollectionPage({
 
         {/* Vinyl Records */}
         <div className="window">
-          <div className="title-bar">🎵 Records ({collection.vinyls.length})</div>
+          <div className="title-bar">
+            🎵 Records ({collection.vinyls.length})
+          </div>
           <div className={styles.contentSection}>
             {collection.vinyls.length === 0 ? (
               <div className={styles.emptyState}>
@@ -165,35 +188,14 @@ export default function FriendCollectionPage({
               </div>
             ) : (
               <div className={styles.collectionGrid}>
-                {collection.vinyls.map(vinyl => (
-                  <div key={vinyl.id} className={styles.card}>
-                    <div className={styles.cardContent}>
-                      {vinyl.imageUrl && (
-                        <img 
-                          src={vinyl.imageUrl} 
-                          alt={`${vinyl.artist} - ${vinyl.title}`}
-                          className={styles.albumArt}
-                        />
-                      )}
-                      <div className={styles.cardInfo}>
-                        <h3>{vinyl.title}</h3>
-                        <p><strong>Artist:</strong> {vinyl.artist}</p>
-                        {vinyl.year && <p><strong>Year:</strong> {vinyl.year}</p>}
-                        {vinyl.genre.length > 0 && (
-                          <div className={styles.genrePills}>
-                            {vinyl.genre.slice(0, 3).map((g, index) => (
-                              <span key={index} className={styles.genrePill}>
-                                {g}
-                              </span>
-                            ))}
-                          </div>
-                        )}
-                        <p className={styles.addedDate}>
-                          Added {new Date(vinyl.createdAt).toLocaleDateString()}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
+                {collection.vinyls.map((vinyl) => (
+                  <VinylCard
+                    key={vinyl.id}
+                    vinyl={vinyl}
+                    showDetails={true}
+                    showActions={false}
+                    linkPrefix={vinyl.discogsId ? `/browse/${vinyl.discogsId}` : "#"}
+                  />
                 ))}
               </div>
             )}
@@ -201,5 +203,5 @@ export default function FriendCollectionPage({
         </div>
       </div>
     </main>
-  )
+  );
 }

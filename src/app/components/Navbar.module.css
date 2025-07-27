@@ -1,10 +1,12 @@
 .navbar {
-  background: var(--ctp-surface0);
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
   padding: 16px 24px;
-  border-bottom: 1px solid var(--ctp-surface1);
   margin-bottom: 0;
-  box-shadow: 0 4px 16px rgba(17, 17, 27, 0.3);
   position: relative;
+  box-shadow: 0 2px 12px var(--shadow-subtle);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
 .navContent {
@@ -20,23 +22,65 @@
   align-items: center;
   gap: 8px;
   text-decoration: none;
-  transition: all 0.2s ease;
-  border-radius: 8px;
+  transition: opacity 0.2s ease;
   padding: 4px 8px;
+  border-radius: 4px;
 }
 
 .navBrand:hover {
-  background: var(--ctp-surface1);
+  opacity: 0.9;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px var(--beeswax-glow);
 }
 
 .brandIcon {
-  font-size: 1.5rem;
+  position: relative;
+  width: 20px;
+  height: 20px;
+}
+
+.vinylIcon {
+  width: 100%;
+  height: 100%;
+  background: var(--vinyl);
+  border-radius: 50%;
+  position: relative;
+  animation: spin 4s linear infinite;
+  border: 1px solid var(--border);
+  box-shadow: inset 0 1px 2px var(--shadow-subtle);
+}
+
+.vinylIcon::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 6px;
+  height: 6px;
+  background: var(--beeswax);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 1px 2px var(--shadow-subtle);
+}
+
+.vinylIcon::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 2px;
+  height: 2px;
+  background: var(--vinyl);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
 }
 
 .brandText {
-  color: var(--ctp-text);
+  color: var(--text);
   font-weight: 600;
-  font-size: 1.2rem;
+  font-size: 1.125rem;
+  font-family: "Inter", sans-serif;
 }
 
 .navList {
@@ -49,30 +93,32 @@
 }
 
 .navItem a {
-  color: var(--ctp-text);
+  color: var(--text-secondary);
   text-decoration: none;
   font-weight: 500;
-  font-size: 0.9em;
-  letter-spacing: 0.025em;
-  transition: all 0.2s ease;
-  padding: 8px 16px;
-  border-radius: 8px;
+  font-size: 0.875rem;
+  letter-spacing: -0.01em;
+  transition: color 0.2s ease;
+  padding: 8px 12px;
+  border-radius: 4px;
   position: relative;
-  background: transparent;
-  border: 1px solid transparent;
+  font-family: "Inter", sans-serif;
 }
 
 .navItem a:hover {
-  color: var(--ctp-mauve);
-  background: var(--ctp-surface1);
-  border-color: var(--ctp-surface2);
+  color: var(--text);
+  background: var(--beeswax-hover);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 
 .activeLink {
-  color: var(--ctp-mauve) !important;
-  background: var(--ctp-surface1) !important;
-  border-color: var(--ctp-mauve) !important;
+  color: var(--beeswax-dark) !important;
+  background: var(--beeswax-transparent) !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
   font-weight: 600 !important;
+  border: 1px solid var(--beeswax) !important;
 }
 
 .profileLink {
@@ -81,30 +127,30 @@
   gap: 8px;
   padding: 6px 12px;
   border-radius: 20px;
-  background: var(--ctp-surface1);
-  border: 1px solid var(--ctp-surface2);
+  background: var(--surface-elevated);
+  border: 1px solid var(--border);
   transition: all 0.2s ease;
 }
 
 .profileLink:hover {
-  background: var(--ctp-surface2);
-  border-color: var(--ctp-mauve);
+  background: var(--surface-warm);
+  border-color: var(--beeswax);
   text-decoration: none;
 }
 
 .activeProfile {
-  background: var(--ctp-surface2) !important;
-  border-color: var(--ctp-mauve) !important;
+  background: var(--surface-warm) !important;
+  border-color: var(--beeswax) !important;
 }
 
 .username {
-  color: var(--ctp-text);
+  color: var(--text);
   font-weight: 500;
   font-size: 0.9rem;
 }
 
 .authLink {
-  color: var(--ctp-text) !important;
+  color: var(--text) !important;
   text-decoration: none;
   font-weight: 500;
   font-size: 0.9em;
@@ -112,14 +158,14 @@
   transition: all 0.2s ease;
   padding: 8px 16px;
   border-radius: 8px;
-  background: var(--ctp-surface1);
-  border: 1px solid var(--ctp-surface2);
+  background: var(--surface-elevated);
+  border: 1px solid var(--border);
 }
 
 .authLink:hover {
-  color: var(--ctp-mauve) !important;
-  background: var(--ctp-surface2);
-  border-color: var(--ctp-mauve);
+  color: var(--beeswax-dark) !important;
+  background: var(--surface-warm);
+  border-color: var(--beeswax);
 }
 
 /* Hamburger menu styles */
@@ -139,7 +185,7 @@
 .hamburgerLine {
   width: 24px;
   height: 3px;
-  background: var(--ctp-text);
+  background: var(--text);
   border-radius: 3px;
   transition: all 0.3s linear;
   position: relative;
@@ -207,12 +253,12 @@
     top: 100%;
     left: 0;
     right: 0;
-    background: var(--ctp-surface0);
+    background: var(--surface);
     flex-direction: column;
     gap: 0;
     width: 100%;
-    border-top: 1px solid var(--ctp-surface1);
-    box-shadow: 0 4px 16px rgba(17, 17, 27, 0.3);
+    border-top: 1px solid var(--border);
+    box-shadow: 0 4px 16px var(--shadow-medium);
     transform: translateY(-100%);
     opacity: 0;
     visibility: hidden;
@@ -220,6 +266,8 @@
     z-index: 1000;
     padding: 0;
     margin: 0;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
   }
 
   /* Show nav list when menu is open */
@@ -236,7 +284,7 @@
 
   .navItem {
     width: 100%;
-    border-bottom: 1px solid var(--ctp-surface1);
+    border-bottom: 1px solid var(--border-subtle);
   }
 
   .navItem:last-child {
@@ -255,7 +303,7 @@
   }
 
   .navItem a:hover {
-    background: var(--ctp-surface1);
+    background: var(--surface-elevated);
   }
 
   .profileLink {
@@ -267,7 +315,7 @@
   }
 
   .profileLink:hover {
-    background: var(--ctp-surface1);
+    background: var(--surface-elevated);
   }
 
   .username {
@@ -286,7 +334,7 @@
   }
 
   .authLink:hover {
-    background: var(--ctp-surface1) !important;
+    background: var(--surface-elevated) !important;
   }
 }
 

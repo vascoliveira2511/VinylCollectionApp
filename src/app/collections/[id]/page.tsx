@@ -1,101 +1,112 @@
-'use client'
+"use client";
 
-import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
-import Link from 'next/link'
-import styles from '../../page.module.css'
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { apiClient } from "@/lib/api-client";
+import VinylCard from "../../components/VinylCard";
+import styles from "../../page.module.css";
 
 interface Vinyl {
-  id: number
-  artist: string
-  title: string
-  year: number
-  imageUrl: string
-  genre: string[]
-  discogsId?: number
-  createdAt?: string
-  updatedAt?: string
+  id: number;
+  artist: string;
+  title: string;
+  year: number;
+  imageUrl: string;
+  genre: string[];
+  discogsId?: number;
+  createdAt?: string;
+  updatedAt?: string;
+  // Additional metadata fields
+  label?: string;
+  format?: string;
+  condition?: string;
+  rating?: number;
+  purchaseDate?: string;
+  purchasePrice?: number;
+  purchaseLocation?: string;
+  catalogNumber?: string;
+  country?: string;
 }
 
 interface Collection {
-  id: number
-  title: string
-  description?: string
-  isDefault: boolean
-  createdAt: string
-  vinyls: Vinyl[]
+  id: number;
+  title: string;
+  description?: string;
+  isDefault: boolean;
+  createdAt: string;
+  vinyls: Vinyl[];
   _count: {
-    vinyls: number
-  }
+    vinyls: number;
+  };
 }
 
 export default function CollectionView({ params }: { params: { id: string } }) {
-  const { id } = params
-  const [collection, setCollection] = useState<Collection | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  
+  const { id } = params;
+  const [collection, setCollection] = useState<Collection | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
   // Filter states
-  const [filterArtist, setFilterArtist] = useState('')
-  const [filterTitle, setFilterTitle] = useState('')
-  const [filterGenre, setFilterGenre] = useState('')
-  const [filterYear, setFilterYear] = useState('')
-  const [displayLimit, setDisplayLimit] = useState(12)
-  const [displayView, setDisplayView] = useState('grid')
-  
-  const router = useRouter()
+  const [filterArtist, setFilterArtist] = useState("");
+  const [filterTitle, setFilterTitle] = useState("");
+  const [filterGenre, setFilterGenre] = useState("");
+  const [filterYear, setFilterYear] = useState("");
+  const [displayLimit, setDisplayLimit] = useState(12);
+  const [displayView, setDisplayView] = useState("grid");
+
+  const router = useRouter();
 
   const fetchCollection = async () => {
     try {
-      const res = await fetch(`/api/collections/${id}`)
-      if (!res.ok) {
-        if (res.status === 401) {
-          router.push('/login')
-          return
-        }
-        if (res.status === 404) {
-          setError('Collection not found')
-          return
-        }
-        throw new Error('Failed to fetch collection')
-      }
-      const data = await res.json()
-      setCollection(data)
+      const data = await apiClient.getCollection(id);
+      setCollection(data as Collection);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred')
+      setError(err instanceof Error ? err.message : "An error occurred");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const deleteVinyl = async (vinylId: number) => {
     try {
-      const res = await fetch(`/api/collection/${vinylId}`, {
-        method: 'DELETE'
-      })
-      if (!res.ok) {
-        throw new Error('Failed to delete vinyl')
-      }
-      // Refresh the collection to show updated list
-      await fetchCollection()
+      await apiClient.deleteVinyl(vinylId.toString());
+      // Refresh the collection with cache invalidation
+      const data = await apiClient.getCollection(id, {
+        cache: "force-refresh",
+      });
+      setCollection(data as Collection);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to delete vinyl')
+      setError(err instanceof Error ? err.message : "Failed to delete vinyl");
     }
-  }
+  };
 
   useEffect(() => {
     if (id) {
-      fetchCollection()
+      fetchCollection();
     }
-  }, [id, router])
+  }, [id, router]);
 
-  const filteredVinyls = collection ? collection.vinyls.filter((vinyl) => {
-    const matchesArtist = filterArtist === '' || vinyl.artist.toLowerCase().includes(filterArtist.toLowerCase())
-    const matchesTitle = filterTitle === '' || vinyl.title.toLowerCase().includes(filterTitle.toLowerCase())
-    const matchesGenre = filterGenre === '' || vinyl.genre.some(g => g.toLowerCase().includes(filterGenre.toLowerCase()))
-    const matchesYear = filterYear === '' || vinyl.year.toString().includes(filterYear)
-    return matchesArtist && matchesTitle && matchesGenre && matchesYear
-  }).slice(0, displayLimit) : []
+  const filteredVinyls = collection
+    ? collection.vinyls
+        .filter((vinyl) => {
+          const matchesArtist =
+            filterArtist === "" ||
+            vinyl.artist.toLowerCase().includes(filterArtist.toLowerCase());
+          const matchesTitle =
+            filterTitle === "" ||
+            vinyl.title.toLowerCase().includes(filterTitle.toLowerCase());
+          const matchesGenre =
+            filterGenre === "" ||
+            vinyl.genre.some((g) =>
+              g.toLowerCase().includes(filterGenre.toLowerCase())
+            );
+          const matchesYear =
+            filterYear === "" || vinyl.year.toString().includes(filterYear);
+          return matchesArtist && matchesTitle && matchesGenre && matchesYear;
+        })
+        .slice(0, displayLimit)
+    : [];
 
   if (loading) {
     return (
@@ -108,7 +119,7 @@ export default function CollectionView({ params }: { params: { id: string } }) {
           </div>
         </div>
       </main>
-    )
+    );
   }
 
   if (error || !collection) {
@@ -117,7 +128,9 @@ export default function CollectionView({ params }: { params: { id: string } }) {
         <div className="container">
           <div className="window">
             <div className={styles.contentSection}>
-              <p style={{ color: 'var(--ctp-red)' }}>{error || 'Collection not found'}</p>
+              <p style={{ color: "var(--ctp-red)" }}>
+                {error || "Collection not found"}
+              </p>
               <Link href="/collections">
                 <button>Back to Collections</button>
               </Link>
@@ -125,7 +138,7 @@ export default function CollectionView({ params }: { params: { id: string } }) {
           </div>
         </div>
       </main>
-    )
+    );
   }
 
   return (
@@ -135,21 +148,28 @@ export default function CollectionView({ params }: { params: { id: string } }) {
         <div className="window">
           <div className="title-bar">
             {collection.title}
-            {collection.isDefault && <span className={styles.defaultBadge}>Default</span>}
+            {collection.isDefault && (
+              <span className={styles.defaultBadge}>Default</span>
+            )}
           </div>
           <div className={styles.contentSection}>
             <div className={styles.collectionHeader}>
               <div className={styles.collectionInfo}>
                 {collection.description && (
-                  <p className={styles.collectionDescription}>{collection.description}</p>
+                  <p className={styles.collectionDescription}>
+                    {collection.description}
+                  </p>
                 )}
                 <p className={styles.collectionStats}>
-                  {collection._count.vinyls} record{collection._count.vinyls !== 1 ? 's' : ''} in this collection
+                  {collection._count.vinyls} record
+                  {collection._count.vinyls !== 1 ? "s" : ""} in this collection
                 </p>
               </div>
               <div className={styles.collectionActions}>
                 <Link href="/collections">
-                  <button className={styles.backButton}>Back to Collections</button>
+                  <button className={styles.backButton}>
+                    Back to Collections
+                  </button>
                 </Link>
               </div>
             </div>
@@ -213,56 +233,31 @@ export default function CollectionView({ params }: { params: { id: string } }) {
           <div className="title-bar">Records ({filteredVinyls.length})</div>
           <div className={styles.contentSection}>
             {filteredVinyls.length > 0 ? (
-              <div className={
-                displayView === "list"
-                  ? styles.collectionList
-                  : displayView === "compact"
-                  ? styles.collectionCompact
-                  : styles.collectionGrid
-              }>
+              <div
+                className={
+                  displayView === "list"
+                    ? styles.collectionList
+                    : displayView === "compact"
+                    ? styles.collectionCompact
+                    : styles.collectionGrid
+                }
+              >
                 {filteredVinyls.map((vinyl) => (
-                  <div key={vinyl.id} className={styles.card}>
-                    <Link href={`/vinyl/${vinyl.id}`}>
-                      <img 
-                        src={`/api/image-proxy?url=${encodeURIComponent(vinyl.imageUrl || 'https://via.placeholder.com/150')}`} 
-                        alt={`${vinyl.title} cover`} 
-                        className={styles.albumArt} 
-                      />
-                      <div className={styles.cardInfo}>
-                        <h3>{vinyl.title}</h3>
-                        <p>{vinyl.artist}</p>
-                        <p>{vinyl.year}</p>
-                        <div className={styles.genrePills}>
-                          {vinyl.genre.map((g, idx) => (
-                            <span key={idx} className={styles.genrePill}>{g}</span>
-                          ))}
-                        </div>
-                      </div>
-                    </Link>
-                    <div className={styles.buttonGroup}>
-                      <Link
-                        href={`/vinyl/${vinyl.id}/edit`}
-                        className={styles.editButton}
-                      >
-                        ✏️ Edit
-                      </Link>
-                      <button
-                        className={styles.deleteButton}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          deleteVinyl(vinyl.id);
-                        }}
-                      >
-                        🗑️ Delete
-                      </button>
-                    </div>
-                  </div>
+                  <VinylCard
+                    key={vinyl.id}
+                    vinyl={vinyl}
+                    showDetails={true}
+                    onEdit={() => {}}
+                    onDelete={() => deleteVinyl(vinyl.id)}
+                  />
                 ))}
               </div>
             ) : (
               <div className={styles.emptyState}>
                 {collection.vinyls.length === 0 ? (
-                  <p>This collection is empty. Add some records to get started!</p>
+                  <p>
+                    This collection is empty. Add some records to get started!
+                  </p>
                 ) : (
                   <p>No records match your current filters.</p>
                 )}
@@ -272,5 +267,5 @@ export default function CollectionView({ params }: { params: { id: string } }) {
         </div>
       </div>
     </main>
-  )
+  );
 }
