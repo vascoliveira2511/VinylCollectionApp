@@ -117,9 +117,11 @@ export default function BrowseDetailPage({
         setLoading(true);
         const [releaseData, statusData] = await Promise.all([
           apiClient.getDiscogsRelease(id),
-          fetch(`/api/vinyl-status?discogsId=${id}`).then(res => res.ok ? res.json() : { status: null }),
+          fetch(`/api/vinyl-status?discogsId=${id}`).then((res) =>
+            res.ok ? res.json() : { status: null }
+          ),
         ]);
-        
+
         setRelease(releaseData as DiscogsRelease);
         setUserStatus(statusData.status);
       } catch (err) {
@@ -168,7 +170,6 @@ export default function BrowseDetailPage({
     }
   };
 
-
   if (loading) {
     return (
       <main className={styles.main}>
@@ -209,11 +210,10 @@ export default function BrowseDetailPage({
     <main className={styles.main}>
       <VinylHeader
         title={release.title}
-        artist={release.artists?.map(a => a.name) || []}
+        artist={release.artists?.map((a) => a.name) || []}
         year={release.year}
         country={release.country}
         genres={release.genres}
-        styles={release.styles}
         images={release.images}
         showBackground={true}
         actions={
@@ -225,12 +225,12 @@ export default function BrowseDetailPage({
             >
               {addingToCollection ? "⏳ Adding..." : "➕ Add to Collection"}
             </button>
-            
-            <StatusButtons 
-              discogsId={release.id} 
+
+            <StatusButtons
+              discogsId={release.id}
               onStatusChange={(status) => setUserStatus(status)}
             />
-            
+
             <Link href="/browse" className={styles.backButton}>
               ← Back to Browse
             </Link>
@@ -241,23 +241,62 @@ export default function BrowseDetailPage({
       <div className="container">
         <div className="window">
           <div className={styles.contentSection}>
-
             {/* Community Status Section */}
-            <div className="window" style={{ marginBottom: "20px", backgroundColor: "var(--ctp-surface0)", border: "2px solid var(--ctp-mauve)" }}>
-              <div className="title-bar" style={{ backgroundColor: "var(--ctp-mauve)", color: "var(--ctp-crust)" }}>🎵 Your Status</div>
+            <div
+              className="window"
+              style={{
+                marginBottom: "20px",
+                backgroundColor: "var(--ctp-surface0)",
+                border: "2px solid var(--ctp-mauve)",
+              }}
+            >
+              <div
+                className="title-bar"
+                style={{
+                  backgroundColor: "var(--ctp-mauve)",
+                  color: "var(--ctp-crust)",
+                }}
+              >
+                🎵 Your Status
+              </div>
               <div className={styles.contentSection}>
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "15px", fontSize: "0.9em" }}>
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "1fr 1fr",
+                    gap: "15px",
+                    fontSize: "0.9em",
+                  }}
+                >
                   <div>
                     <strong>Collection Status:</strong>
                     <div style={{ marginTop: "5px" }}>
-                      {userStatus === "want" && <span style={{ color: "var(--ctp-red)" }}>❤️ In Wantlist</span>}
-                      {userStatus === "have" && <span style={{ color: "var(--ctp-green)" }}>✅ Have</span>}
-                      {!userStatus && <span style={{ color: "var(--ctp-subtext1)" }}>Not in your collection</span>}
+                      {userStatus === "want" && (
+                        <span style={{ color: "var(--ctp-red)" }}>
+                          ❤️ In Wantlist
+                        </span>
+                      )}
+                      {userStatus === "have" && (
+                        <span style={{ color: "var(--ctp-green)" }}>
+                          ✅ Have
+                        </span>
+                      )}
+                      {!userStatus && (
+                        <span style={{ color: "var(--ctp-subtext1)" }}>
+                          Not in your collection
+                        </span>
+                      )}
                     </div>
                   </div>
                   <div>
                     <strong>Community:</strong>
-                    <div style={{ marginTop: "5px", color: "var(--ctp-subtext1)", fontSize: "0.85em" }}>
+                    <div
+                      style={{
+                        marginTop: "5px",
+                        color: "var(--ctp-subtext1)",
+                        fontSize: "0.85em",
+                      }}
+                    >
                       Community reviews and comments available below
                     </div>
                   </div>
@@ -281,7 +320,6 @@ export default function BrowseDetailPage({
                 />
               </div>
             </div>
-
 
             <VinylVideos videos={release.videos || []} />
 

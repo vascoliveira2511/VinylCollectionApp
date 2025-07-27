@@ -99,13 +99,15 @@ export default function BrowsePage() {
 
   // UI state
   const [showFilters, setShowFilters] = useState(false);
-  
+
   // Filter states for results
   const [genreFilter, setGenreFilter] = useState("");
   const [formatFilter, setFormatFilter] = useState("");
   const [countryFilter, setCountryFilter] = useState("");
   const [yearFilter, setYearFilter] = useState("");
-  const [sortBy, setSortBy] = useState<"relevance" | "artist" | "title" | "year">("relevance");
+  const [sortBy, setSortBy] = useState<
+    "relevance" | "artist" | "title" | "year"
+  >("relevance");
 
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -114,7 +116,8 @@ export default function BrowsePage() {
   useEffect(() => {
     const fetchCollections = async () => {
       try {
-        const collectionsData = await apiClient.getCollections() as Collection[];
+        const collectionsData =
+          (await apiClient.getCollections()) as Collection[];
         setCollections(collectionsData);
       } catch (error) {
         console.error("Error fetching collections:", error);
@@ -276,19 +279,29 @@ export default function BrowsePage() {
   // Filter and sort results
   const filteredAndSortedResults = results
     .filter((item) => {
-      const matchesGenre = !genreFilter || 
-        item.genre.some(g => g.toLowerCase().includes(genreFilter.toLowerCase())) ||
-        item.style.some(s => s.toLowerCase().includes(genreFilter.toLowerCase()));
-      
-      const matchesFormat = !formatFilter || 
-        item.format.some(f => f.toLowerCase().includes(formatFilter.toLowerCase()));
-      
-      const matchesCountry = !countryFilter || 
-        (item.country && item.country.toLowerCase().includes(countryFilter.toLowerCase()));
-      
-      const matchesYear = !yearFilter || 
-        (item.year && item.year.toString().includes(yearFilter));
-      
+      const matchesGenre =
+        !genreFilter ||
+        item.genre.some((g) =>
+          g.toLowerCase().includes(genreFilter.toLowerCase())
+        ) ||
+        item.style.some((s) =>
+          s.toLowerCase().includes(genreFilter.toLowerCase())
+        );
+
+      const matchesFormat =
+        !formatFilter ||
+        item.format.some((f) =>
+          f.toLowerCase().includes(formatFilter.toLowerCase())
+        );
+
+      const matchesCountry =
+        !countryFilter ||
+        (item.country &&
+          item.country.toLowerCase().includes(countryFilter.toLowerCase()));
+
+      const matchesYear =
+        !yearFilter || (item.year && item.year.toString().includes(yearFilter));
+
       return matchesGenre && matchesFormat && matchesCountry && matchesYear;
     })
     .sort((a, b) => {
@@ -322,10 +335,10 @@ export default function BrowsePage() {
 
       await apiClient.addVinyl(vinylData);
 
-      const collectionName = collectionId 
-        ? collections.find(c => c.id === collectionId)?.title || "collection"
+      const collectionName = collectionId
+        ? collections.find((c) => c.id === collectionId)?.title || "collection"
         : "your collection";
-      
+
       alert(`"${item.title}" by ${item.artist} added to ${collectionName}!`);
     } catch (err) {
       alert(
@@ -449,7 +462,11 @@ export default function BrowsePage() {
         {/* Filter Controls */}
         {hasSearched && results.length > 0 && (
           <div className="window">
-            <div className="title-bar" style={{ cursor: "pointer" }} onClick={() => setShowFilters(!showFilters)}>
+            <div
+              className="title-bar"
+              style={{ cursor: "pointer" }}
+              onClick={() => setShowFilters(!showFilters)}
+            >
               Filter & Sort Results {showFilters ? "▲" : "▼"}
             </div>
             {showFilters && (
@@ -493,7 +510,10 @@ export default function BrowsePage() {
                   </div>
                   <div className={styles.filterGroup}>
                     <label>Sort by:</label>
-                    <select value={sortBy} onChange={(e) => setSortBy(e.target.value as any)}>
+                    <select
+                      value={sortBy}
+                      onChange={(e) => setSortBy(e.target.value as any)}
+                    >
                       <option value="relevance">Relevance</option>
                       <option value="artist">Artist A-Z</option>
                       <option value="title">Title A-Z</option>
@@ -537,17 +557,23 @@ export default function BrowsePage() {
 
               {error && <div className={styles.errorMessage}>{error}</div>}
 
-              {!loading && filteredAndSortedResults.length === 0 && hasSearched && !error && (
-                <div
-                  style={{
-                    textAlign: "center",
-                    padding: "2rem",
-                    color: "var(--ctp-subtext1)",
-                  }}
-                >
-                  <p>No results found. Try adjusting your search terms or filters.</p>
-                </div>
-              )}
+              {!loading &&
+                filteredAndSortedResults.length === 0 &&
+                hasSearched &&
+                !error && (
+                  <div
+                    style={{
+                      textAlign: "center",
+                      padding: "2rem",
+                      color: "var(--ctp-subtext1)",
+                    }}
+                  >
+                    <p>
+                      No results found. Try adjusting your search terms or
+                      filters.
+                    </p>
+                  </div>
+                )}
 
               {!loading && filteredAndSortedResults.length > 0 && (
                 <>
@@ -557,14 +583,16 @@ export default function BrowsePage() {
                         key={`${item.type}-${item.id}`}
                         vinyl={{
                           ...item,
-                          genre: [...(item.genre || []), ...(item.style || [])]
+                          genre: [...(item.genre || []), ...(item.style || [])],
                         }}
                         showDetails={true}
                         linkPrefix="/browse"
                         addToCollectionComponent={
                           <AddToCollectionButton
                             collections={collections}
-                            onAdd={(collectionId) => addToCollection(item, collectionId)}
+                            onAdd={(collectionId) =>
+                              addToCollection(item, collectionId)
+                            }
                           />
                         }
                       />
