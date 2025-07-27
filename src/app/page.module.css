@@ -137,7 +137,7 @@
 /* A24-inspired Card Design */
 .card {
   background: var(--surface);
-  border-radius: 0;
+  border-radius: 12px;
   padding: 0;
   text-align: left;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -146,15 +146,18 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  aspect-ratio: 1;
   height: auto;
-  min-height: 400px;
-  box-shadow: none;
+  box-shadow: 0 4px 20px var(--shadow-subtle);
   cursor: pointer;
 }
 
 .card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 16px 64px var(--shadow-medium);
+  transform: translateY(-3px);
+  box-shadow: 
+    0 12px 32px var(--shadow-medium),
+    0 0 0 1px var(--border-focus);
+  border-color: var(--border-focus);
 }
 
 /* A24-style image container */
@@ -173,9 +176,6 @@
   transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.card:hover .imageContainer img {
-  transform: scale(1.02);
-}
 
 /* Enhanced card content */
 .card .content {
@@ -267,19 +267,14 @@ a.card:visited {
 }
 
 .cardInfo {
-  position: relative;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
   z-index: 2;
-  background: linear-gradient(
-    to top,
-    rgba(26, 26, 26, 0.95) 0%,
-    rgba(26, 26, 26, 0.8) 40%,
-    rgba(26, 26, 26, 0.4) 70%,
-    transparent 100%
-  );
-  padding: 18px;
-  margin-top: auto;
-  border-radius: 0 0 16px 16px;
-  min-height: 120px;
+  background: var(--overlay-background);
+  padding: 20px;
+  min-height: 140px;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -401,34 +396,27 @@ a.card:visited {
   display: none;
 }
 
-.card:hover {
-  border-color: var(--yellow-border);
-  box-shadow: 
-    0 8px 24px var(--shadow-subtle),
-    0 0 0 1px var(--yellow-border);
-  transform: translateY(-2px);
-}
 
 .cardHeader {
   margin-bottom: 8px;
 }
 
 .cardTitle {
-  color: #FFFFFF;
+  color: var(--overlay-text-primary);
   margin: 0 0 4px 0;
   font-size: 1em;
   font-weight: 600;
   letter-spacing: -0.01em;
   font-family: "Inter", sans-serif;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+  text-shadow: var(--overlay-shadow);
 }
 
 .cardArtist {
-  color: #E0E0E0;
+  color: var(--overlay-text-accent);
   margin: 0 0 8px 0;
   font-size: 0.875em;
   font-weight: 500;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+  text-shadow: var(--overlay-shadow);
 }
 
 .card h3 {
@@ -450,10 +438,18 @@ a.card:visited {
 }
 
 .addedDate {
-  color: rgba(255, 215, 0, 0.8);
+  color: var(--overlay-text-primary) !important;
   font-size: 0.75em;
   margin-top: 8px;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+  text-shadow: var(--overlay-shadow);
+}
+
+/* Ensure year text in card overlay is visible */
+.cardInfo p:not(.addedDate) {
+  color: var(--overlay-text-secondary);
+  margin: 4px 0;
+  font-size: 0.8em;
+  text-shadow: var(--overlay-shadow);
 }
 
 .albumArt {
@@ -470,10 +466,6 @@ a.card:visited {
   clip-path: inset(0);
 }
 
-.albumArt:hover {
-  transform: scale(1.05);
-  clip-path: inset(0);
-}
 
 .genrePills {
   display: flex;
@@ -484,23 +476,24 @@ a.card:visited {
 }
 
 .genrePill {
-  background: rgba(255, 215, 0, 0.2);
-  color: var(--text);
+  background: var(--beeswax-active);
+  color: var(--overlay-text-primary);
   padding: 4px 8px;
   border-radius: 12px;
   font-size: 0.7em;
   font-weight: 600;
   letter-spacing: -0.01em;
-  border: 1px solid rgba(255, 215, 0, 0.5);
+  border: 1px solid var(--beeswax-glow);
   transition: all 0.3s ease;
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
+  text-shadow: var(--overlay-shadow);
 }
 
 .genrePill:hover {
-  background: var(--yellow-hover);
-  color: var(--text);
-  border-color: var(--yellow);
+  background: var(--beeswax-glow);
+  color: var(--overlay-text-primary);
+  border-color: var(--beeswax);
   transform: translateY(-1px);
 }
 
@@ -562,8 +555,8 @@ a.card:visited {
 }
 
 .vinylCoverImage:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 48px var(--shadow-strong), 0 0 0 3px var(--yellow-glow);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 48px var(--shadow-strong), 0 0 0 2px var(--border-focus);
 }
 
 .imageThumbnails {
@@ -1107,6 +1100,7 @@ a.card:visited {
 .exportButton:hover {
   background: var(--ctp-mauve);
   color: var(--ctp-base);
+  transform: translateY(-1px);
 }
 
 .importSection {
@@ -1309,9 +1303,9 @@ a.card:visited {
 .editButton,
 a.editButton,
 Link.editButton {
-  background: var(--ctp-blue) !important;
-  color: #000000 !important;
-  border: none;
+  background: var(--surface) !important;
+  color: var(--text) !important;
+  border: 1px solid var(--border-strong);
   border-radius: 6px;
   padding: 8px 16px;
   cursor: pointer;
@@ -1323,22 +1317,25 @@ Link.editButton {
   gap: 6px;
   border-bottom: none !important;
   text-decoration: none !important;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
 }
 
 .editButton:hover,
 a.editButton:hover,
 Link.editButton:hover {
-  background: var(--ctp-sky) !important;
+  background: var(--surface) !important;
   transform: translateY(-1px);
-  color: #000000 !important;
+  color: var(--text) !important;
   border-bottom: none !important;
   text-decoration: none !important;
+  border-color: var(--beeswax);
 }
 
 .deleteButton {
-  background: var(--ctp-red);
-  color: var(--ctp-base);
-  border: none;
+  background: rgba(220, 38, 38, 0.9);
+  color: #FFFFFF;
+  border: 1px solid rgba(220, 38, 38, 0.3);
   border-radius: 6px;
   padding: 8px 16px;
   cursor: pointer;
@@ -1349,14 +1346,17 @@ Link.editButton:hover {
   align-items: center;
   gap: 6px;
   border-bottom: none;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
 }
 
 .deleteButton:hover {
-  background: var(--ctp-maroon);
+  background: rgba(220, 38, 38, 1);
   transform: translateY(-1px);
-  color: var(--ctp-base) !important;
+  color: #FFFFFF !important;
   border-bottom: none !important;
   text-decoration: none !important;
+  border-color: rgba(220, 38, 38, 0.8);
 }
 
 .cancelButton {
@@ -1423,11 +1423,9 @@ Link.editButton:hover {
 }
 
 .manageButton {
-  background: var(--surface-glass);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  background: var(--surface);
   color: var(--text);
-  border: 1px solid var(--border);
+  border: 2px solid var(--border-strong);
   border-radius: 8px;
   padding: 12px 20px;
   cursor: pointer;
@@ -1437,24 +1435,20 @@ Link.editButton:hover {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  border-bottom: none;
   text-decoration: none;
   font-family: "Inter", sans-serif;
-  box-shadow: 
-    0 4px 16px var(--shadow-subtle),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 12px var(--shadow-medium);
+  margin: 4px;
 }
 
 .manageButton:hover {
-  background: var(--yellow-transparent);
-  border-color: var(--yellow-border);
+  background: var(--surface-elevated);
+  border-color: var(--beeswax);
   color: var(--text) !important;
   border-bottom: none !important;
-  box-shadow: 
-    0 8px 24px var(--shadow-subtle),
-    0 0 0 1px var(--yellow-glow),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
-  transform: translateY(-2px);
+  text-decoration: none !important;
+  box-shadow: 0 6px 16px var(--shadow-strong);
+  transform: translateY(-1px);
 }
 
 .createButton {
@@ -1481,61 +1475,60 @@ Link.editButton:hover {
 }
 
 .addButton {
-  background: var(--yellow);
-  color: var(--text-inverse);
-  border: 1px solid var(--yellow);
+  background: var(--surface);
+  color: var(--text);
+  border: 2px solid var(--border-strong);
   border-radius: 8px;
   padding: 12px 20px;
   cursor: pointer;
   font-size: 0.875rem;
-  font-weight: 600;
+  font-weight: 500;
   transition: all 0.3s ease;
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  border-bottom: none;
   text-decoration: none;
   font-family: "Inter", sans-serif;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  box-shadow: 
-    0 4px 16px var(--shadow-yellow),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 12px var(--shadow-medium);
+  margin: 4px;
 }
 
 .addButton:hover {
-  background: rgba(255, 215, 0, 0.9);
-  border-color: var(--yellow);
-  color: var(--text-inverse) !important;
+  background: var(--surface-elevated);
+  border-color: var(--beeswax);
+  color: var(--text) !important;
   border-bottom: none !important;
-  box-shadow: 
-    0 8px 24px var(--yellow-glow),
-    inset 0 1px 0 rgba(255, 255, 255, 0.3);
-  transform: translateY(-2px);
+  text-decoration: none !important;
+  box-shadow: 0 6px 16px var(--shadow-strong);
+  transform: translateY(-1px);
 }
 
 .statsButton {
-  background: var(--ctp-blue);
-  color: #000000;
-  border: none;
-  border-radius: 6px;
-  padding: 8px 16px;
+  background: var(--surface);
+  color: var(--text);
+  border: 2px solid var(--border-strong);
+  border-radius: 8px;
+  padding: 12px 20px;
   cursor: pointer;
-  font-size: 0.9em;
+  font-size: 0.875rem;
   font-weight: 500;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  border-bottom: none;
+  gap: 8px;
   text-decoration: none;
+  box-shadow: 0 4px 12px var(--shadow-medium);
+  margin: 4px;
 }
 
 .statsButton:hover {
-  background: var(--ctp-blue);
-  transform: translateY(-1px);
-  color: #000000 !important;
+  background: var(--surface-elevated);
+  border-color: var(--beeswax);
+  color: var(--text) !important;
   border-bottom: none !important;
+  text-decoration: none !important;
+  box-shadow: 0 6px 16px var(--shadow-strong);
+  transform: translateY(-1px);
 }
 
 .exportButton {
@@ -1551,6 +1544,7 @@ Link.editButton:hover {
 .exportButton:hover {
   background: var(--ctp-mauve);
   color: var(--ctp-base);
+  transform: translateY(-1px);
 }
 
 .importButton {
@@ -2159,9 +2153,9 @@ Link.editButton:hover {
 }
 
 .collectionCard:hover {
-  border-color: var(--ctp-mauve);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 16px rgba(17, 17, 27, 0.4);
+  border-color: var(--border-focus);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px var(--shadow-medium);
 }
 
 .collectionHeader h3 {
@@ -2391,25 +2385,6 @@ Link.editButton:hover {
   gap: 12px;
 }
 
-.manageButton {
-  background: var(--ctp-blue);
-  color: var(--ctp-base);
-  padding: 8px 16px;
-  border-radius: 6px;
-  text-decoration: none;
-  font-weight: 500;
-  font-size: 0.9em;
-  transition: all 0.2s ease;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  border-bottom: none;
-}
-
-.manageButton:hover {
-  transform: translateY(-1px);
-  border-bottom: none;
-}
 
 .collectionsIntro {
   background: var(--ctp-surface1);
@@ -2590,8 +2565,8 @@ Link.editButton:hover {
 }
 
 .loginButton:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 16px 32px var(--shadow-medium);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 16px var(--shadow-medium);
 }
 
 .loginButton:disabled {
@@ -2658,8 +2633,8 @@ Link.editButton:hover {
 .googleButton:hover:not(:disabled) {
   background: var(--surface-elevated);
   border-color: var(--beeswax);
-  transform: translateY(-2px);
-  box-shadow: 0 16px 32px var(--shadow-medium);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 16px var(--shadow-medium);
 }
 
 .googleButton:disabled {
@@ -2764,24 +2739,6 @@ Link.editButton:hover {
   flex-wrap: wrap;
 }
 
-.statsButton {
-  background: var(--ctp-blue);
-  color: var(--ctp-base);
-  text-decoration: none;
-  padding: 8px 16px;
-  border-radius: 6px;
-  font-weight: 500;
-  font-size: 0.9em;
-  transition: all 0.2s ease;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  border-bottom: none;
-}
-
-.statsButton:hover {
-  transform: translateY(-1px);
-}
 
 .filterSection {
   margin-bottom: 24px;
@@ -2794,25 +2751,7 @@ Link.editButton:hover {
   font-weight: 600;
 }
 
-.addButton {
-  color: var(--ctp-base) !important;
-  background: var(--ctp-green);
-  color: var(--ctp-base);
-  text-decoration: none;
-  padding: 8px 16px;
-  border-radius: 6px;
-  font-weight: 500;
-  font-size: 0.9em;
-  transition: all 0.2s ease;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  border-bottom: none;
-}
 
-.addButton:hover {
-  transform: translateY(-1px);
-}
 
 /* Friends Page Styles */
 .searchResults {
@@ -3002,12 +2941,6 @@ Link.editButton:hover {
   gap: 8px;
 }
 
-.addedDate {
-  color: var(--ctp-overlay1);
-  font-size: 0.8rem;
-  margin-top: 8px;
-  font-style: italic;
-}
 
 .cardContent {
   height: 100%;
@@ -3898,8 +3831,7 @@ Link.editButton:hover {
   margin-top: 0.75rem;
 }
 
-.viewButton,
-.addButton {
+.viewButton {
   color: var(--ctp-base) !important;
   padding: 0.5rem 1rem;
   border: none;
@@ -3909,25 +3841,12 @@ Link.editButton:hover {
   text-decoration: none;
   text-align: center;
   transition: background-color 0.2s;
-}
-
-.viewButton {
   background: var(--ctp-surface2);
   color: var(--ctp-text);
 }
 
 .viewButton:hover {
   background: var(--ctp-overlay0);
-}
-
-.addButton {
-  color: var(--ctp-base) !important;
-  background: var(--ctp-green);
-  color: white;
-}
-
-.addButton:hover {
-  background: var(--ctp-teal);
 }
 
 .pagination {
@@ -4285,34 +4204,7 @@ Link.editButton:hover {
 }
 
 /* Organized Browse Card Styles */
-.cardHeader {
-  margin-bottom: 12px;
-  border-bottom: 1px solid var(--ctp-surface1);
-  padding-bottom: 8px;
-}
 
-.cardTitle {
-  color: var(--ctp-text);
-  font-size: 1.1rem;
-  font-weight: 600;
-  margin: 0 0 4px 0;
-  line-height: 1.3;
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-}
-
-.cardArtist {
-  color: var(--ctp-mauve);
-  font-size: 0.95rem;
-  margin: 0;
-  font-weight: 500;
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-line-clamp: 1;
-  -webkit-box-orient: vertical;
-}
 
 .cardDetails {
   margin-bottom: 12px;
@@ -4356,20 +4248,6 @@ Link.editButton:hover {
   justify-content: center;
 }
 
-.cardTags .genrePill {
-  background: var(--ctp-blue);
-  color: var(--ctp-base);
-  padding: 4px 8px;
-  border-radius: 12px;
-  font-size: 0.75rem;
-  font-weight: 500;
-  transition: all 0.2s ease;
-}
-
-.cardTags .genrePill:hover {
-  background: var(--ctp-sky);
-  transform: translateY(-1px);
-}
 
 .cardTags .stylePill {
   background: var(--ctp-surface2) !important;
@@ -4404,35 +4282,40 @@ Link.editButton:hover {
 }
 
 .metaYear {
-  background: var(--ctp-surface1);
-  color: var(--ctp-text);
+  background: var(--beeswax-glow);
+  color: var(--overlay-text-primary);
   padding: 2px 6px;
   border-radius: 4px;
   font-weight: 500;
   font-size: 0.8rem;
+  text-shadow: var(--overlay-shadow);
 }
 
 .metaCountry {
-  color: var(--ctp-subtext0);
+  color: var(--overlay-text-secondary);
   font-size: 0.8rem;
+  text-shadow: var(--overlay-shadow);
 }
 
 .metaFormat {
-  color: var(--ctp-mauve);
+  color: var(--overlay-text-primary);
   font-weight: 500;
   margin-bottom: 2px;
   font-size: 0.8rem;
+  text-shadow: var(--overlay-shadow);
 }
 
 .metaLabel {
-  color: var(--ctp-subtext1);
+  color: var(--overlay-text-secondary);
   font-size: 0.8rem;
   line-height: 1.3;
+  text-shadow: var(--overlay-shadow);
 }
 
 .metaCatno {
-  color: var(--ctp-overlay2);
+  color: var(--overlay-text-tertiary);
   font-weight: normal;
+  text-shadow: var(--overlay-shadow);
 }
 
 /* Browse page filter controls */
@@ -4578,9 +4461,10 @@ Link.editButton:hover {
 /* Enhanced Metadata Display Styles */
 .metaBarcode {
   font-size: 0.75rem;
-  color: var(--ctp-subtext1);
+  color: var(--overlay-text-muted);
   font-family: monospace;
   margin-top: 4px;
+  text-shadow: var(--overlay-shadow);
 }
 
 .metaCommunity {
@@ -4588,23 +4472,28 @@ Link.editButton:hover {
   gap: 8px;
   font-size: 0.75rem;
   margin-top: 4px;
+  color: var(--overlay-text-secondary);
+  text-shadow: var(--overlay-shadow);
 }
 
 .communityHave {
-  color: var(--ctp-green);
+  color: var(--success-light);
+  text-shadow: var(--overlay-shadow);
 }
 
 .communityWant {
-  color: var(--ctp-red);
+  color: var(--error-light);
+  text-shadow: var(--overlay-shadow);
 }
 
 .metaMaster {
-  background: var(--ctp-mauve);
-  color: var(--ctp-crust);
+  background: var(--beeswax-glow);
+  color: var(--overlay-text-primary);
   padding: 2px 6px;
   border-radius: 10px;
   font-size: 0.7rem;
   font-weight: 500;
+  text-shadow: var(--overlay-shadow);
 }
 
 .identifiersList {

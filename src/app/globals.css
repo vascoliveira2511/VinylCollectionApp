@@ -3,13 +3,13 @@
 :root {
   /* Modern Beeswax & Vinyl Theme - "Where Golden Records Meet Digital Collections" */
   
-  /* Base surfaces - Clean whites with subtle warmth */
-  --background: #FEFEFE;
-  --surface: #FFFFFF;
-  --surface-elevated: #F9F8F6;
-  --surface-subtle: #F5F4F2;
-  --surface-glass: rgba(255, 255, 255, 0.85);
-  --surface-warm: #FBF9F7;
+  /* Base surfaces - 2025 warm neutrals inspired by Mocha Mousse trends */
+  --background: #FAF8F5;
+  --surface: #FEFDFB;
+  --surface-elevated: #F7F5F2;
+  --surface-subtle: #F3F0ED;
+  --surface-glass: rgba(250, 248, 245, 0.85);
+  --surface-warm: #F8F6F3;
   
   /* Text hierarchy - Rich contrasts on light background */
   --text: #1A1A1A;
@@ -18,18 +18,18 @@
   --text-inverse: #FFFFFF;
   --text-muted: #8B8B8B;
   
-  /* Borders - Subtle and warm */
-  --border: rgba(212, 175, 55, 0.2);
-  --border-subtle: rgba(232, 213, 183, 0.3);
+  /* Borders - Enhanced warm tones for 2025 neutrals */
+  --border: rgba(164, 120, 100, 0.15);
+  --border-subtle: rgba(232, 213, 183, 0.2);
   --border-focus: rgba(212, 175, 55, 0.4);
-  --border-strong: rgba(212, 175, 55, 0.6);
+  --border-strong: rgba(164, 120, 100, 0.3);
   
   /* Accents - Modern minimalism */
   --accent: #1A1A1A;
   --accent-secondary: #2D2D2D;
   --accent-muted: #757575;
   
-  /* Beeswax palette - Warm honey tones */
+  /* Beeswax palette - Enhanced warm honey tones for 2025 */
   --beeswax: #D4AF37;
   --beeswax-light: #F5E6D3;
   --beeswax-lighter: #FAF0E6;
@@ -39,6 +39,12 @@
   --beeswax-hover: rgba(212, 175, 55, 0.15);
   --beeswax-active: rgba(212, 175, 55, 0.25);
   --beeswax-glow: rgba(212, 175, 55, 0.3);
+  
+  /* 2025 Warm Neutral Accents - Mocha Mousse inspired */
+  --mocha: #A47864;
+  --cream: #FDFBD4;
+  --wheatfield: #F4E4BC;
+  --warm-stone: #E8DDD4;
   
   /* Vinyl accents - Deep sophisticated tones */
   --vinyl: #1A1A1A;
@@ -56,17 +62,27 @@
   --info: #2563EB;
   --info-light: #DBEAFE;
   
-  /* Shadows - Subtle depth */
-  --shadow: rgba(26, 26, 26, 0.08);
-  --shadow-subtle: rgba(26, 26, 26, 0.04);
-  --shadow-medium: rgba(26, 26, 26, 0.12);
-  --shadow-strong: rgba(26, 26, 26, 0.16);
+  /* Shadows - Enhanced for warm backgrounds */
+  --shadow: rgba(164, 120, 100, 0.08);
+  --shadow-subtle: rgba(164, 120, 100, 0.04);
+  --shadow-medium: rgba(164, 120, 100, 0.12);
+  --shadow-strong: rgba(164, 120, 100, 0.16);
   --shadow-beeswax: rgba(212, 175, 55, 0.15);
+  --shadow-warm: rgba(156, 126, 26, 0.1);
   
   /* Interactive states */
   --hover-overlay: rgba(212, 175, 55, 0.08);
   --active-overlay: rgba(212, 175, 55, 0.12);
   --focus-ring: rgba(212, 175, 55, 0.3);
+  
+  /* Card overlay colors - For dark overlays on album art */
+  --overlay-background: linear-gradient(to top, rgba(26, 26, 26, 0.95) 0%, rgba(26, 26, 26, 0.85) 30%, rgba(26, 26, 26, 0.6) 60%, transparent 100%);
+  --overlay-text-primary: #FFFFFF;
+  --overlay-text-secondary: #E0E0E0;
+  --overlay-text-tertiary: #C0C0C0;
+  --overlay-text-accent: rgba(212, 175, 55, 0.9);
+  --overlay-text-muted: #D0D0D0;
+  --overlay-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
 }
 
 * {
