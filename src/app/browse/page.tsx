@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { apiClient } from "@/lib/api-client";
@@ -74,7 +74,7 @@ interface Collection {
   };
 }
 
-export default function BrowsePage() {
+function BrowsePageContent() {
   const [results, setResults] = useState<BrowseItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -638,5 +638,13 @@ export default function BrowsePage() {
         )}
       </div>
     </main>
+  );
+}
+
+export default function BrowsePage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <BrowsePageContent />
+    </Suspense>
   );
 }

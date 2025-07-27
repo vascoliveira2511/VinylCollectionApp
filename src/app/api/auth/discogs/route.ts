@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { createDiscogsOAuth } from "@/lib/discogs-oauth";
 import * as jose from "jose";
 
+// Force dynamic rendering for this route
+export const dynamic = 'force-dynamic';
+
 export async function GET(request: NextRequest) {
   try {
     // Get current user from JWT to store user ID for callback

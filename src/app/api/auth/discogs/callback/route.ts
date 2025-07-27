@@ -3,6 +3,9 @@ import { createDiscogsOAuth } from "@/lib/discogs-oauth";
 import { prisma } from "@/lib/db";
 import * as jose from "jose";
 
+// Force dynamic rendering for this route
+export const dynamic = 'force-dynamic';
+
 const secret = new TextEncoder().encode(process.env.JWT_SECRET);
 
 export async function GET(request: NextRequest) {
