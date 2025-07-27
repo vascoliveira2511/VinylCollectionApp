@@ -203,17 +203,13 @@ export default function Home() {
     <main className={styles.main}>
       <div className="container">
         <div className="window">
-          <div className="title-bar">
-            Your Vinyl Collection
-          </div>
+          <div className="title-bar">Your Vinyl Collection</div>
           <div className={styles.contentSection}>
             <div className={styles.browseIntro}>
-              <h2>
-                Your Vinyl Records ({vinyls.length} total)
-              </h2>
+              <h2>Your Vinyl Records ({vinyls.length} total)</h2>
               <p>
-                Browse, filter, and manage your entire vinyl collection. 
-                Click any record to view details or edit information.
+                Browse, filter, and manage your entire vinyl collection. Click
+                any record to view details or edit information.
               </p>
               <div className={styles.browseActions}>
                 <Link href="/browse" className={styles.addButton}>

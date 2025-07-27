@@ -1,191 +1,197 @@
-'use client'
+"use client";
 
-import { useState, useEffect } from 'react'
-import Link from 'next/link'
-import { useRouter } from 'next/navigation'
-import { apiClient } from '@/lib/api-client'
-import styles from '../page.module.css'
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { apiClient } from "@/lib/api-client";
+import styles from "../page.module.css";
 
 interface Vinyl {
-  id: number
-  artist: string
-  title: string
-  year: number
-  imageUrl: string
-  genre: string[]
-  discogsId?: number
-  createdAt?: string
-  updatedAt?: string
+  id: number;
+  artist: string;
+  title: string;
+  year: number;
+  imageUrl: string;
+  genre: string[];
+  discogsId?: number;
+  createdAt?: string;
+  updatedAt?: string;
   collection?: {
-    id: number
-    title: string
-    isDefault: boolean
-  }
+    id: number;
+    title: string;
+    isDefault: boolean;
+  };
   // New manual fields
-  trackList?: string[]
-  description?: string
-  label?: string
-  format?: string
-  condition?: string
-  rating?: number
-  purchaseDate?: string
-  purchasePrice?: number
-  purchaseCurrency?: string
-  purchaseLocation?: string
-  catalogNumber?: string
-  country?: string
+  trackList?: string[];
+  description?: string;
+  label?: string;
+  format?: string;
+  condition?: string;
+  rating?: number;
+  purchaseDate?: string;
+  purchasePrice?: number;
+  purchaseCurrency?: string;
+  purchaseLocation?: string;
+  catalogNumber?: string;
+  country?: string;
 }
 
 interface Collection {
-  id: number
-  title: string
-  description?: string
-  isDefault: boolean
+  id: number;
+  title: string;
+  description?: string;
+  isDefault: boolean;
   _count: {
-    vinyls: number
-  }
+    vinyls: number;
+  };
 }
 
 interface Suggestion {
-  artist: string
-  title: string
-  genre: string[]
-  style: string[]
-  year: number | null
-  format: string[]
-  label: string[]
-  thumb: string | null
-  country: string | null
-  catno: string | null
+  artist: string;
+  title: string;
+  genre: string[];
+  style: string[];
+  year: number | null;
+  format: string[];
+  label: string[];
+  thumb: string | null;
+  country: string | null;
+  catno: string | null;
 }
 
 interface UserProfile {
-  username: string
-  totalRecords: number
-  genreStats: Record<string, number>
-  recentVinyls: Vinyl[]
+  username: string;
+  totalRecords: number;
+  genreStats: Record<string, number>;
+  recentVinyls: Vinyl[];
 }
 
 export default function AddVinyl() {
-  const [vinyls, setVinyls] = useState<Vinyl[]>([])
-  const [collections, setCollections] = useState<Collection[]>([])
-  const [suggestions, setSuggestions] = useState<Suggestion[]>([])
-  const [userProfile, setUserProfile] = useState<UserProfile | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  
-  // Form state
-  const [artist, setArtist] = useState('')
-  const [title, setTitle] = useState('')
-  const [year, setYear] = useState('')
-  const [imageUrl, setImageUrl] = useState('')
-  const [genre, setGenre] = useState<string[]>([])
-  const [discogsId, setDiscogsId] = useState<number | undefined>(undefined)
-  const [selectedCollectionId, setSelectedCollectionId] = useState<number | undefined>(undefined)
-  
-  // New manual fields state
-  const [trackList, setTrackList] = useState<string[]>([])
-  const [description, setDescription] = useState('')
-  const [label, setLabel] = useState('')
-  const [format, setFormat] = useState('')
-  const [condition, setCondition] = useState('')
-  const [rating, setRating] = useState<number | undefined>(undefined)
-  const [purchaseDate, setPurchaseDate] = useState('')
-  const [purchasePrice, setPurchasePrice] = useState<number | undefined>(undefined)
-  const [purchaseCurrency, setPurchaseCurrency] = useState('USD')
-  const [purchaseLocation, setPurchaseLocation] = useState('')
-  const [catalogNumber, setCatalogNumber] = useState('')
-  const [country, setCountry] = useState('')
-  
-  // Search and form states
-  const [searchMode, setSearchMode] = useState(true)
-  const [searchQuery, setSearchQuery] = useState('')
-  const [isSearching, setIsSearching] = useState(false)
-  const [dataFetched, setDataFetched] = useState(false)
-  const [successMessage, setSuccessMessage] = useState<string | null>(null)
-  
-  // Filter states
-  const [filterArtist, setFilterArtist] = useState('')
-  const [filterTitle, setFilterTitle] = useState('')
-  const [filterGenre, setFilterGenre] = useState('')
-  const [filterYear, setFilterYear] = useState('')
-  const [filterCollection, setFilterCollection] = useState<string>('all')
-  const [displayLimit, setDisplayLimit] = useState(12)
+  const [vinyls, setVinyls] = useState<Vinyl[]>([]);
+  const [collections, setCollections] = useState<Collection[]>([]);
+  const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const router = useRouter()
+  // Form state
+  const [artist, setArtist] = useState("");
+  const [title, setTitle] = useState("");
+  const [year, setYear] = useState("");
+  const [imageUrl, setImageUrl] = useState("");
+  const [genre, setGenre] = useState<string[]>([]);
+  const [discogsId, setDiscogsId] = useState<number | undefined>(undefined);
+  const [selectedCollectionId, setSelectedCollectionId] = useState<
+    number | undefined
+  >(undefined);
+
+  // New manual fields state
+  const [trackList, setTrackList] = useState<string[]>([]);
+  const [description, setDescription] = useState("");
+  const [label, setLabel] = useState("");
+  const [format, setFormat] = useState("");
+  const [condition, setCondition] = useState("");
+  const [rating, setRating] = useState<number | undefined>(undefined);
+  const [purchaseDate, setPurchaseDate] = useState("");
+  const [purchasePrice, setPurchasePrice] = useState<number | undefined>(
+    undefined
+  );
+  const [purchaseCurrency, setPurchaseCurrency] = useState("USD");
+  const [purchaseLocation, setPurchaseLocation] = useState("");
+  const [catalogNumber, setCatalogNumber] = useState("");
+  const [country, setCountry] = useState("");
+
+  // Search and form states
+  const [searchMode, setSearchMode] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isSearching, setIsSearching] = useState(false);
+  const [dataFetched, setDataFetched] = useState(false);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+
+  // Filter states
+  const [filterArtist, setFilterArtist] = useState("");
+  const [filterTitle, setFilterTitle] = useState("");
+  const [filterGenre, setFilterGenre] = useState("");
+  const [filterYear, setFilterYear] = useState("");
+  const [filterCollection, setFilterCollection] = useState<string>("all");
+  const [displayLimit, setDisplayLimit] = useState(12);
+
+  const router = useRouter();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         // Fetch user profile with caching
-        const userData = await apiClient.getCurrentUser()
-        setUserProfile(userData)
+        const userData = await apiClient.getCurrentUser();
+        setUserProfile(userData as UserProfile);
 
         // Fetch collections with caching
-        const collectionsData = await apiClient.getCollections()
-        setCollections(collectionsData)
-        
+        const collectionsData = await apiClient.getCollections();
+        setCollections(collectionsData as Collection[]);
+
         // Set default collection as selected if available
-        const defaultCollection = collectionsData.find((c: Collection) => c.isDefault)
+        const defaultCollection = (collectionsData as Collection[]).find(
+          (c: Collection) => c.isDefault
+        );
         if (defaultCollection) {
-          setSelectedCollectionId(defaultCollection.id)
+          setSelectedCollectionId(defaultCollection.id);
         }
 
         // Fetch vinyls
-        await fetchVinyls()
+        await fetchVinyls();
       } catch (error) {
-        console.error('Error fetching data:', error)
-        setError(error instanceof Error ? error.message : 'An error occurred')
+        console.error("Error fetching data:", error);
+        setError(error instanceof Error ? error.message : "An error occurred");
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
+    };
 
-    fetchData()
-  }, [router])
+    fetchData();
+  }, [router]);
 
   const fetchVinyls = async (collectionFilter?: string) => {
     try {
-      const filters: Record<string, string> = {}
-      if (collectionFilter && collectionFilter !== 'all') {
-        filters.collectionId = collectionFilter
+      const filters: Record<string, string> = {};
+      if (collectionFilter && collectionFilter !== "all") {
+        filters.collectionId = collectionFilter;
       }
-      
-      const vinylsData = await apiClient.getVinylCollection(filters)
-      setVinyls(vinylsData)
+
+      const vinylsData = await apiClient.getVinylCollection(filters);
+      setVinyls(vinylsData as Vinyl[]);
     } catch (error) {
-      console.error('Error fetching vinyls:', error)
-      setError(error instanceof Error ? error.message : 'An error occurred')
+      console.error("Error fetching vinyls:", error);
+      setError(error instanceof Error ? error.message : "An error occurred");
     }
-  }
+  };
 
   useEffect(() => {
     if (collections.length > 0) {
-      fetchVinyls(filterCollection)
+      fetchVinyls(filterCollection);
     }
-  }, [filterCollection, collections])
+  }, [filterCollection, collections]);
 
   const addVinyl = async (e: React.FormEvent) => {
-    e.preventDefault()
-    
+    e.preventDefault();
+
     if (!artist || !title) {
-      setError('Please fill in Artist and Title fields')
-      return
+      setError("Please fill in Artist and Title fields");
+      return;
     }
-    
+
     // Clear any previous errors if we have the minimum required fields
     if (artist && title) {
-      setError(null)
+      setError(null);
     }
 
     try {
-      setError(null)
-      setSuccessMessage(null)
-      const vinylData = { 
-        artist, 
-        title, 
-        year: year ? parseInt(year) : null, 
-        imageUrl, 
+      setError(null);
+      setSuccessMessage(null);
+      const vinylData = {
+        artist,
+        title,
+        year: year ? parseInt(year) : null,
+        imageUrl,
         genre,
         discogsId,
         collectionId: selectedCollectionId,
@@ -201,226 +207,242 @@ export default function AddVinyl() {
         purchaseCurrency,
         purchaseLocation,
         catalogNumber,
-        country
-      }
+        country,
+      };
 
-      await apiClient.addVinyl(vinylData)
-      setSuccessMessage(`✅ "${title}" by ${artist} added to your collection!`)
+      await apiClient.addVinyl(vinylData);
+      setSuccessMessage(`✅ "${title}" by ${artist} added to your collection!`);
 
       // Reset form but keep current search mode
-      const currentSearchMode = searchMode
-      setArtist('')
-      setTitle('')
-      setYear('')
-      setImageUrl('')
-      setGenre([])
-      setDiscogsId(undefined)
-      setSuggestions([])
-      setSearchQuery('')
-      setDataFetched(false)
-      
+      const currentSearchMode = searchMode;
+      setArtist("");
+      setTitle("");
+      setYear("");
+      setImageUrl("");
+      setGenre([]);
+      setDiscogsId(undefined);
+      setSuggestions([]);
+      setSearchQuery("");
+      setDataFetched(false);
+
       // Reset manual fields
-      setTrackList([])
-      setDescription('')
-      setLabel('')
-      setFormat('')
-      setCondition('')
-      setRating(undefined)
-      setPurchaseDate('')
-      setPurchasePrice(undefined)
-      setPurchaseCurrency('USD')
-      setPurchaseLocation('')
-      setCatalogNumber('')
-      setCountry('')
-      
+      setTrackList([]);
+      setDescription("");
+      setLabel("");
+      setFormat("");
+      setCondition("");
+      setRating(undefined);
+      setPurchaseDate("");
+      setPurchasePrice(undefined);
+      setPurchaseCurrency("USD");
+      setPurchaseLocation("");
+      setCatalogNumber("");
+      setCountry("");
+
       // Keep the user in their preferred mode
-      setSearchMode(currentSearchMode)
-      
+      setSearchMode(currentSearchMode);
+
       // Hide success message after 4 seconds
       setTimeout(() => {
-        setSuccessMessage(null)
-      }, 4000)
-      
+        setSuccessMessage(null);
+      }, 4000);
+
       // Refresh vinyls and user data with cache invalidation
       const [vinylsData, userData] = await Promise.all([
-        apiClient.getVinylCollection({}, { cache: 'force-refresh' }),
-        apiClient.getCurrentUser({ cache: 'force-refresh' })
-      ])
-      
-      setVinyls(vinylsData)
-      setUserProfile(userData)
+        apiClient.getVinylCollection({}, { cache: "force-refresh" }),
+        apiClient.getCurrentUser({ cache: "force-refresh" }),
+      ]);
+
+      setVinyls(vinylsData as Vinyl[]);
+      setUserProfile(userData as UserProfile);
     } catch (error) {
-      setError(error instanceof Error ? error.message : 'An error occurred')
+      setError(error instanceof Error ? error.message : "An error occurred");
     }
-  }
+  };
 
   const deleteVinyl = async (id: number) => {
     try {
-      setError(null)
-      await apiClient.deleteVinyl(id.toString())
-      
+      setError(null);
+      await apiClient.deleteVinyl(id.toString());
+
       // Refresh data with cache invalidation
       const [vinylsData, userData] = await Promise.all([
-        apiClient.getVinylCollection({}, { cache: 'force-refresh' }),
-        apiClient.getCurrentUser({ cache: 'force-refresh' })
-      ])
-      
-      setVinyls(vinylsData)
-      setUserProfile(userData)
-    } catch (error) {
-      setError(error instanceof Error ? error.message : 'An error occurred')
-    }
-  }
+        apiClient.getVinylCollection({}, { cache: "force-refresh" }),
+        apiClient.getCurrentUser({ cache: "force-refresh" }),
+      ]);
 
+      setVinyls(vinylsData as Vinyl[]);
+      setUserProfile(userData as UserProfile);
+    } catch (error) {
+      setError(error instanceof Error ? error.message : "An error occurred");
+    }
+  };
 
   const handleSearchChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const query = e.target.value
-    setSearchQuery(query)
-    
+    const query = e.target.value;
+    setSearchQuery(query);
+
     if (query.length > 2) {
-      setIsSearching(true)
+      setIsSearching(true);
       try {
-        const data = await apiClient.searchDiscogs(query)
-        setSuggestions(data)
+        const data = await apiClient.searchDiscogs(query);
+        setSuggestions(data as Suggestion[]);
       } catch (error) {
-        setSuggestions([])
+        setSuggestions([]);
       } finally {
-        setIsSearching(false)
+        setIsSearching(false);
       }
     } else {
-      setSuggestions([])
+      setSuggestions([]);
       // Clear form if search is cleared
-      if (query === '' && searchMode) {
-        setArtist('')
-        setTitle('')
-        setYear('')
-        setImageUrl('')
-        setGenre([])
-        setDiscogsId(undefined)
-        setDataFetched(false)
+      if (query === "" && searchMode) {
+        setArtist("");
+        setTitle("");
+        setYear("");
+        setImageUrl("");
+        setGenre([]);
+        setDiscogsId(undefined);
+        setDataFetched(false);
         // Reset manual fields
-        setTrackList([])
-        setDescription('')
-        setLabel('')
-        setFormat('')
-        setCondition('')
-        setRating(undefined)
-        setPurchaseDate('')
-        setPurchasePrice(undefined)
-        setPurchaseCurrency('USD')
-        setPurchaseLocation('')
-        setCatalogNumber('')
-        setCountry('')
+        setTrackList([]);
+        setDescription("");
+        setLabel("");
+        setFormat("");
+        setCondition("");
+        setRating(undefined);
+        setPurchaseDate("");
+        setPurchasePrice(undefined);
+        setPurchaseCurrency("USD");
+        setPurchaseLocation("");
+        setCatalogNumber("");
+        setCountry("");
       }
     }
-  }
+  };
 
   const handleSuggestionClick = async (suggestion: Suggestion) => {
-    setSearchQuery(`${suggestion.artist} - ${suggestion.title}`)
-    setArtist(suggestion.artist)
-    setTitle(suggestion.title)
-    setSuggestions([])
-    setIsSearching(true)
-    setDataFetched(false)
-    
+    setSearchQuery(`${suggestion.artist} - ${suggestion.title}`);
+    setArtist(suggestion.artist);
+    setTitle(suggestion.title);
+    setSuggestions([]);
+    setIsSearching(true);
+    setDataFetched(false);
+
     try {
-      setError(null)
-      const data = await apiClient.getDiscogsData(suggestion.artist, suggestion.title)
-      
+      setError(null);
+      const data: Partial<Vinyl> = await apiClient.getDiscogsData(
+        suggestion.artist,
+        suggestion.title
+      );
+
       // Handle potentially missing fields from Discogs
       if (data.year) {
-        setYear(data.year.toString())
+        setYear(data.year.toString());
       } else {
-        setYear('') // Clear year if not found
+        setYear(""); // Clear year if not found
       }
-      if (data.imageUrl) setImageUrl(data.imageUrl)
+      if (data.imageUrl) setImageUrl(data.imageUrl);
       if (data.genre && data.genre.length > 0) {
-        setGenre(data.genre)
+        setGenre(data.genre);
       } else {
-        setGenre([]) // Clear genres if not found
+        setGenre([]); // Clear genres if not found
       }
-      if (data.discogsId) setDiscogsId(data.discogsId)
-      setDataFetched(true)
-      
+      if (data.discogsId) setDiscogsId(data.discogsId);
+      setDataFetched(true);
+
       // Show info about missing fields
-      const missingFields = []
-      if (!data.year) missingFields.push('year')
-      if (!data.genre || data.genre.length === 0) missingFields.push('genre')
-      
+      const missingFields = [];
+      if (!data.year) missingFields.push("year");
+      if (!data.genre || data.genre.length === 0) missingFields.push("genre");
+
       if (missingFields.length > 0) {
-        setError(`ℹ️ Note: ${missingFields.join(', ')} not found in Discogs - you can add these manually if needed`)
+        setError(
+          `ℹ️ Note: ${missingFields.join(
+            ", "
+          )} not found in Discogs - you can add these manually if needed`
+        );
         // Clear error after 5 seconds since this is just informational
         setTimeout(() => {
-          setError(null)
-        }, 5000)
+          setError(null);
+        }, 5000);
       } else {
-        setError(null) // Clear any previous errors
+        setError(null); // Clear any previous errors
       }
     } catch (error) {
-      console.error('Error fetching album data:', error)
-      setError('Failed to fetch album data from Discogs')
+      console.error("Error fetching album data:", error);
+      setError("Failed to fetch album data from Discogs");
     } finally {
-      setIsSearching(false)
+      setIsSearching(false);
     }
-  }
+  };
 
   const toggleSearchMode = () => {
-    setSearchMode(!searchMode)
-    setSearchQuery('')
-    setSuggestions([])
-    setDataFetched(false)
+    setSearchMode(!searchMode);
+    setSearchQuery("");
+    setSuggestions([]);
+    setDataFetched(false);
     // Clear form when switching modes
     if (!searchMode) {
-      setArtist('')
-      setTitle('')
-      setYear('')
-      setImageUrl('')
-      setGenre([])
-      setDiscogsId(undefined)
+      setArtist("");
+      setTitle("");
+      setYear("");
+      setImageUrl("");
+      setGenre([]);
+      setDiscogsId(undefined);
       // Reset manual fields
-      setTrackList([])
-      setDescription('')
-      setLabel('')
-      setFormat('')
-      setCondition('')
-      setRating(undefined)
-      setPurchaseDate('')
-      setPurchasePrice(undefined)
-      setPurchaseCurrency('USD')
-      setPurchaseLocation('')
-      setCatalogNumber('')
-      setCountry('')
+      setTrackList([]);
+      setDescription("");
+      setLabel("");
+      setFormat("");
+      setCondition("");
+      setRating(undefined);
+      setPurchaseDate("");
+      setPurchasePrice(undefined);
+      setPurchaseCurrency("USD");
+      setPurchaseLocation("");
+      setCatalogNumber("");
+      setCountry("");
     }
-  }
+  };
 
   const handleManualEntry = () => {
-    setSearchMode(false)
-    setSuggestions([])
-    setSearchQuery('')
-    setDataFetched(false)
+    setSearchMode(false);
+    setSuggestions([]);
+    setSearchQuery("");
+    setDataFetched(false);
     // Reset manual fields
-    setTrackList([])
-    setDescription('')
-    setLabel('')
-    setFormat('')
-    setCondition('')
-    setRating(undefined)
-    setPurchaseDate('')
-    setPurchasePrice(undefined)
-    setPurchaseCurrency('USD')
-    setPurchaseLocation('')
-    setCatalogNumber('')
-    setCountry('')
-  }
+    setTrackList([]);
+    setDescription("");
+    setLabel("");
+    setFormat("");
+    setCondition("");
+    setRating(undefined);
+    setPurchaseDate("");
+    setPurchasePrice(undefined);
+    setPurchaseCurrency("USD");
+    setPurchaseLocation("");
+    setCatalogNumber("");
+    setCountry("");
+  };
 
-
-  const filteredVinyls = vinyls.filter((vinyl) => {
-    const matchesArtist = filterArtist === '' || vinyl.artist.toLowerCase().includes(filterArtist.toLowerCase())
-    const matchesTitle = filterTitle === '' || vinyl.title.toLowerCase().includes(filterTitle.toLowerCase())
-    const matchesGenre = filterGenre === '' || vinyl.genre.some(g => g.toLowerCase().includes(filterGenre.toLowerCase()))
-    const matchesYear = filterYear === '' || vinyl.year.toString().includes(filterYear)
-    return matchesArtist && matchesTitle && matchesGenre && matchesYear
-  }).slice(0, displayLimit)
+  const filteredVinyls = vinyls
+    .filter((vinyl) => {
+      const matchesArtist =
+        filterArtist === "" ||
+        vinyl.artist.toLowerCase().includes(filterArtist.toLowerCase());
+      const matchesTitle =
+        filterTitle === "" ||
+        vinyl.title.toLowerCase().includes(filterTitle.toLowerCase());
+      const matchesGenre =
+        filterGenre === "" ||
+        vinyl.genre.some((g) =>
+          g.toLowerCase().includes(filterGenre.toLowerCase())
+        );
+      const matchesYear =
+        filterYear === "" || vinyl.year.toString().includes(filterYear);
+      return matchesArtist && matchesTitle && matchesGenre && matchesYear;
+    })
+    .slice(0, displayLimit);
 
   if (loading) {
     return (
@@ -434,7 +456,7 @@ export default function AddVinyl() {
           </div>
         </div>
       </main>
-    )
+    );
   }
 
   if (error) {
@@ -444,26 +466,32 @@ export default function AddVinyl() {
           <div className="window">
             <div className="title-bar">Error</div>
             <div className={styles.contentSection}>
-              <p style={{ color: 'var(--ctp-red)' }}>{error}</p>
-              <button onClick={() => window.location.reload()}>Try Again</button>
+              <p style={{ color: "var(--ctp-red)" }}>{error}</p>
+              <button onClick={() => window.location.reload()}>
+                Try Again
+              </button>
             </div>
           </div>
         </div>
       </main>
-    )
+    );
   }
 
   return (
     <main className={styles.main}>
       <div className="container">
-
         <div className="window">
           <div className="title-bar">Add Vinyl to Collection</div>
           <div className={styles.contentSection}>
             <div className={styles.browseIntro}>
               <h2>Add Music to Your Collection</h2>
               <p>
-                Search our database or manually enter vinyl details. For the best experience, try <Link href="/browse" className={styles.helpLink}>Discover Music →</Link> to browse millions of releases.
+                Search our database or manually enter vinyl details. For the
+                best experience, try{" "}
+                <Link href="/browse" className={styles.helpLink}>
+                  Discover Music →
+                </Link>{" "}
+                to browse millions of releases.
               </p>
               <div className={styles.browseActions}>
                 <Link href="/browse" className={styles.addButton}>
@@ -476,17 +504,21 @@ export default function AddVinyl() {
             </div>
             {/* Search Mode Toggle - Outside form to prevent expansion */}
             <div className={styles.searchModeToggle}>
-              <button 
-                type="button" 
+              <button
+                type="button"
                 onClick={toggleSearchMode}
-                className={`${styles.modeButton} ${searchMode ? styles.active : ''}`}
+                className={`${styles.modeButton} ${
+                  searchMode ? styles.active : ""
+                }`}
               >
                 🔍 Search
               </button>
-              <button 
-                type="button" 
+              <button
+                type="button"
                 onClick={handleManualEntry}
-                className={`${styles.modeButton} ${!searchMode ? styles.active : ''}`}
+                className={`${styles.modeButton} ${
+                  !searchMode ? styles.active : ""
+                }`}
               >
                 ✏️ Manual
               </button>
@@ -494,13 +526,10 @@ export default function AddVinyl() {
 
             {/* Success Message */}
             {successMessage && (
-              <div className={styles.successMessage}>
-                {successMessage}
-              </div>
+              <div className={styles.successMessage}>{successMessage}</div>
             )}
 
             <form onSubmit={addVinyl} className={styles.form}>
-
               {/* Search Mode */}
               {searchMode ? (
                 <div className={styles.searchContainer}>
@@ -513,16 +542,24 @@ export default function AddVinyl() {
                       className={styles.searchInput}
                     />
                     {isSearching && (
-                      <div className={styles.searchingIndicator}>🔍 Searching...</div>
+                      <div className={styles.searchingIndicator}>
+                        🔍 Searching...
+                      </div>
                     )}
                     {suggestions.length > 0 && (
                       <ul className={styles.suggestionsList}>
                         {suggestions.map((s, index) => (
-                          <li key={index} onClick={() => handleSuggestionClick(s)} className={styles.suggestionItem}>
+                          <li
+                            key={index}
+                            onClick={() => handleSuggestionClick(s)}
+                            className={styles.suggestionItem}
+                          >
                             <div className={styles.suggestionContent}>
                               {s.thumb && (
-                                <img 
-                                  src={`/api/image-proxy?url=${encodeURIComponent(s.thumb)}`}
+                                <img
+                                  src={`/api/image-proxy?url=${encodeURIComponent(
+                                    s.thumb
+                                  )}`}
                                   alt={`${s.title} cover`}
                                   className={styles.suggestionThumb}
                                 />
@@ -534,12 +571,18 @@ export default function AddVinyl() {
                                 <div className={styles.suggestionMeta}>
                                   {s.year && <span>{s.year}</span>}
                                   {s.country && <span> • {s.country}</span>}
-                                  {s.format.length > 0 && <span> • {s.format[0]}</span>}
-                                  {s.label.length > 0 && <span> • {s.label[0]}</span>}
+                                  {s.format.length > 0 && (
+                                    <span> • {s.format[0]}</span>
+                                  )}
+                                  {s.label.length > 0 && (
+                                    <span> • {s.label[0]}</span>
+                                  )}
                                 </div>
                                 <div className={styles.suggestionGenres}>
-                                  {s.genre.length > 0 && s.genre.slice(0, 2).join(', ')}
-                                  {s.style.length > 0 && ` • ${s.style.slice(0, 2).join(', ')}`}
+                                  {s.genre.length > 0 &&
+                                    s.genre.slice(0, 2).join(", ")}
+                                  {s.style.length > 0 &&
+                                    ` • ${s.style.slice(0, 2).join(", ")}`}
                                 </div>
                               </div>
                             </div>
@@ -555,12 +598,26 @@ export default function AddVinyl() {
                       <h4>✅ Found on Discogs:</h4>
                       <div className={styles.dataPreview}>
                         <div>
-                          <p><strong>Artist:</strong> {artist}</p>
-                          <p><strong>Title:</strong> {title}</p>
-                          <p><strong>Year:</strong> {year}</p>
-                          <p><strong>Genre:</strong> {genre.join(', ')}</p>
+                          <p>
+                            <strong>Artist:</strong> {artist}
+                          </p>
+                          <p>
+                            <strong>Title:</strong> {title}
+                          </p>
+                          <p>
+                            <strong>Year:</strong> {year}
+                          </p>
+                          <p>
+                            <strong>Genre:</strong> {genre.join(", ")}
+                          </p>
                         </div>
-                        {imageUrl && <img src={imageUrl} alt="Album cover" className={styles.previewImage} />}
+                        {imageUrl && (
+                          <img
+                            src={imageUrl}
+                            alt="Album cover"
+                            className={styles.previewImage}
+                          />
+                        )}
                       </div>
                     </div>
                   )}
@@ -594,8 +651,15 @@ export default function AddVinyl() {
                   <input
                     type="text"
                     placeholder="Genre (comma-separated, optional)"
-                    value={genre.join(', ')}
-                    onChange={(e) => setGenre(e.target.value.split(',').map(g => g.trim()).filter(g => g))}
+                    value={genre.join(", ")}
+                    onChange={(e) =>
+                      setGenre(
+                        e.target.value
+                          .split(",")
+                          .map((g) => g.trim())
+                          .filter((g) => g)
+                      )
+                    }
                   />
                   <input
                     type="text"
@@ -607,25 +671,36 @@ export default function AddVinyl() {
                 </div>
               )}
               <div className={styles.collectionSelector}>
-                <label htmlFor="collection-select" className={styles.selectorLabel}>
+                <label
+                  htmlFor="collection-select"
+                  className={styles.selectorLabel}
+                >
                   📁 Add to Collection:
                 </label>
                 <select
                   id="collection-select"
-                  value={selectedCollectionId || ''}
-                  onChange={(e) => setSelectedCollectionId(e.target.value ? parseInt(e.target.value) : undefined)}
+                  value={selectedCollectionId || ""}
+                  onChange={(e) =>
+                    setSelectedCollectionId(
+                      e.target.value ? parseInt(e.target.value) : undefined
+                    )
+                  }
                   className={styles.fullWidthInput}
                   required
                 >
                   <option value="">Choose a collection...</option>
                   {collections.map((collection) => (
                     <option key={collection.id} value={collection.id}>
-                      {collection.title} {collection.isDefault ? '(Default)' : ''} • {collection._count.vinyls} records
+                      {collection.title}{" "}
+                      {collection.isDefault ? "(Default)" : ""} •{" "}
+                      {collection._count.vinyls} records
                     </option>
                   ))}
                 </select>
                 <p className={styles.selectorHint}>
-                  <Link href="/collections" className={styles.helpLink}>+ Create new collection</Link>
+                  <Link href="/collections" className={styles.helpLink}>
+                    + Create new collection
+                  </Link>
                 </p>
               </div>
               <div className={styles.formActions}>
@@ -640,7 +715,10 @@ export default function AddVinyl() {
           <div className={styles.contentSection}>
             <div className={styles.browseIntro}>
               <h2>What's next?</h2>
-              <p>After adding your vinyl, you might want to organize it or view your collection.</p>
+              <p>
+                After adding your vinyl, you might want to organize it or view
+                your collection.
+              </p>
               <div className={styles.browseActions}>
                 <Link href="/" className={styles.manageButton}>
                   🎧 My Collection
@@ -660,5 +738,5 @@ export default function AddVinyl() {
         </div>
       </div>
     </main>
-  )
+  );
 }

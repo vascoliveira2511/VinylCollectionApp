@@ -79,10 +79,24 @@ interface DiscogsRelease {
     entity_type: string;
     entity_type_name: string;
   }>;
+  extraartists?: Array<{
+    name: string;
+    id: number;
+    role: string;
+    tracks?: string;
+    join?: string;
+    anv?: string;
+  }>;
+  identifiers?: Array<{
+    type: string;
+    value: string;
+    description?: string;
+  }>;
   uri: string;
   estimated_weight: number;
   lowest_price: number;
   num_for_sale: number;
+  master_id?: number; // Added to fix type error
 }
 
 export default function VinylDetailPage({
@@ -95,11 +109,15 @@ export default function VinylDetailPage({
   const [discogsDetails, setDiscogsDetails] = useState<DiscogsRelease | null>(
     null
   );
+  const [comments, setComments] = useState<any[]>([]);
   const [selectedImage, setSelectedImage] = useState(0);
   const [showPersonalNotes, setShowPersonalNotes] = useState(false);
   const [userStatus, setUserStatus] = useState<"want" | "have" | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [newComment, setNewComment] = useState<string>("");
+  const [newRating, setNewRating] = useState<number | undefined>(undefined);
+  const [isReview, setIsReview] = useState<boolean>(false);
   const router = useRouter();
 
   // Helper function to format Discogs notes
@@ -402,7 +420,7 @@ export default function VinylDetailPage({
                   <div className={styles.vinylMeta}>
                     {vinyl.year} {vinyl.country && `• ${vinyl.country}`}
                   </div>
-                  
+
                   {/* Genre pills */}
                   <div className={styles.genrePills}>
                     {vinyl.genre?.map((g, idx) => (
@@ -418,161 +436,170 @@ export default function VinylDetailPage({
                   </div>
                 </div>
 
-              {/* Rating display */}
-              {vinyl.rating && (
-                <div
-                  style={{
-                    marginTop: "15px",
-                    fontSize: "1.2em",
-                    textAlign: "center",
-                  }}
-                >
-                  <div>{renderRating(vinyl.rating)}</div>
+                {/* Rating display */}
+                {vinyl.rating && (
                   <div
                     style={{
-                      fontSize: "0.9em",
-                      color: "var(--ctp-subtext1)",
-                      marginTop: "5px",
+                      marginTop: "15px",
+                      fontSize: "1.2em",
+                      textAlign: "center",
                     }}
                   >
-                    Personal Rating: {vinyl.rating}/5
+                    <div>{renderRating(vinyl.rating)}</div>
+                    <div
+                      style={{
+                        fontSize: "0.9em",
+                        color: "var(--ctp-subtext1)",
+                        marginTop: "5px",
+                      }}
+                    >
+                      Personal Rating: {vinyl.rating}/5
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
 
                 {/* Action buttons */}
                 <div className={styles.vinylActions}>
-                <Link href={`/vinyl/${id}/edit`} className={styles.editButton}>
-                  Edit
-                </Link>
-                <button onClick={handleDelete} className={styles.deleteButton}>
-                  Delete
-                </button>
-                {vinyl.discogsId && (
-                  <>
-                    <button
-                      onClick={() => handleStatusChange("want")}
-                      className={`${styles.statusButton} ${
-                        userStatus === "want" ? styles.statusActive : ""
-                      }`}
-                    >
-                      {userStatus === "want" ? "In Wantlist" : "Want"}
-                    </button>
+                  <Link
+                    href={`/vinyl/${id}/edit`}
+                    className={styles.editButton}
+                  >
+                    Edit
+                  </Link>
+                  <button
+                    onClick={handleDelete}
+                    className={styles.deleteButton}
+                  >
+                    Delete
+                  </button>
+                  {vinyl.discogsId && (
+                    <>
+                      <button
+                        onClick={() => handleStatusChange("want")}
+                        className={`${styles.statusButton} ${
+                          userStatus === "want" ? styles.statusActive : ""
+                        }`}
+                      >
+                        {userStatus === "want" ? "In Wantlist" : "Want"}
+                      </button>
 
-                    <button
-                      onClick={() => handleStatusChange("have")}
-                      className={`${styles.statusButton} ${
-                        userStatus === "have" ? styles.statusActive : ""
-                      }`}
-                    >
-                      {userStatus === "have" ? "Have" : "Mark as Have"}
-                    </button>
-                  </>
-                )}
-                <button
-                  onClick={() => router.back()}
-                  className={styles.backButton}
-                >
-                  ← Back
-                </button>
+                      <button
+                        onClick={() => handleStatusChange("have")}
+                        className={`${styles.statusButton} ${
+                          userStatus === "have" ? styles.statusActive : ""
+                        }`}
+                      >
+                        {userStatus === "have" ? "Have" : "Mark as Have"}
+                      </button>
+                    </>
+                  )}
+                  <button
+                    onClick={() => router.back()}
+                    className={styles.backButton}
+                  >
+                    ← Back
+                  </button>
+                </div>
               </div>
-            </div>
 
-            {/* Personal Collection Info - Consolidated */}
-            <div
-              className="window"
-              style={{
-                marginBottom: "20px",
-                backgroundColor: "var(--ctp-surface0)",
-                border: "2px solid var(--ctp-mauve)",
-              }}
-            >
+              {/* Personal Collection Info - Consolidated */}
               <div
-                className="title-bar"
+                className="window"
                 style={{
-                  backgroundColor: "var(--ctp-mauve)",
-                  color: "var(--ctp-crust)",
+                  marginBottom: "20px",
+                  backgroundColor: "var(--ctp-surface0)",
+                  border: "2px solid var(--ctp-mauve)",
                 }}
               >
-                📝 My Collection
-              </div>
-              <div className={styles.contentSection}>
                 <div
+                  className="title-bar"
                   style={{
-                    display: "grid",
-                    gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-                    gap: "15px",
-                    fontSize: "0.9em",
+                    backgroundColor: "var(--ctp-mauve)",
+                    color: "var(--ctp-crust)",
                   }}
                 >
-                  {/* Collection */}
-                  {vinyl.collection && (
+                  📝 My Collection
+                </div>
+                <div className={styles.contentSection}>
+                  <div
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns:
+                        "repeat(auto-fit, minmax(200px, 1fr))",
+                      gap: "15px",
+                      fontSize: "0.9em",
+                    }}
+                  >
+                    {/* Collection */}
+                    {vinyl.collection && (
+                      <div>
+                        <strong>Collection:</strong>
+                        <div style={{ marginTop: "2px" }}>
+                          {vinyl.collection.title}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Status */}
                     <div>
-                      <strong>Collection:</strong>
+                      <strong>Status:</strong>
                       <div style={{ marginTop: "2px" }}>
-                        {vinyl.collection.title}
+                        {userStatus === "want" && (
+                          <span style={{ color: "var(--ctp-red)" }}>
+                            In Wantlist
+                          </span>
+                        )}
+                        {userStatus === "have" && (
+                          <span style={{ color: "var(--ctp-green)" }}>
+                            Have
+                          </span>
+                        )}
+                        {!userStatus && (
+                          <span style={{ color: "var(--ctp-green)" }}>
+                            Owned
+                          </span>
+                        )}
                       </div>
                     </div>
-                  )}
 
-                  {/* Status */}
-                  <div>
-                    <strong>Status:</strong>
-                    <div style={{ marginTop: "2px" }}>
-                      {userStatus === "want" && (
-                        <span style={{ color: "var(--ctp-red)" }}>
-                          In Wantlist
-                        </span>
-                      )}
-                      {userStatus === "have" && (
-                        <span style={{ color: "var(--ctp-green)" }}>
-                          Have
-                        </span>
-                      )}
-                      {!userStatus && (
-                        <span style={{ color: "var(--ctp-green)" }}>
-                          Owned
-                        </span>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Media Condition */}
-                  {vinyl.condition && (
-                    <div>
-                      <strong>Media:</strong>
-                      <div style={{ marginTop: "2px" }}>{vinyl.condition}</div>
-                    </div>
-                  )}
-
-                  {/* Sleeve Condition */}
-                  {vinyl.sleeveCondition && (
-                    <div>
-                      <strong>Sleeve:</strong>
-                      <div style={{ marginTop: "2px" }}>
-                        {vinyl.sleeveCondition}
+                    {/* Media Condition */}
+                    {vinyl.condition && (
+                      <div>
+                        <strong>Media:</strong>
+                        <div style={{ marginTop: "2px" }}>
+                          {vinyl.condition}
+                        </div>
                       </div>
-                    </div>
-                  )}
+                    )}
 
-                  {/* Personal Notes Preview */}
-                  <div>
-                    <strong>Notes:</strong>
-                    <div
-                      style={{
-                        marginTop: "2px",
-                        color: "var(--ctp-subtext1)",
-                        fontSize: "0.85em",
-                      }}
-                    >
-                      {vinyl.description
-                        ? "Has personal notes (see below)"
-                        : "No personal notes"}
+                    {/* Sleeve Condition */}
+                    {vinyl.sleeveCondition && (
+                      <div>
+                        <strong>Sleeve:</strong>
+                        <div style={{ marginTop: "2px" }}>
+                          {vinyl.sleeveCondition}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Personal Notes Preview */}
+                    <div>
+                      <strong>Notes:</strong>
+                      <div
+                        style={{
+                          marginTop: "2px",
+                          color: "var(--ctp-subtext1)",
+                          fontSize: "0.85em",
+                        }}
+                      >
+                        {vinyl.description
+                          ? "Has personal notes (see below)"
+                          : "No personal notes"}
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
             </div>
 
             {/* Release Information - Simple Layout */}
