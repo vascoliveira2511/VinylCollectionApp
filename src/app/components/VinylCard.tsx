@@ -50,9 +50,13 @@ export default function VinylCard({
   addToCollectionComponent,
 }: VinylCardProps) {
   // Use the best available image URL (APIs now provide improved URLs)
-  const imageUrl = vinyl.imageUrl || vinyl.thumb || "https://via.placeholder.com/150";
-  
-  const linkUrl = linkPrefix === "/browse" ? `/browse/${vinyl.id}` : `${linkPrefix}/${vinyl.id}`;
+  const imageUrl =
+    vinyl.imageUrl || vinyl.thumb || "https://via.placeholder.com/150";
+
+  const linkUrl =
+    linkPrefix === "/browse"
+      ? `/browse/${vinyl.id}`
+      : `${linkPrefix}/${vinyl.id}`;
 
   return (
     <div className={styles.card}>
@@ -68,13 +72,19 @@ export default function VinylCard({
             <h3 className={styles.cardTitle}>{vinyl.title}</h3>
             <p className={styles.cardArtist}>{vinyl.artist}</p>
           </div>
-          
+
           {showDetails && (
             <div className={styles.cardMeta}>
               <div className={styles.metaLine}>
-                {vinyl.year && <span className={styles.metaYear}>{vinyl.year}</span>}
-                {vinyl.country && <span className={styles.metaCountry}>{vinyl.country}</span>}
-                {vinyl.type === "master" && <span className={styles.metaMaster}>Master</span>}
+                {vinyl.year && (
+                  <span className={styles.metaYear}>{vinyl.year}</span>
+                )}
+                {vinyl.country && (
+                  <span className={styles.metaCountry}>{vinyl.country}</span>
+                )}
+                {vinyl.type === "master" && (
+                  <span className={styles.metaMaster}>Master</span>
+                )}
               </div>
               {vinyl.format && (
                 <div className={styles.metaFormat}>
@@ -84,7 +94,9 @@ export default function VinylCard({
               {vinyl.label && (
                 <div className={styles.metaLabel}>
                   {Array.isArray(vinyl.label) ? vinyl.label[0] : vinyl.label}
-                  {vinyl.catno && <span className={styles.metaCatno}> • {vinyl.catno}</span>}
+                  {vinyl.catno && (
+                    <span className={styles.metaCatno}> • {vinyl.catno}</span>
+                  )}
                 </div>
               )}
               {vinyl.barcode && vinyl.barcode.length > 0 && (
@@ -94,25 +106,28 @@ export default function VinylCard({
               )}
               {vinyl.community && (
                 <div className={styles.metaCommunity}>
-                  <span className={styles.communityHave}>Have: {vinyl.community.have}</span>
-                  <span className={styles.communityWant}>Want: {vinyl.community.want}</span>
+                  <span className={styles.communityHave}>
+                    Have: {vinyl.community.have}
+                  </span>
+                  <span className={styles.communityWant}>
+                    Want: {vinyl.community.want}
+                  </span>
                 </div>
               )}
             </div>
           )}
-          
-          {!showDetails && vinyl.year && (
-            <p>{vinyl.year}</p>
-          )}
-          
+
+          {!showDetails && vinyl.year && <p>{vinyl.year}</p>}
+
           <div className={styles.cardTags}>
-            {vinyl.genre && vinyl.genre.slice(0, showDetails ? 2 : 3).map((g, idx) => (
-              <span key={idx} className={styles.genrePill}>
-                {g}
-              </span>
-            ))}
+            {vinyl.genre &&
+              vinyl.genre.slice(0, showDetails ? 2 : 3).map((g, idx) => (
+                <span key={idx} className={styles.genrePill}>
+                  {g}
+                </span>
+              ))}
           </div>
-          
+
           {vinyl.createdAt && (
             <p className={styles.addedDate}>
               Added {new Date(vinyl.createdAt).toLocaleDateString()}
@@ -120,7 +135,7 @@ export default function VinylCard({
           )}
         </div>
       </Link>
-      
+
       {showActions && (
         <div className={styles.buttonGroup}>
           {addToCollectionComponent ? (

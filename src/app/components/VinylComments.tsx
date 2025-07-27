@@ -34,7 +34,9 @@ export default function VinylComments({ discogsId }: VinylCommentsProps) {
 
   const fetchComments = async () => {
     try {
-      const response = await fetch(`/api/vinyl-comments?discogsId=${discogsId}`);
+      const response = await fetch(
+        `/api/vinyl-comments?discogsId=${discogsId}`
+      );
       if (response.ok) {
         const data = await response.json();
         setComments(data);
@@ -48,7 +50,7 @@ export default function VinylComments({ discogsId }: VinylCommentsProps) {
 
   const handleCommentSubmit = async () => {
     if (!newComment.trim()) return;
-    
+
     try {
       const response = await fetch("/api/vinyl-comments", {
         method: "POST",
@@ -60,7 +62,7 @@ export default function VinylComments({ discogsId }: VinylCommentsProps) {
           isReview: isReview,
         }),
       });
-      
+
       if (response.ok) {
         const comment = await response.json();
         setComments([comment, ...comments]);
@@ -72,7 +74,10 @@ export default function VinylComments({ discogsId }: VinylCommentsProps) {
         alert("Error: " + (data.error || "Failed to post comment"));
       }
     } catch (err) {
-      alert("Network error: " + (err instanceof Error ? err.message : "Unknown error"));
+      alert(
+        "Network error: " +
+          (err instanceof Error ? err.message : "Unknown error")
+      );
     }
   };
 
@@ -89,7 +94,9 @@ export default function VinylComments({ discogsId }: VinylCommentsProps) {
 
   return (
     <div className="window" style={{ marginBottom: "20px" }}>
-      <div className="title-bar">Community Reviews & Comments ({comments.length})</div>
+      <div className="title-bar">
+        Community Reviews & Comments ({comments.length})
+      </div>
       <div className={styles.contentSection}>
         {/* Comment Form */}
         <div className={styles.commentForm}>
@@ -123,7 +130,9 @@ export default function VinylComments({ discogsId }: VinylCommentsProps) {
           <textarea
             value={newComment}
             onChange={(e) => setNewComment(e.target.value)}
-            placeholder={isReview ? "Write your review..." : "Write a comment..."}
+            placeholder={
+              isReview ? "Write your review..." : "Write a comment..."
+            }
             className={styles.commentTextarea}
             rows={3}
           />
@@ -161,9 +170,7 @@ export default function VinylComments({ discogsId }: VinylCommentsProps) {
                     {new Date(comment.createdAt).toLocaleDateString()}
                   </span>
                 </div>
-                <div className={styles.commentContent}>
-                  {comment.content}
-                </div>
+                <div className={styles.commentContent}>{comment.content}</div>
               </div>
             ))
           )}

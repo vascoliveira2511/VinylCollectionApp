@@ -70,7 +70,14 @@ export default function ReleaseInfo({
       <div className="window" style={{ marginBottom: "20px" }}>
         <div className="title-bar">Release Information</div>
         <div className={styles.contentSection}>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "12px", fontSize: "0.85em" }}>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+              gap: "12px",
+              fontSize: "0.85em",
+            }}
+          >
             {/* Labels */}
             {labels.length > 0 && (
               <div>
@@ -116,7 +123,10 @@ export default function ReleaseInfo({
               <div>
                 <strong style={{ fontSize: "0.9em" }}>Master Release:</strong>
                 <div style={{ marginTop: "2px" }}>
-                  <Link href={`/browse/master/${master_id}`} className={styles.masterLink}>
+                  <Link
+                    href={`/browse/master/${master_id}`}
+                    className={styles.masterLink}
+                  >
                     View all versions
                   </Link>
                 </div>
@@ -128,13 +138,21 @@ export default function ReleaseInfo({
           {companies.length > 0 && (
             <div style={{ marginTop: "15px", fontSize: "0.85em" }}>
               <strong style={{ fontSize: "0.9em" }}>Key Companies:</strong>
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: "4px", marginTop: "4px" }}>
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
+                  gap: "4px",
+                  marginTop: "4px",
+                }}
+              >
                 {companies
-                  .filter(c => 
-                    c.entity_type_name?.includes("Copyright") || 
-                    c.entity_type_name?.includes("Pressed By") ||
-                    c.entity_type_name?.includes("Manufactured") ||
-                    c.entity_type_name?.includes("Distributed")
+                  .filter(
+                    (c) =>
+                      c.entity_type_name?.includes("Copyright") ||
+                      c.entity_type_name?.includes("Pressed By") ||
+                      c.entity_type_name?.includes("Manufactured") ||
+                      c.entity_type_name?.includes("Distributed")
                   )
                   .slice(0, 4)
                   .map((company, idx) => (
@@ -156,7 +174,14 @@ export default function ReleaseInfo({
           {showCredits && extraartists.length > 0 && (
             <div style={{ marginTop: "15px", fontSize: "0.85em" }}>
               <strong style={{ fontSize: "0.9em" }}>Credits:</strong>
-              <div style={{ display: "grid", gap: "3px", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", marginTop: "4px" }}>
+              <div
+                style={{
+                  display: "grid",
+                  gap: "3px",
+                  gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+                  marginTop: "4px",
+                }}
+              >
                 {extraartists.slice(0, 8).map((artist, idx) => (
                   <div key={idx}>
                     <strong>{artist.name}</strong> - {artist.role}
@@ -176,9 +201,7 @@ export default function ReleaseInfo({
             <div style={{ marginTop: "15px", fontSize: "0.85em" }}>
               <strong style={{ fontSize: "0.9em" }}>Marketplace:</strong>
               <div style={{ marginTop: "2px" }}>
-                {num_for_sale > 0 && (
-                  <span>{num_for_sale} for sale</span>
-                )}
+                {num_for_sale > 0 && <span>{num_for_sale} for sale</span>}
                 {lowest_price && (
                   <span>
                     {num_for_sale > 0 && " • "}
@@ -196,11 +219,31 @@ export default function ReleaseInfo({
         <div className="window" style={{ marginBottom: "20px" }}>
           <div className="title-bar">Barcode and Other Identifiers</div>
           <div className={styles.contentSection}>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "8px", fontSize: "0.85em" }}>
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+                gap: "8px",
+                fontSize: "0.85em",
+              }}
+            >
               {identifiers.map((identifier, idx) => (
                 <div key={idx}>
-                  <strong style={{ fontSize: "0.9em" }}>{identifier.type}:</strong> {identifier.value}
-                  {identifier.description && <span style={{ color: "var(--ctp-subtext1)", fontSize: "0.8em" }}> ({identifier.description})</span>}
+                  <strong style={{ fontSize: "0.9em" }}>
+                    {identifier.type}:
+                  </strong>{" "}
+                  {identifier.value}
+                  {identifier.description && (
+                    <span
+                      style={{
+                        color: "var(--ctp-subtext1)",
+                        fontSize: "0.8em",
+                      }}
+                    >
+                      {" "}
+                      ({identifier.description})
+                    </span>
+                  )}
                 </div>
               ))}
             </div>

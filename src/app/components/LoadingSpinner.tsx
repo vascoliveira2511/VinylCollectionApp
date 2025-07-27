@@ -13,9 +13,12 @@ export default function LoadingSpinner({
 }: LoadingSpinnerProps) {
   const getSizeClass = () => {
     switch (size) {
-      case "small": return styles.small;
-      case "large": return styles.large;
-      default: return styles.medium;
+      case "small":
+        return styles.small;
+      case "large":
+        return styles.large;
+      default:
+        return styles.medium;
     }
   };
 

@@ -16,7 +16,11 @@ interface TrackListProps {
   defaultOpen?: boolean;
 }
 
-export default function TrackList({ tracks, title = "Track List", defaultOpen = false }: TrackListProps) {
+export default function TrackList({
+  tracks,
+  title = "Track List",
+  defaultOpen = false,
+}: TrackListProps) {
   const [showTracks, setShowTracks] = useState(defaultOpen);
 
   if (!tracks || tracks.length === 0) {
@@ -37,16 +41,10 @@ export default function TrackList({ tracks, title = "Track List", defaultOpen = 
           <div className={styles.trackList}>
             {tracks.map((track, index) => (
               <div key={index} className={styles.trackItem}>
-                <span className={styles.trackPosition}>
-                  {track.position}
-                </span>
-                <span className={styles.trackTitle}>
-                  {track.title}
-                </span>
+                <span className={styles.trackPosition}>{track.position}</span>
+                <span className={styles.trackTitle}>{track.title}</span>
                 {track.duration && (
-                  <span className={styles.trackDuration}>
-                    {track.duration}
-                  </span>
+                  <span className={styles.trackDuration}>{track.duration}</span>
                 )}
               </div>
             ))}

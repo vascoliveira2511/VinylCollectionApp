@@ -2,6 +2,10 @@
 
 import { useState } from "react";
 import styles from "../page.module.css";
+// If using TypeScript and CSS modules, ensure you have a declaration file (*.d.ts) for CSS modules.
+// For example, create src/app/page.module.css.d.ts with:
+// declare const styles: { [className: string]: string };
+// export default styles;
 
 interface VinylHeaderProps {
   title: string;
@@ -9,7 +13,7 @@ interface VinylHeaderProps {
   year?: number;
   country?: string;
   genres?: string[];
-  styles?: string[];
+  styleTags?: string[];
   images?: Array<{
     uri: string;
     uri500?: string;
@@ -27,7 +31,7 @@ export default function VinylHeader({
   year,
   country,
   genres = [],
-  styles = [],
+  styleTags = [],
   images = [],
   rating,
   showBackground = true,
@@ -161,7 +165,7 @@ export default function VinylHeader({
               {g}
             </span>
           ))}
-          {styles.map((s, idx) => (
+          {styleTags.map((s, idx) => (
             <span key={idx} className={styles.stylePill}>
               {s}
             </span>
@@ -192,7 +196,15 @@ export default function VinylHeader({
 
         {/* Action buttons */}
         {actions && (
-          <div style={{ marginTop: "20px", display: "flex", gap: "10px", flexWrap: "wrap", justifyContent: "center" }}>
+          <div
+            style={{
+              marginTop: "20px",
+              display: "flex",
+              gap: "10px",
+              flexWrap: "wrap",
+              justifyContent: "center",
+            }}
+          >
             {actions}
           </div>
         )}

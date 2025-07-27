@@ -49,7 +49,7 @@ interface SimpleReleaseInfoProps {
   released?: string;
   master_id?: number;
   country?: string;
-  
+
   // Detailed info
   companies?: Company[];
   extraartists?: ExtraArtist[];
@@ -74,7 +74,7 @@ export default function SimpleReleaseInfo(props: SimpleReleaseInfoProps) {
 
   const groupCreditsByRole = (credits: ExtraArtist[]) => {
     const grouped: { [role: string]: string[] } = {};
-    credits.forEach(credit => {
+    credits.forEach((credit) => {
       if (!grouped[credit.role]) {
         grouped[credit.role] = [];
       }
@@ -86,7 +86,14 @@ export default function SimpleReleaseInfo(props: SimpleReleaseInfoProps) {
   return (
     <div style={{ display: "grid", gap: "20px" }}>
       {/* Basic Release Info - Always visible */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "16px", fontSize: "0.9em" }}>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+          gap: "16px",
+          fontSize: "0.9em",
+        }}
+      >
         {/* Labels */}
         {props.labels && props.labels.length > 0 && (
           <div>
@@ -100,7 +107,7 @@ export default function SimpleReleaseInfo(props: SimpleReleaseInfoProps) {
             </div>
           </div>
         )}
-        
+
         {/* Format */}
         {props.formats && props.formats.length > 0 && (
           <div>
@@ -108,7 +115,8 @@ export default function SimpleReleaseInfo(props: SimpleReleaseInfoProps) {
             <div style={{ marginTop: "4px", color: "var(--ctp-subtext1)" }}>
               {props.formats.map((format, idx) => (
                 <div key={idx}>
-                  {format.qty && `${format.qty} x `}{format.name}
+                  {format.qty && `${format.qty} x `}
+                  {format.name}
                   {format.descriptions && format.descriptions.length > 0 && (
                     <div style={{ fontSize: "0.9em" }}>
                       {format.descriptions.join(", ")}
@@ -119,20 +127,24 @@ export default function SimpleReleaseInfo(props: SimpleReleaseInfoProps) {
             </div>
           </div>
         )}
-        
+
         {/* Country */}
         {props.country && (
           <div>
             <strong>Country:</strong>
-            <div style={{ marginTop: "4px", color: "var(--ctp-subtext1)" }}>{props.country}</div>
+            <div style={{ marginTop: "4px", color: "var(--ctp-subtext1)" }}>
+              {props.country}
+            </div>
           </div>
         )}
-        
+
         {/* Released */}
         {props.released && (
           <div>
             <strong>Released:</strong>
-            <div style={{ marginTop: "4px", color: "var(--ctp-subtext1)" }}>{props.released}</div>
+            <div style={{ marginTop: "4px", color: "var(--ctp-subtext1)" }}>
+              {props.released}
+            </div>
           </div>
         )}
 
@@ -141,11 +153,11 @@ export default function SimpleReleaseInfo(props: SimpleReleaseInfoProps) {
           <div>
             <strong>Master Release:</strong>
             <div style={{ marginTop: "4px" }}>
-              <Link 
-                href={`/browse/master/${props.master_id}`} 
-                style={{ 
-                  color: "var(--ctp-blue)", 
-                  textDecoration: "underline"
+              <Link
+                href={`/browse/master/${props.master_id}`}
+                style={{
+                  color: "var(--ctp-blue)",
+                  textDecoration: "underline",
                 }}
               >
                 View all versions
@@ -160,29 +172,34 @@ export default function SimpleReleaseInfo(props: SimpleReleaseInfoProps) {
         <div>
           <div style={{ display: "grid", gap: "2px", fontSize: "0.85em" }}>
             {props.tracklist.map((track, index) => (
-              <div key={index} style={{ 
-                display: "grid",
-                gridTemplateColumns: "auto auto 1fr auto",
-                gap: "12px",
-                padding: "2px 0",
-                alignItems: "baseline"
-              }}>
-                <span style={{ 
-                  fontFamily: "monospace",
-                  color: "var(--ctp-overlay1)",
-                  minWidth: "24px"
-                }}>
+              <div
+                key={index}
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "auto auto 1fr auto",
+                  gap: "12px",
+                  padding: "2px 0",
+                  alignItems: "baseline",
+                }}
+              >
+                <span
+                  style={{
+                    fontFamily: "monospace",
+                    color: "var(--ctp-overlay1)",
+                    minWidth: "24px",
+                  }}
+                >
                   {track.position}
                 </span>
                 <span style={{ color: "var(--ctp-text)" }}>
                   {/* Extract artist from title if it contains – */}
-                  {track.title.includes('–') ? (
+                  {track.title.includes("–") ? (
                     <>
                       <span style={{ color: "var(--ctp-subtext1)" }}>
-                        {track.title.split('–')[0].trim()}–
+                        {track.title.split("–")[0].trim()}–
                       </span>
                       <span style={{ marginLeft: "8px" }}>
-                        {track.title.split('–').slice(1).join('–').trim()}
+                        {track.title.split("–").slice(1).join("–").trim()}
                       </span>
                     </>
                   ) : (
@@ -191,11 +208,13 @@ export default function SimpleReleaseInfo(props: SimpleReleaseInfoProps) {
                 </span>
                 <span></span> {/* Spacer */}
                 {track.duration && (
-                  <span style={{ 
-                    fontFamily: "monospace",
-                    color: "var(--ctp-subtext1)",
-                    fontSize: "0.9em"
-                  }}>
+                  <span
+                    style={{
+                      fontFamily: "monospace",
+                      color: "var(--ctp-subtext1)",
+                      fontSize: "0.9em",
+                    }}
+                  >
                     {track.duration}
                   </span>
                 )}
@@ -208,14 +227,18 @@ export default function SimpleReleaseInfo(props: SimpleReleaseInfoProps) {
       {/* Credits - Always visible, grouped by role */}
       {props.extraartists && props.extraartists.length > 0 && (
         <div style={{ fontSize: "0.85em" }}>
-          {Object.entries(groupCreditsByRole(props.extraartists)).map(([role, artists], idx) => (
-            <div key={idx} style={{ marginBottom: "4px" }}>
-              <strong style={{ color: "var(--ctp-text)" }}>{role}</strong>
-              <span style={{ color: "var(--ctp-subtext1)", marginLeft: "8px" }}>
-                – {artists.join(", ")}
-              </span>
-            </div>
-          ))}
+          {Object.entries(groupCreditsByRole(props.extraartists)).map(
+            ([role, artists], idx) => (
+              <div key={idx} style={{ marginBottom: "4px" }}>
+                <strong style={{ color: "var(--ctp-text)" }}>{role}</strong>
+                <span
+                  style={{ color: "var(--ctp-subtext1)", marginLeft: "8px" }}
+                >
+                  – {artists.join(", ")}
+                </span>
+              </div>
+            )
+          )}
         </div>
       )}
 
@@ -239,9 +262,21 @@ export default function SimpleReleaseInfo(props: SimpleReleaseInfoProps) {
       {/* Release Notes - Always visible */}
       {props.notes && (
         <div style={{ fontSize: "0.9em" }}>
-          <strong style={{ color: "var(--ctp-text)", marginBottom: "8px", display: "block" }}>Release Notes:</strong>
+          <strong
+            style={{
+              color: "var(--ctp-text)",
+              marginBottom: "8px",
+              display: "block",
+            }}
+          >
+            Release Notes:
+          </strong>
           <div style={{ lineHeight: "1.4", color: "var(--ctp-subtext1)" }}>
-            <div dangerouslySetInnerHTML={{ __html: formatDiscogsNotes(props.notes) }} />
+            <div
+              dangerouslySetInnerHTML={{
+                __html: formatDiscogsNotes(props.notes),
+              }}
+            />
           </div>
         </div>
       )}
@@ -251,7 +286,9 @@ export default function SimpleReleaseInfo(props: SimpleReleaseInfoProps) {
         <div style={{ fontSize: "0.85em" }}>
           {props.identifiers.map((identifier, idx) => (
             <div key={idx} style={{ marginBottom: "2px" }}>
-              <strong style={{ color: "var(--ctp-text)" }}>{identifier.type}</strong>
+              <strong style={{ color: "var(--ctp-text)" }}>
+                {identifier.type}
+              </strong>
               <span style={{ color: "var(--ctp-subtext1)", marginLeft: "8px" }}>
                 {identifier.value}
                 {identifier.description && ` (${identifier.description})`}

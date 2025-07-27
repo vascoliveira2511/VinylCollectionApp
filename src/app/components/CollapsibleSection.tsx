@@ -10,11 +10,11 @@ interface CollapsibleSectionProps {
   icon?: string;
 }
 
-export default function CollapsibleSection({ 
-  title, 
-  children, 
+export default function CollapsibleSection({
+  title,
+  children,
   defaultOpen = false,
-  icon 
+  icon,
 }: CollapsibleSectionProps) {
   const [isOpen, setIsOpen] = useState(defaultOpen);
 
@@ -25,13 +25,10 @@ export default function CollapsibleSection({
         style={{ cursor: "pointer" }}
         onClick={() => setIsOpen(!isOpen)}
       >
-        {icon && `${icon} `}{title} {isOpen ? "▲" : "▼"}
+        {icon && `${icon} `}
+        {title} {isOpen ? "▲" : "▼"}
       </div>
-      {isOpen && (
-        <div className={styles.contentSection}>
-          {children}
-        </div>
-      )}
+      {isOpen && <div className={styles.contentSection}>{children}</div>}
     </div>
   );
 }
