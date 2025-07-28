@@ -169,11 +169,18 @@ export default function Home() {
   if (loading) {
     return (
       <main className={styles.main}>
-        <div className="container">
-          <div className="window">
-            <div className="title-bar">Loading...</div>
-            <div className={styles.contentSection}>
-              <p>Loading your vinyl collection...</p>
+        <div className={styles.heroSection}>
+          <div className="content-wrapper">
+            <h1>Loading Your Vinyl Universe...</h1>
+            <div className={styles.loadingStats}>
+              <div className={styles.statCard}>
+                <div className={styles.statNumber}>
+                  <div className="vinyl-loader">
+                    <div className="vinyl-record"></div>
+                  </div>
+                </div>
+                <div className={styles.statLabel}>Loading Collection</div>
+              </div>
             </div>
           </div>
         </div>
@@ -201,120 +208,236 @@ export default function Home() {
 
   return (
     <main className={styles.main}>
-      <div className="container">
-        <div className="window">
-          <div className="title-bar">Your Vinyl Collection</div>
-          <div className={styles.contentSection}>
-            <div className={styles.browseIntro}>
-              <h2>Your Vinyl Records ({vinyls.length} total)</h2>
-              <p>
-                Browse, filter, and manage your entire vinyl collection. Click
-                any record to view details or edit information.
-              </p>
-              <div className={styles.browseActions}>
-                <Link href="/browse" className={styles.addButton}>
-                  Discover Music
-                </Link>
-                <Link href="/collections" className={styles.manageButton}>
-                  Manage Collections
-                </Link>
+      {/* Hero Section */}
+      <div className={styles.heroSection}>
+        <div className="content-wrapper">
+          <h1>Your Vinyl Universe</h1>
+          <p className="text-large">
+            Discover, collect, and celebrate the vinyl records that define your musical journey
+          </p>
+          
+          {/* Quick Stats */}
+          {userProfile && (
+            <div className={styles.statsGrid}>
+              <div className={styles.statCard}>
+                <div className={styles.statNumber}>{userProfile.totalRecords || 0}</div>
+                <div className={styles.statLabel}>Total Records</div>
+              </div>
+              <div className={styles.statCard}>
+                <div className={styles.statNumber}>
+                  {userProfile.genreStats ? Object.keys(userProfile.genreStats).length : 0}
+                </div>
+                <div className={styles.statLabel}>Genres</div>
+              </div>
+              <div className={styles.statCard}>
+                <div className={styles.statNumber}>{collections?.length || 0}</div>
+                <div className={styles.statLabel}>Collections</div>
+              </div>
+              <div className={styles.statCard}>
+                <div className={styles.statNumber}>
+                  {userProfile.recentVinyls?.length || 0}
+                </div>
+                <div className={styles.statLabel}>Recent Adds</div>
               </div>
             </div>
+          )}
+          
+          <div className={styles.heroActions}>
+            <Link href="/browse" className="btn-primary">
+              Discover Music
+            </Link>
+            <Link href="/collections" className="btn-secondary">
+              Manage Collections
+            </Link>
+          </div>
+        </div>
+      </div>
 
-            {error && <div className={styles.errorMessage}>{error}</div>}
-
-            <div className={styles.filterSection}>
-              <h3>Filter Records</h3>
-              <div className={styles.filters}>
-                <input
-                  type="text"
-                  placeholder="Filter by Artist"
-                  value={filterArtist}
-                  onChange={(e) => setFilterArtist(e.target.value)}
-                />
-                <input
-                  type="text"
-                  placeholder="Filter by Title"
-                  value={filterTitle}
-                  onChange={(e) => setFilterTitle(e.target.value)}
-                />
-                <input
-                  type="text"
-                  placeholder="Filter by Genre"
-                  value={filterGenre}
-                  onChange={(e) => setFilterGenre(e.target.value)}
-                />
-                <input
-                  type="number"
-                  placeholder="Filter by Year"
-                  value={filterYear}
-                  onChange={(e) => setFilterYear(e.target.value)}
-                />
-                <select
-                  value={filterCollection}
-                  onChange={(e) => setFilterCollection(e.target.value)}
-                >
-                  <option value="all">All Collections</option>
-                  {collections.map((collection) => (
-                    <option
-                      key={collection.id}
-                      value={collection.id.toString()}
-                    >
-                      {collection.title} ({collection._count.vinyls})
-                    </option>
-                  ))}
-                </select>
-                <select
-                  value={displayLimit}
-                  onChange={(e) => setDisplayLimit(parseInt(e.target.value))}
-                >
-                  <option value={12}>Show 12</option>
-                  <option value={20}>Show 20</option>
-                  <option value={24}>Show 24</option>
-                  <option value={48}>Show 48</option>
-                  <option value={vinyls.length}>Show All</option>
-                </select>
-                <select
-                  value={displayView}
-                  onChange={(e) => setDisplayView(e.target.value)}
-                  title="View Type (from your preferences)"
-                >
-                  <option value="grid">Grid View</option>
-                  <option value="list">List View</option>
-                  <option value="compact">Compact View</option>
-                </select>
-              </div>
+      {/* Featured/Recent Section */}
+      {userProfile?.recentVinyls && userProfile.recentVinyls.length > 0 && (
+        <div className={styles.section}>
+          <div className="content-wrapper">
+            <div className={styles.sectionHeader}>
+              <h2>Recently Added</h2>
+              <p>Your latest vinyl discoveries</p>
             </div>
-
-            <div
-              className={
-                displayView === "list"
-                  ? styles.collectionList
-                  : displayView === "compact"
-                  ? styles.collectionCompact
-                  : styles.collectionGrid
-              }
-            >
-              {filteredVinyls.map((vinyl) => (
+            <div className={styles.featuredGrid}>
+              {userProfile.recentVinyls.slice(0, 4).map((vinyl) => (
                 <VinylCard
-                  key={vinyl.id}
+                  key={`recent-${vinyl.id}`}
                   vinyl={vinyl}
-                  showDetails={true}
+                  showDetails={false}
                   onEdit={() => {}}
                   onDelete={() => deleteVinyl(vinyl.id)}
                 />
               ))}
             </div>
+          </div>
+        </div>
+      )}
 
-            {filteredVinyls.length === 0 && (
-              <div className={styles.emptyState}>
-                <p>
-                  No vinyl records found. Try adjusting your filters or{" "}
-                  <Link href="/browse">discover music</Link> to add to your
-                  collection!
-                </p>
+      {/* Empty State for New Users */}
+      {userProfile && (!userProfile.recentVinyls || userProfile.recentVinyls.length === 0) && userProfile.totalRecords === 0 && (
+        <div className={styles.section}>
+          <div className="content-wrapper">
+            <div className={styles.emptyHero}>
+              <h2>Start Your Vinyl Journey</h2>
+              <p>Your collection is waiting to be discovered. Add your first record to get started!</p>
+              <div className={styles.heroActions}>
+                <Link href="/browse" className="btn-primary">
+                  Discover Your First Record
+                </Link>
               </div>
-            )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Genre Overview */}
+      {userProfile?.genreStats && Object.keys(userProfile.genreStats).length > 0 && (
+        <div className={styles.section}>
+          <div className="content-wrapper">
+            <div className={styles.sectionHeader}>
+              <h2>Your Musical DNA</h2>
+              <p>Genre breakdown of your collection</p>
+            </div>
+            <div className={styles.genreGrid}>
+              {Object.entries(userProfile.genreStats)
+                .sort(([,a], [,b]) => b - a)
+                .slice(0, 6)
+                .map(([genre, count]) => (
+                  <div 
+                    key={genre} 
+                    className={`${styles.genreCard} ${filterGenre === genre ? styles.genreCardActive : ''}`}
+                    onClick={() => {
+                      setFilterGenre(filterGenre === genre ? '' : genre);
+                      // Scroll to collection section
+                      document.querySelector('[data-collection-section]')?.scrollIntoView({ 
+                        behavior: 'smooth' 
+                      });
+                    }}
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        setFilterGenre(filterGenre === genre ? '' : genre);
+                        document.querySelector('[data-collection-section]')?.scrollIntoView({ 
+                          behavior: 'smooth' 
+                        });
+                      }
+                    }}
+                  >
+                    <div className={styles.genreName}>{genre}</div>
+                    <div className={styles.genreCount}>{count} records</div>
+                  </div>
+                ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Full Collection Section */}
+      <div className={styles.section} data-collection-section>
+        <div className="content-wrapper">
+          <div className="window">
+            <div className="title-bar">Browse Your Collection</div>
+            <div className={styles.contentSection}>
+
+              {error && <div className={styles.errorMessage}>{error}</div>}
+
+              <div className={styles.filterSection}>
+                <h3>Filter Records</h3>
+                <div className={styles.filters}>
+                  <input
+                    type="text"
+                    placeholder="Filter by Artist"
+                    value={filterArtist}
+                    onChange={(e) => setFilterArtist(e.target.value)}
+                  />
+                  <input
+                    type="text"
+                    placeholder="Filter by Title"
+                    value={filterTitle}
+                    onChange={(e) => setFilterTitle(e.target.value)}
+                  />
+                  <input
+                    type="text"
+                    placeholder="Filter by Genre"
+                    value={filterGenre}
+                    onChange={(e) => setFilterGenre(e.target.value)}
+                  />
+                  <input
+                    type="number"
+                    placeholder="Filter by Year"
+                    value={filterYear}
+                    onChange={(e) => setFilterYear(e.target.value)}
+                  />
+                  <select
+                    value={filterCollection}
+                    onChange={(e) => setFilterCollection(e.target.value)}
+                  >
+                    <option value="all">All Collections</option>
+                    {collections.map((collection) => (
+                      <option
+                        key={collection.id}
+                        value={collection.id.toString()}
+                      >
+                        {collection.title} ({collection._count.vinyls})
+                      </option>
+                    ))}
+                  </select>
+                  <select
+                    value={displayLimit}
+                    onChange={(e) => setDisplayLimit(parseInt(e.target.value))}
+                  >
+                    <option value={12}>Show 12</option>
+                    <option value={20}>Show 20</option>
+                    <option value={24}>Show 24</option>
+                    <option value={48}>Show 48</option>
+                    <option value={vinyls.length}>Show All</option>
+                  </select>
+                  <select
+                    value={displayView}
+                    onChange={(e) => setDisplayView(e.target.value)}
+                    title="View Type (from your preferences)"
+                  >
+                    <option value="grid">Grid View</option>
+                    <option value="list">List View</option>
+                    <option value="compact">Compact View</option>
+                  </select>
+                </div>
+              </div>
+
+              <div
+                className={
+                  displayView === "list"
+                    ? styles.collectionList
+                    : displayView === "compact"
+                    ? styles.collectionCompact
+                    : styles.collectionGrid
+                }
+              >
+                {filteredVinyls.map((vinyl) => (
+                  <VinylCard
+                    key={`collection-${vinyl.id}`}
+                    vinyl={vinyl}
+                    showDetails={true}
+                    onEdit={() => {}}
+                    onDelete={() => deleteVinyl(vinyl.id)}
+                  />
+                ))}
+              </div>
+
+              {filteredVinyls.length === 0 && (
+                <div className={styles.emptyState}>
+                  <p>
+                    No vinyl records found. Try adjusting your filters or{" "}
+                    <Link href="/browse">discover music</Link> to add to your
+                    collection!
+                  </p>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>

@@ -108,7 +108,7 @@ body {
   min-height: 100vh;
 }
 
-/* Clean A24-style background - No distracting elements */
+/* Subtle vinyl groove pattern background */
 body::before {
   content: "";
   position: fixed;
@@ -116,7 +116,44 @@ body::before {
   left: 0;
   width: 100%;
   height: 100%;
-  background: var(--background);
+  background: 
+    /* Vinyl groove pattern inspired by real records */
+    repeating-radial-gradient(
+      circle at center,
+      transparent 0px,
+      transparent 8px,
+      rgba(164, 120, 100, 0.08) 8px,
+      rgba(164, 120, 100, 0.08) 9px,
+      transparent 9px,
+      transparent 16px,
+      rgba(164, 120, 100, 0.05) 16px,
+      rgba(164, 120, 100, 0.05) 17px,
+      transparent 17px
+    ),
+    var(--background);
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Diagonal lines pattern overlay for texture */
+body::after {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: 
+    /* Subtle diagonal texture */
+    repeating-linear-gradient(
+      45deg,
+      transparent 0px,
+      transparent 40px,
+      rgba(212, 175, 55, 0.02) 40px,
+      rgba(212, 175, 55, 0.02) 41px,
+      transparent 41px,
+      transparent 80px
+    );
   pointer-events: none;
   z-index: -1;
 }

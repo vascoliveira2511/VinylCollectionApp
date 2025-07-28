@@ -102,6 +102,223 @@
   }
 }
 
+/* Hero Section Styles */
+.heroSection {
+  text-align: center;
+  padding: 120px 0 80px;
+  margin-bottom: 0;
+}
+
+.heroSection h1 {
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  margin-bottom: 24px;
+  background: linear-gradient(135deg, var(--text) 0%, var(--beeswax) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  /* Fallback for browsers that don't support background-clip */
+  color: var(--text);
+}
+
+/* Fallback for unsupported browsers */
+@supports not (-webkit-background-clip: text) {
+  .heroSection h1 {
+    background: none;
+    color: var(--text);
+  }
+}
+
+.heroSection .text-large {
+  margin-bottom: 48px;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Stats Grid */
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 24px;
+  max-width: 600px;
+  margin: 0 auto 48px;
+}
+
+.statCard {
+  background: var(--surface-elevated);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px 16px;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.statCard:hover {
+  border-color: var(--beeswax);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px var(--shadow-medium);
+}
+
+.statNumber {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--beeswax);
+  margin-bottom: 8px;
+}
+
+.statLabel {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Hero Actions */
+.heroActions {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* Featured Grid */
+.featuredGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 24px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+/* Genre Grid */
+.genreGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.genreCard {
+  background: var(--surface-elevated);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  user-select: none;
+}
+
+.genreCard:focus {
+  outline: 2px solid var(--beeswax);
+  outline-offset: 2px;
+}
+
+.genreCardActive {
+  background: var(--beeswax-light);
+  border-color: var(--beeswax);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px var(--shadow-medium);
+}
+
+.genreCard:hover {
+  border-color: var(--beeswax);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px var(--shadow-medium);
+  background: var(--surface);
+}
+
+.genreName {
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 8px;
+  text-transform: capitalize;
+}
+
+.genreCount {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+@media (max-width: 768px) {
+  .heroSection {
+    padding: 80px 0 60px;
+  }
+  
+  .statsGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  
+  .statCard {
+    padding: 20px 12px;
+  }
+  
+  .statNumber {
+    font-size: 1.5rem;
+  }
+  
+  .heroActions {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .heroActions a {
+    width: 100%;
+    max-width: 300px;
+  }
+  
+  .featuredGrid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+  }
+  
+  .genreGrid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .statsGrid {
+    grid-template-columns: 1fr;
+  }
+  
+  .statCard {
+    padding: 16px;
+  }
+}
+
+/* Empty State Styles */
+.emptyHero {
+  text-align: center;
+  padding: 60px 20px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.emptyHero h2 {
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+}
+
+.emptyHero p {
+  color: var(--text-tertiary);
+  margin-bottom: 32px;
+}
+
+/* Loading State */
+.loadingStats {
+  display: flex;
+  justify-content: center;
+  margin-top: 48px;
+}
+
+.loadingStats .statCard {
+  min-width: 200px;
+}
+
 .collectionGrid .card {
   display: flex;
   flex-direction: column;

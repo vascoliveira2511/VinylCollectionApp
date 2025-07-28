@@ -48,7 +48,14 @@
       "WebFetch(domain:python3-discogs-client.readthedocs.io)",
       "Bash(pkill:*)",
       "WebFetch(domain:a24.com)",
-      "WebFetch(domain:a24films.com)"
+      "WebFetch(domain:a24films.com)",
+      "WebFetch(domain:dribbble.com)",
+      "WebFetch(domain:99designs.com)",
+      "WebFetch(domain:codepen.io)",
+      "WebFetch(domain:www.magicpattern.design)",
+      "WebFetch(domain:bansal.io)",
+      "WebFetch(domain:muffingroup.com)",
+      "WebFetch(domain:webflow.com)"
     ],
     "deny": []
   }
