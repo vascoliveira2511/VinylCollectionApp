@@ -1,13 +1,14 @@
 import { NextResponse } from "next/server";
 import * as jose from "jose";
 import { prisma } from "@/lib/db";
+import { cookies } from "next/headers";
 
 const secret = new TextEncoder().encode(process.env.JWT_SECRET);
 
 export async function POST(request: Request) {
   try {
-    const token = request.cookies.get("token")?.value;
-    
+    const token = cookies().get("token")?.value;
+
     if (!token) {
       return NextResponse.json({ error: "No token provided" }, { status: 401 });
     }
@@ -19,7 +20,7 @@ export async function POST(request: Request) {
       payload = validPayload;
     } catch (error: any) {
       // If token is expired but still valid JWT, extract payload
-      if (error.code === 'ERR_JWT_EXPIRED') {
+      if (error.code === "ERR_JWT_EXPIRED") {
         const decoded = jose.decodeJwt(token);
         payload = decoded;
       } else {
@@ -56,6 +57,9 @@ export async function POST(request: Request) {
     return response;
   } catch (error) {
     console.error("Token refresh error:", error);
-    return NextResponse.json({ error: "Token refresh failed" }, { status: 401 });
+    return NextResponse.json(
+      { error: "Token refresh failed" },
+      { status: 401 }
+    );
   }
 }
