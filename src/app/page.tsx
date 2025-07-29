@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { apiClient } from "@/lib/api-client";
 import VinylCard from "./components/VinylCard";
+import LoadingSpinner from "./components/LoadingSpinner";
 import styles from "./page.module.css";
 
 interface Vinyl {
@@ -171,17 +172,10 @@ export default function Home() {
       <main className={styles.main}>
         <div className={styles.heroSection}>
           <div className="content-wrapper">
-            <h1>Loading Your Vinyl Universe...</h1>
-            <div className={styles.loadingStats}>
-              <div className={styles.statCard}>
-                <div className={styles.statNumber}>
-                  <div className="vinyl-loader">
-                    <div className="vinyl-record"></div>
-                  </div>
-                </div>
-                <div className={styles.statLabel}>Loading Collection</div>
-              </div>
-            </div>
+            <LoadingSpinner 
+              size="large" 
+              text="Loading Your Vinyl Universe..." 
+            />
           </div>
         </div>
       </main>
@@ -211,44 +205,46 @@ export default function Home() {
       {/* Hero Section */}
       <div className={styles.heroSection}>
         <div className="content-wrapper">
-          <h1>Your Vinyl Universe</h1>
-          <p className="text-large">
-            Discover, collect, and celebrate the vinyl records that define your musical journey
-          </p>
-          
-          {/* Quick Stats */}
-          {userProfile && (
-            <div className={styles.statsGrid}>
-              <div className={styles.statCard}>
-                <div className={styles.statNumber}>{userProfile.totalRecords || 0}</div>
-                <div className={styles.statLabel}>Total Records</div>
-              </div>
-              <div className={styles.statCard}>
-                <div className={styles.statNumber}>
-                  {userProfile.genreStats ? Object.keys(userProfile.genreStats).length : 0}
+          <div className={styles.heroContent}>
+            <h1 className={styles.heroTitle}>Your Vinyl Universe</h1>
+            <p className={styles.heroSubtitle}>
+              Discover, collect, and celebrate the vinyl records that define your musical journey
+            </p>
+            
+            {/* Quick Stats */}
+            {userProfile && (
+              <div className={styles.statsGrid}>
+                <div className={styles.statCard}>
+                  <div className={styles.statNumber}>{userProfile.totalRecords || 0}</div>
+                  <div className={styles.statLabel}>Total Records</div>
                 </div>
-                <div className={styles.statLabel}>Genres</div>
-              </div>
-              <div className={styles.statCard}>
-                <div className={styles.statNumber}>{collections?.length || 0}</div>
-                <div className={styles.statLabel}>Collections</div>
-              </div>
-              <div className={styles.statCard}>
-                <div className={styles.statNumber}>
-                  {userProfile.recentVinyls?.length || 0}
+                <div className={styles.statCard}>
+                  <div className={styles.statNumber}>
+                    {userProfile.genreStats ? Object.keys(userProfile.genreStats).length : 0}
+                  </div>
+                  <div className={styles.statLabel}>Genres</div>
                 </div>
-                <div className={styles.statLabel}>Recent Adds</div>
+                <div className={styles.statCard}>
+                  <div className={styles.statNumber}>{collections?.length || 0}</div>
+                  <div className={styles.statLabel}>Collections</div>
+                </div>
+                <div className={styles.statCard}>
+                  <div className={styles.statNumber}>
+                    {userProfile.recentVinyls?.length || 0}
+                  </div>
+                  <div className={styles.statLabel}>Recent Adds</div>
+                </div>
               </div>
+            )}
+            
+            <div className={styles.heroActions}>
+              <Link href="/browse" className={`${styles.heroButton} ${styles.heroPrimary}`}>
+                Discover Music
+              </Link>
+              <Link href="/collections" className={`${styles.heroButton} ${styles.heroSecondary}`}>
+                Manage Collections
+              </Link>
             </div>
-          )}
-          
-          <div className={styles.heroActions}>
-            <Link href="/browse" className="btn-primary">
-              Discover Music
-            </Link>
-            <Link href="/collections" className="btn-secondary">
-              Manage Collections
-            </Link>
           </div>
         </div>
       </div>
@@ -262,13 +258,14 @@ export default function Home() {
               <p>Your latest vinyl discoveries</p>
             </div>
             <div className={styles.featuredGrid}>
-              {userProfile.recentVinyls.slice(0, 4).map((vinyl) => (
+              {userProfile.recentVinyls.slice(0, 4).map((vinyl, index) => (
                 <VinylCard
                   key={`recent-${vinyl.id}`}
                   vinyl={vinyl}
                   showDetails={false}
                   onEdit={() => {}}
                   onDelete={() => deleteVinyl(vinyl.id)}
+                  priority={index < 2} // Priority loading for first 2 images
                 />
               ))}
             </div>
@@ -417,13 +414,14 @@ export default function Home() {
                     : styles.collectionGrid
                 }
               >
-                {filteredVinyls.map((vinyl) => (
+                {filteredVinyls.map((vinyl, index) => (
                   <VinylCard
                     key={`collection-${vinyl.id}`}
                     vinyl={vinyl}
                     showDetails={true}
                     onEdit={() => {}}
                     onDelete={() => deleteVinyl(vinyl.id)}
+                    priority={index < 6} // Priority loading for first 6 images in main collection
                   />
                 ))}
               </div>

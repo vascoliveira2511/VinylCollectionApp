@@ -569,7 +569,7 @@ export default function Profile() {
 
                 {preferencesSuccess && (
                   <div className={styles.successMessage}>
-                    ✅ Preferences saved successfully!
+                    Preferences saved successfully!
                   </div>
                 )}
 
@@ -695,9 +695,16 @@ export default function Profile() {
                     disabled={preferencesLoading}
                     className={styles.primaryButton}
                   >
-                    {preferencesLoading
-                      ? "💾 Saving..."
-                      : "💾 Save Preferences"}
+                    {preferencesLoading ? (
+                      <>
+                        <div className="vinyl-loader" style={{width: '16px', height: '16px', marginRight: '8px'}}>
+                          <div className="vinyl-record"></div>
+                        </div>
+                        Saving...
+                      </>
+                    ) : (
+                      "Save Preferences"
+                    )}
                   </button>
                 </div>
               </div>
@@ -767,7 +774,6 @@ export default function Profile() {
 
                 {syncSuccess && (
                   <div className={styles.successMessage}>
-                    ✅{" "}
                     {user?.discogsUsername
                       ? "Discogs account connected successfully!"
                       : "Collection synced successfully!"}
@@ -847,8 +853,8 @@ export default function Profile() {
                           className={styles.syncButton}
                         >
                           {syncLoading
-                            ? "🔄 Syncing Collection..."
-                            : "🔄 Sync Collection"}
+                            ? "Syncing Collection..."
+                            : "Sync Collection"}
                         </button>
                         <button
                           onClick={cleanupDuplicates}
@@ -856,13 +862,13 @@ export default function Profile() {
                           className={styles.cleanupButton}
                         >
                           {cleanupLoading
-                            ? "🧹 Cleaning up..."
-                            : "🧹 Remove Duplicates"}
+                            ? "Cleaning up..."
+                            : "Remove Duplicates"}
                         </button>
                       </div>
                       <p className={styles.syncNote}>
                         <small>
-                          ⚠️ Large collections may take several minutes to sync
+                          Note: Large collections may take several minutes to sync
                           due to API rate limits. Use "Remove Duplicates" to
                           merge existing records with Discogs data.
                         </small>
@@ -874,7 +880,7 @@ export default function Profile() {
                     <h3>Features</h3>
                     <div className={styles.featureList}>
                       <div className={styles.feature}>
-                        <span className={styles.featureIcon}>📀</span>
+                        <span className={styles.featureIcon}>□</span>
                         <div className={styles.featureContent}>
                           <div className={styles.featureTitle}>
                             Collection Sync
@@ -885,7 +891,7 @@ export default function Profile() {
                         </div>
                       </div>
                       <div className={styles.feature}>
-                        <span className={styles.featureIcon}>🖼️</span>
+                        <span className={styles.featureIcon}>□</span>
                         <div className={styles.featureContent}>
                           <div className={styles.featureTitle}>
                             High-Quality Images
@@ -896,7 +902,7 @@ export default function Profile() {
                         </div>
                       </div>
                       <div className={styles.feature}>
-                        <span className={styles.featureIcon}>🏷️</span>
+                        <span className={styles.featureIcon}>□</span>
                         <div className={styles.featureContent}>
                           <div className={styles.featureTitle}>
                             Rich Metadata
@@ -907,7 +913,7 @@ export default function Profile() {
                         </div>
                       </div>
                       <div className={styles.feature}>
-                        <span className={styles.featureIcon}>⭐</span>
+                        <span className={styles.featureIcon}>★</span>
                         <div className={styles.featureContent}>
                           <div className={styles.featureTitle}>
                             Ratings & Notes
@@ -1063,7 +1069,7 @@ export default function Profile() {
                 <div className={styles.dangerCard}>
                   <h3>Delete Account</h3>
                   <p className={styles.dangerWarning}>
-                    ⚠️ This action cannot be undone. This will permanently
+                    Warning: This action cannot be undone. This will permanently
                     delete your account and all your vinyl records.
                   </p>
 

@@ -452,7 +452,16 @@ function BrowsePageContent() {
                   className={styles.createButton}
                   style={{ marginTop: "12px" }}
                 >
-                  {loading ? "Searching..." : "Search"}
+                  {loading ? (
+                    <>
+                      <div className="vinyl-loader" style={{width: '16px', height: '16px', marginRight: '8px'}}>
+                        <div className="vinyl-record"></div>
+                      </div>
+                      Searching...
+                    </>
+                  ) : (
+                    "Search"
+                  )}
                 </button>
               </div>
             </div>

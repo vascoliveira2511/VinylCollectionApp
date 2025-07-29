@@ -102,84 +102,205 @@
   }
 }
 
-/* Hero Section Styles */
+/* Modern Hero Section Styles */
 .heroSection {
   text-align: center;
-  padding: 120px 0 80px;
+  padding: 140px 0 100px;
   margin-bottom: 0;
+  position: relative;
+  background: transparent;
 }
 
-.heroSection h1 {
-  font-size: clamp(2.5rem, 6vw, 4.5rem);
-  margin-bottom: 24px;
+.heroContent {
+  max-width: 800px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+}
+
+.heroTitle {
+  font-size: clamp(3rem, 7vw, 5rem);
+  font-weight: 800;
+  margin-bottom: 0;
   background: linear-gradient(135deg, var(--text) 0%, var(--beeswax) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  /* Fallback for browsers that don't support background-clip */
-  color: var(--text);
+  text-align: center;
+  line-height: 1.1;
+  letter-spacing: -0.04em;
 }
 
 /* Fallback for unsupported browsers */
 @supports not (-webkit-background-clip: text) {
-  .heroSection h1 {
+  .heroTitle {
     background: none;
     color: var(--text);
   }
 }
 
-.heroSection .text-large {
-  margin-bottom: 48px;
-  max-width: 700px;
-  margin-left: auto;
-  margin-right: auto;
+.heroSubtitle {
+  font-size: clamp(1.25rem, 2.5vw, 1.5rem);
+  line-height: 1.5;
+  color: var(--text-secondary);
+  text-align: center;
+  max-width: 600px;
+  margin: 0;
+  font-weight: 400;
+  letter-spacing: -0.01em;
 }
 
 /* Stats Grid */
 .statsGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
   gap: 24px;
-  max-width: 600px;
-  margin: 0 auto 48px;
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 0 16px;
 }
 
 .statCard {
-  background: var(--surface-elevated);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 24px 16px;
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid var(--border-subtle);
+  border-radius: 16px;
+  padding: 24px 20px;
   text-align: center;
-  transition: all 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.statCard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--beeswax), var(--beeswax-dark));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.statCard:hover::before {
+  opacity: 1;
 }
 
 .statCard:hover {
+  transform: translateY(-6px) scale(1.02);
   border-color: var(--beeswax);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 32px var(--shadow-medium);
+  box-shadow: 0 12px 40px rgba(212, 175, 55, 0.2);
+  background: rgba(255, 255, 255, 1);
 }
 
 .statNumber {
-  font-size: 2rem;
-  font-weight: 700;
-  color: var(--beeswax);
+  font-size: clamp(2rem, 4vw, 2.8rem);
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--beeswax) 0%, var(--beeswax-dark) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1;
   margin-bottom: 8px;
+  transition: transform 0.3s ease;
+}
+
+.statCard:hover .statNumber {
+  transform: scale(1.1);
+}
+
+/* Fallback for unsupported browsers */
+@supports not (-webkit-background-clip: text) {
+  .statNumber {
+    background: none;
+    color: var(--beeswax);
+  }
 }
 
 .statLabel {
   font-size: 0.875rem;
   color: var(--text-secondary);
+  font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
 
-/* Hero Actions */
+/* Modern Hero Actions */
 .heroActions {
   display: flex;
-  gap: 16px;
+  gap: 20px;
   justify-content: center;
   flex-wrap: wrap;
+  margin-top: 16px;
 }
+
+.heroButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 18px 32px;
+  border-radius: 50px;
+  font-family: "Inter", sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  text-transform: none;
+  letter-spacing: -0.01em;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  border: 2px solid transparent;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.heroButton::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.6s;
+}
+
+.heroButton:hover::before {
+  left: 100%;
+}
+
+.heroPrimary {
+  background: linear-gradient(135deg, var(--beeswax) 0%, var(--beeswax-dark) 100%);
+  color: var(--text-inverse);
+  border-color: var(--beeswax);
+}
+
+.heroPrimary:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 8px 30px rgba(212, 175, 55, 0.4);
+  background: linear-gradient(135deg, var(--beeswax-dark) 0%, var(--beeswax-darker) 100%);
+}
+
+.heroSecondary {
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--text);
+  border-color: var(--border);
+}
+
+.heroSecondary:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 8px 30px rgba(26, 26, 26, 0.15);
+  background: var(--surface);
+  border-color: var(--beeswax);
+}
+
 
 /* Featured Grid */
 .featuredGrid {
@@ -377,21 +498,37 @@
   border-color: var(--border-focus);
 }
 
-/* A24-style image container */
+/* A24-style image container with performance optimizations */
 .card .imageContainer {
   position: relative;
   width: 100%;
   aspect-ratio: 1;
   overflow: hidden;
   background: var(--surface-subtle);
+  border-radius: 8px;
 }
 
 .card .imageContainer img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+  will-change: transform;
 }
+
+.imagePlaceholder {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface-subtle);
+  z-index: 1;
+}
+
 
 
 /* Enhanced card content */
@@ -2877,6 +3014,7 @@ Link.editButton:hover {
   display: inline-block;
 }
 
+
 .loginFooter {
   text-align: center;
   margin-top: 32px;
@@ -2927,6 +3065,545 @@ Link.editButton:hover {
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+
+@keyframes vinylSpin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Modern Vinyl Page Styles */
+.vinylPageBackground {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  overflow: hidden;
+  will-change: auto;
+  /* Chrome performance fixes */
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+}
+
+.albumCoverBackground {
+  position: absolute;
+  top: -20%;
+  left: -20%;
+  width: 140%;
+  height: 140%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  filter: blur(30px) brightness(0.8) saturate(0.8);
+  z-index: 1;
+  /* Chrome performance optimizations */
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  -webkit-transform: translate3d(0, 0, 0);
+}
+
+.vinylGrooveOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0.5) 100%);
+  z-index: 2;
+  /* Chrome performance - simplified gradient */
+  will-change: auto;
+  transform: translate3d(0, 0, 0);
+}
+
+.vinylPageContainer {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 40px 24px;
+  position: relative;
+  min-height: 100vh;
+  z-index: 10;
+  /* Chrome performance */
+  contain: layout style paint;
+  will-change: auto;
+}
+
+.vinylHeroSection {
+  background: rgba(255, 255, 255, 0.98);
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  margin-bottom: 40px;
+  /* Chrome performance */
+  transform: translate3d(0, 0, 0);
+  will-change: auto;
+  overflow: hidden;
+}
+
+.vinylHeroContent {
+  display: grid;
+  grid-template-columns: 400px 1fr;
+  gap: 60px;
+  padding: 60px;
+  align-items: start;
+}
+
+.vinylAlbumArt {
+  position: sticky;
+  top: 40px;
+}
+
+.mainAlbumCover {
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 
+    0 25px 80px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(212, 175, 55, 0.2);
+  margin-bottom: 20px;
+}
+
+.coverImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.mainAlbumCover:hover .coverImage {
+  transform: scale(1.05);
+}
+
+.imageThumbnails {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.thumbnail {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+  opacity: 0.7;
+}
+
+.thumbnail:hover {
+  opacity: 1;
+  transform: translateY(-2px);
+}
+
+.thumbnailActive {
+  border-color: var(--beeswax);
+  opacity: 1;
+  transform: translateY(-2px);
+}
+
+.vinylHeroInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.vinylTitleSection {
+  border-bottom: 1px solid var(--border-subtle);
+  padding-bottom: 24px;
+}
+
+.modernVinylTitle {
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 800;
+  line-height: 1.1;
+  margin: 0 0 16px 0;
+  background: linear-gradient(135deg, #1a1a1a 0%, var(--beeswax) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: 0 2px 4px rgba(255, 255, 255, 0.5);
+}
+
+@supports not (-webkit-background-clip: text) {
+  .modernVinylTitle {
+    background: none;
+    color: #1a1a1a;
+    text-shadow: 0 2px 4px rgba(255, 255, 255, 0.8);
+  }
+}
+
+.modernVinylArtist {
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 600;
+  color: #2a2a2a;
+  margin: 0 0 16px 0;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+}
+
+.vinylMetaInfo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 1.125rem;
+  color: var(--text-tertiary);
+}
+
+.vinylYear {
+  font-weight: 600;
+  color: var(--beeswax-dark);
+}
+
+.vinylCountry {
+  font-weight: 500;
+}
+
+.metaSeparator {
+  color: var(--border);
+}
+
+.modernGenrePills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.modernGenrePill {
+  background: var(--beeswax-transparent);
+  color: var(--beeswax-dark);
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border: 1px solid var(--beeswax);
+  transition: all 0.3s ease;
+}
+
+.modernGenrePill:hover {
+  background: var(--beeswax);
+  color: var(--text-inverse);
+  transform: translateY(-1px);
+}
+
+.personalRating {
+  text-align: center;
+  padding: 20px;
+  background: var(--surface-elevated);
+  border-radius: 16px;
+  border: 1px solid var(--border-subtle);
+}
+
+.ratingStars {
+  font-size: 2rem;
+  color: var(--beeswax);
+  margin-bottom: 8px;
+}
+
+.ratingText {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.modernActionButtons {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.modernEditButton,
+.modernDeleteButton,
+.modernBackButton,
+.modernStatusButton {
+  padding: 12px 24px;
+  border-radius: 24px;
+  font-weight: 600;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: inherit;
+  font-size: 0.9rem;
+  min-width: 140px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}
+
+.modernEditButton {
+  background: #d4af37;
+  color: white;
+  border-color: #d4af37;
+}
+
+.modernEditButton:hover {
+  background: #b8941f;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(212, 175, 55, 0.3);
+}
+
+.modernDeleteButton {
+  background: transparent;
+  color: #dc2626;
+  border-color: #dc2626;
+}
+
+.modernDeleteButton:hover {
+  background: #dc2626;
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(220, 38, 38, 0.3);
+}
+
+.modernBackButton {
+  background: transparent;
+  color: #666666;
+  border-color: #cccccc;
+}
+
+.modernBackButton:hover {
+  background: #f5f5f5;
+  color: #333333;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.statusButtonGroup {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+
+.statusWant {
+  background: transparent;
+  color: #666666;
+  border-color: #cccccc;
+}
+
+.statusWant:hover {
+  background: rgba(255, 107, 114, 0.1);
+  color: #ff6b72;
+  border-color: #ff6b72;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.statusWantActive {
+  background: #ff6b72;
+  color: white;
+  border-color: #ff6b72;
+}
+
+.statusHave {
+  background: transparent;
+  color: #666666;
+  border-color: #cccccc;
+}
+
+.statusHave:hover {
+  background: rgba(34, 197, 94, 0.1);
+  color: #22c55e;
+  border-color: #22c55e;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.statusHaveActive {
+  background: #22c55e;
+  color: white;
+  border-color: #22c55e;
+}
+
+/* Simplified Vinyl Page Content */
+.vinylSimpleContent {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.infoSection {
+  margin-bottom: 40px;
+  padding: 0;
+}
+
+.infoSection h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 20px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--beeswax);
+  display: inline-block;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+}
+
+.infoGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 16px;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.infoGrid div {
+  color: #1a1a1a;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.notesContent {
+  background: rgba(255, 255, 255, 0.98);
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  color: #1a1a1a;
+  line-height: 1.6;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+}
+
+.discogsLink {
+  display: inline-flex;
+  align-items: center;
+  padding: 12px 24px;
+  background: #d4af37;
+  color: white;
+  text-decoration: none;
+  border-radius: 24px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  border: 2px solid #d4af37;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.discogsLink:hover {
+  background: #b8941f;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(212, 175, 55, 0.3);
+}
+
+
+.infoItem {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.infoLabel {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.infoValue {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.statusOwned {
+  color: var(--success);
+}
+
+.personalNotesContent {
+  background: var(--surface-elevated);
+  padding: 24px;
+  border-radius: 12px;
+  border: 1px solid var(--border-subtle);
+  white-space: pre-wrap;
+  line-height: 1.6;
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+}
+
+.externalLinksContainer {
+  text-align: center;
+}
+
+.modernExternalLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: var(--beeswax);
+  color: var(--text-inverse);
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.modernExternalLink:hover {
+  background: var(--beeswax-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(212, 175, 55, 0.3);
+}
+
+/* Mobile Responsive */
+@media (max-width: 1024px) {
+  .vinylHeroContent {
+    grid-template-columns: 300px 1fr;
+    gap: 40px;
+    padding: 40px;
+  }
+}
+
+@media (max-width: 768px) {
+  .vinylPageContainer {
+    padding: 20px 16px;
+  }
+
+  .vinylHeroContent {
+    grid-template-columns: 1fr;
+    gap: 32px;
+    padding: 32px 24px;
+  }
+
+  .vinylAlbumArt {
+    position: static;
+    max-width: 300px;
+    margin: 0 auto;
+  }
+
+  .modernVinylTitle {
+    text-align: center;
+  }
+
+  .modernVinylArtist {
+    text-align: center;
+  }
+
+  .vinylMetaInfo {
+    justify-content: center;
+  }
+
+  .modernActionButtons {
+    justify-content: center;
+  }
+
+  .statusButtonGroup {
+    justify-content: center;
+  }
+
+  .collectionInfoGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .modernSectionContent {
+    padding: 24px;
+  }
 }
 
 /* Browse Section Styles */

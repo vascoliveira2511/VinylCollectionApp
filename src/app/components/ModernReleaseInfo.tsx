@@ -102,20 +102,20 @@ export default function ModernReleaseInfo(props: ModernReleaseInfoProps) {
         }}
       >
         {[
-          { key: "overview", label: "📋 Overview", count: "" },
+          { key: "overview", label: "Overview", count: "" },
           {
             key: "details",
-            label: "🏢 Details",
+            label: "Details",
             count: props.companies?.length || 0,
           },
           {
             key: "credits",
-            label: "👥 Credits",
+            label: "Credits",
             count: props.extraartists?.length || 0,
           },
           {
             key: "tracks",
-            label: "🎵 Tracks",
+            label: "Tracks",
             count: props.tracklist?.length || 0,
           },
         ].map((tab) => (
@@ -169,7 +169,7 @@ export default function ModernReleaseInfo(props: ModernReleaseInfoProps) {
                   color: "var(--ctp-mauve)",
                 }}
               >
-                📀 Release Details
+                Release Details
               </h3>
               <div style={{ display: "grid", gap: "8px", fontSize: "0.9em" }}>
                 {props.labels && props.labels.length > 0 && (
@@ -249,7 +249,7 @@ export default function ModernReleaseInfo(props: ModernReleaseInfoProps) {
                     color: "var(--ctp-mauve)",
                   }}
                 >
-                  💰 Marketplace
+                  Marketplace
                 </h3>
                 <div style={{ fontSize: "0.9em" }}>
                   {props.num_for_sale > 0 && (
@@ -281,7 +281,7 @@ export default function ModernReleaseInfo(props: ModernReleaseInfoProps) {
                     color: "var(--ctp-mauve)",
                   }}
                 >
-                  🏷️ Identifiers
+                  Identifiers
                 </h3>
                 <div
                   style={{ display: "grid", gap: "4px", fontSize: "0.85em" }}
@@ -317,7 +317,7 @@ export default function ModernReleaseInfo(props: ModernReleaseInfoProps) {
                   color: "var(--ctp-mauve)",
                 }}
               >
-                🔗 Links
+                Links
               </h3>
               <div style={{ display: "grid", gap: "6px" }}>
                 {props.master_id && (
@@ -329,14 +329,14 @@ export default function ModernReleaseInfo(props: ModernReleaseInfoProps) {
                       fontSize: "0.9em",
                     }}
                   >
-                    👑 View all versions
+                    View all versions
                   </Link>
                 )}
                 {props.videos && props.videos.length > 0 && (
                   <span
                     style={{ color: "var(--ctp-subtext1)", fontSize: "0.9em" }}
                   >
-                    🎬 {props.videos.length} video
+                    {props.videos.length} video
                     {props.videos.length !== 1 ? "s" : ""} available
                   </span>
                 )}
@@ -364,7 +364,7 @@ export default function ModernReleaseInfo(props: ModernReleaseInfoProps) {
                       color: "var(--ctp-mauve)",
                     }}
                   >
-                    🏢 Companies
+                    Companies
                   </h3>
                   <div
                     style={{ display: "grid", gap: "6px", fontSize: "0.85em" }}
@@ -411,7 +411,7 @@ export default function ModernReleaseInfo(props: ModernReleaseInfoProps) {
                       color: "var(--ctp-mauve)",
                     }}
                   >
-                    📝 Release Notes
+                    Release Notes
                   </h3>
                   <div
                     style={{
@@ -444,7 +444,7 @@ export default function ModernReleaseInfo(props: ModernReleaseInfoProps) {
                   color: "var(--ctp-mauve)",
                 }}
               >
-                👥 Credits
+                Credits
               </h3>
               <div
                 style={{
@@ -498,7 +498,7 @@ export default function ModernReleaseInfo(props: ModernReleaseInfoProps) {
                   color: "var(--ctp-mauve)",
                 }}
               >
-                🎵 Track Listing
+                Track Listing
               </h3>
               <div style={{ display: "grid", gap: "2px" }}>
                 {props.tracklist.map((track, index) => (

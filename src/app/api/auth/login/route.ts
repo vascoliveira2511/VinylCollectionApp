@@ -26,7 +26,7 @@ export async function POST(request: Request) {
     username: user.username,
   })
     .setProtectedHeader({ alg: "HS256" })
-    .setExpirationTime("2h")
+    .setExpirationTime("24h")
     .sign(secret);
 
   const response = NextResponse.json({ message: "Login successful" });
@@ -34,6 +34,7 @@ export async function POST(request: Request) {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "strict",
+    maxAge: 24 * 60 * 60, // 24 hours
   });
   return response;
 }

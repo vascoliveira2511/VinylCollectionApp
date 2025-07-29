@@ -137,7 +137,7 @@ export default function FriendCollectionPage({
       <div className="container">
         {/* Collection Header */}
         <div className="window">
-          <div className="title-bar">📚 {collection.title}</div>
+          <div className="title-bar">{collection.title}</div>
           <div className={styles.contentSection}>
             <div className={styles.collectionHeader}>
               <div className={styles.collectionInfo}>
@@ -179,7 +179,7 @@ export default function FriendCollectionPage({
         {/* Vinyl Records */}
         <div className="window">
           <div className="title-bar">
-            🎵 Records ({collection.vinyls.length})
+            Records ({collection.vinyls.length})
           </div>
           <div className={styles.contentSection}>
             {collection.vinyls.length === 0 ? (

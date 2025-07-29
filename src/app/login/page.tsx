@@ -159,7 +159,9 @@ export default function Login() {
                 >
                   {loading ? (
                     <>
-                      <span className={styles.spinner}></span>
+                      <div className="vinyl-loader" style={{width: '20px', height: '20px', marginRight: '8px'}}>
+                        <div className="vinyl-record"></div>
+                      </div>
                       Signing in...
                     </>
                   ) : (
@@ -180,7 +182,9 @@ export default function Login() {
               >
                 {googleLoading ? (
                   <>
-                    <span className={styles.spinner}></span>
+                    <div className="vinyl-loader" style={{width: '20px', height: '20px', marginRight: '8px'}}>
+                      <div className="vinyl-record"></div>
+                    </div>
                     Signing in...
                   </>
                 ) : (

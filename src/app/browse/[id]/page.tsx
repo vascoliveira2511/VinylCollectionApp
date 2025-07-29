@@ -194,7 +194,7 @@ export default function BrowseDetailPage({
           <div className="window">
             <div className={styles.contentSection}>
               <div className={styles.errorState}>
-                <p>❌ {error || "Release not found"}</p>
+                <p>Error: {error || "Release not found"}</p>
                 <Link href="/browse" className={styles.backButton}>
                   ← Back to Browse
                 </Link>
@@ -223,7 +223,7 @@ export default function BrowseDetailPage({
               disabled={addingToCollection}
               className={styles.addToCollectionButton}
             >
-              {addingToCollection ? "⏳ Adding..." : "➕ Add to Collection"}
+              {addingToCollection ? "Adding..." : "Add to Collection"}
             </button>
 
             <StatusButtons
@@ -257,7 +257,7 @@ export default function BrowseDetailPage({
                   color: "var(--ctp-crust)",
                 }}
               >
-                🎵 Your Status
+                Your Status
               </div>
               <div className={styles.contentSection}>
                 <div
@@ -273,12 +273,12 @@ export default function BrowseDetailPage({
                     <div style={{ marginTop: "5px" }}>
                       {userStatus === "want" && (
                         <span style={{ color: "var(--ctp-red)" }}>
-                          ❤️ In Wantlist
+                          In Wantlist
                         </span>
                       )}
                       {userStatus === "have" && (
                         <span style={{ color: "var(--ctp-green)" }}>
-                          ✅ Have
+                          Have
                         </span>
                       )}
                       {!userStatus && (

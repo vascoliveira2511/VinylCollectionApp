@@ -38,7 +38,7 @@ export class ErrorBoundary extends React.Component<
 
       return (
         <div className={styles.errorContainer}>
-          <div className={styles.errorIcon}>⚠️</div>
+          <div className={styles.errorIcon}>!</div>
           <h2 className={styles.errorTitle}>Something went wrong</h2>
           <p className={styles.errorMessage}>
             {this.state.error?.message || "An unexpected error occurred"}

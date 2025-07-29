@@ -82,7 +82,7 @@ export default function StatusButtons({
           userStatus === "want" ? styles.statusActive : ""
         }`}
       >
-        {userStatus === "want" ? "❤️ In Wantlist" : "❤️ Want"}
+        {userStatus === "want" ? "In Wantlist" : "Want"}
       </button>
 
       <button
@@ -91,7 +91,7 @@ export default function StatusButtons({
           userStatus === "have" ? styles.statusActive : ""
         }`}
       >
-        {userStatus === "have" ? "✅ Have" : "✅ Mark as Have"}
+        {userStatus === "have" ? "Have" : "Mark as Have"}
       </button>
     </>
   );

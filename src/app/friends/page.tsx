@@ -192,7 +192,7 @@ export default function FriendsPage() {
       <div className="container">
         {/* Search Section */}
         <div className="window">
-          <div className="title-bar">🔍 Find Friends</div>
+          <div className="title-bar">Find Friends</div>
           <div className={styles.contentSection}>
             <div className={styles.inputContainer}>
               <input
@@ -203,7 +203,7 @@ export default function FriendsPage() {
                 className={styles.searchInput}
               />
               {isSearching && (
-                <div className={styles.searchingIndicator}>🔍 Searching...</div>
+                <div className={styles.searchingIndicator}>Searching...</div>
               )}
             </div>
 
@@ -227,17 +227,17 @@ export default function FriendsPage() {
                               onClick={() => sendFriendRequest(user.id)}
                               className={styles.addButton}
                             >
-                              ➕ Add Friend
+                              Add Friend
                             </button>
                           )}
                           {user.friendshipStatus === "sent" && (
                             <span className={styles.statusText}>
-                              ✉️ Request Sent
+                              Request Sent
                             </span>
                           )}
                           {user.friendshipStatus === "received" && (
                             <span className={styles.statusText}>
-                              📥 Sent You Request
+                              Sent You Request
                             </span>
                           )}
                           {user.friendshipStatus === "friends" && (
@@ -245,7 +245,7 @@ export default function FriendsPage() {
                               href={`/users/${user.id}`}
                               className={styles.viewButton}
                             >
-                              👀 View Profile
+                              View Profile
                             </Link>
                           )}
                         </div>
@@ -260,7 +260,7 @@ export default function FriendsPage() {
 
         {/* Friends Management */}
         <div className="window">
-          <div className="title-bar">👥 Friends</div>
+          <div className="title-bar">Friends</div>
           <div className={styles.contentSection}>
             {error && <div className={styles.errorMessage}>{error}</div>}
 
@@ -327,13 +327,13 @@ export default function FriendsPage() {
                             href={`/users/${friendship.friend?.id}`}
                             className={styles.viewButton}
                           >
-                            👀 View Collections
+                            View Collections
                           </Link>
                           <button
                             onClick={() => removeFriend(friendship.id)}
                             className={styles.deleteButton}
                           >
-                            ❌ Remove Friend
+                            Remove Friend
                           </button>
                         </div>
                       </div>
@@ -372,7 +372,7 @@ export default function FriendsPage() {
                             }
                             className={styles.addButton}
                           >
-                            ✅ Accept
+                            Accept
                           </button>
                           <button
                             onClick={() =>
@@ -380,7 +380,7 @@ export default function FriendsPage() {
                             }
                             className={styles.cancelButton}
                           >
-                            ❌ Decline
+                            Decline
                           </button>
                         </div>
                       </div>
@@ -417,7 +417,7 @@ export default function FriendsPage() {
                             onClick={() => removeFriend(request.id)}
                             className={styles.cancelButton}
                           >
-                            🚫 Cancel Request
+                            Cancel Request
                           </button>
                         </div>
                       </div>

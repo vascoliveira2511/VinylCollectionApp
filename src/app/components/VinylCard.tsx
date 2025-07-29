@@ -1,6 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
+import { useState, useCallback, memo } from "react";
 import styles from "../page.module.css";
 
 interface VinylCardProps {
@@ -37,9 +39,10 @@ interface VinylCardProps {
   onAdd?: (vinyl: any) => void;
   // New props for collection selection
   addToCollectionComponent?: React.ReactNode;
+  priority?: boolean; // For above-the-fold images
 }
 
-export default function VinylCard({
+const VinylCard = memo(function VinylCard({
   vinyl,
   showActions = true,
   showDetails = false,
@@ -48,25 +51,59 @@ export default function VinylCard({
   onDelete,
   onAdd,
   addToCollectionComponent,
+  priority = false,
 }: VinylCardProps) {
+  const [imageError, setImageError] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  
   // Use the best available image URL (APIs now provide improved URLs)
   const imageUrl =
-    vinyl.imageUrl || vinyl.thumb || "https://via.placeholder.com/150";
+    vinyl.imageUrl || vinyl.thumb || "https://via.placeholder.com/150x150/f0ece7/1a1a1a?text=No+Image";
 
   const linkUrl =
     linkPrefix === "/browse"
       ? `/browse/${vinyl.id}`
       : `${linkPrefix}/${vinyl.id}`;
 
+  const handleImageLoad = useCallback(() => {
+    setIsLoading(false);
+  }, []);
+
+  const handleImageError = useCallback(() => {
+    setImageError(true);
+    setIsLoading(false);
+  }, []);
+
   return (
     <div className={styles.card}>
       <Link href={linkUrl}>
-        <img
-          src={`/api/image-proxy?url=${encodeURIComponent(imageUrl)}`}
-          alt={`${vinyl.title} cover`}
-          className={styles.albumArt}
-          loading="lazy"
-        />
+        <div className={styles.imageContainer}>
+          {isLoading && (
+            <div className={styles.imagePlaceholder}>
+              <div className="vinyl-loader">
+                <div className="vinyl-record"></div>
+              </div>
+            </div>
+          )}
+          <Image
+            src={imageError ? "https://via.placeholder.com/150x150/f0ece7/1a1a1a?text=No+Image" : `/api/image-proxy?url=${encodeURIComponent(imageUrl)}`}
+            alt={`${vinyl.title} by ${vinyl.artist}`}
+            className={styles.albumArt}
+            width={150}
+            height={150}
+            loading={priority ? "eager" : "lazy"}
+            priority={priority}
+            placeholder="blur"
+            blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyEhjyw6H+FpMCf2eVvZl1F5mAb9bBBhgbLzzzrw/3zt7ZrqcXoaStgmtnyBFQu8W3LagHQlHYsStSrxgPEfWuOvv5+8RD6V7zq97eBHcW9pJl6X8sKNdJIbKJl3oIrJF/xBqpXhNE3UKVjTEuGagqJPECCfSEYPUu5w+7JKq/nX7P6e5uYLT3pOCN4e5RvYZkuLQPcrKpNOJkVj6vQW4l8LlxEq5qrJmK2Zxu8qrHx9T3fwJuvb5U/WuOvv5+8RD6V7zq97eBHcW9pJl6X8sKNdJIbKJl3oIrJF/xBqpXhNE3UKVjTEuGagqJPECCfSEYPUu5w+7JKq/nX7P6e5uYLT3pOCN4e5RvYZkuLQPcrKpNOJkVj6vQW4l8LlxEq5qrJmK2Zxu8qrHx9T3f"
+            onLoad={handleImageLoad}
+            onError={handleImageError}
+            sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
+            style={{
+              opacity: isLoading ? 0 : 1,
+              transition: 'opacity 0.3s ease-in-out'
+            }}
+          />
+        </div>
         <div className={styles.cardInfo}>
           <div className={styles.cardHeader}>
             <h3 className={styles.cardTitle}>{vinyl.title}</h3>
@@ -174,4 +211,6 @@ export default function VinylCard({
       )}
     </div>
   );
-}
+});
+
+export default VinylCard;

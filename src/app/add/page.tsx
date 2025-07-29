@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { apiClient } from "@/lib/api-client";
+import LoadingSpinner from "../components/LoadingSpinner";
 import styles from "../page.module.css";
 
 interface Vinyl {
@@ -211,7 +212,7 @@ export default function AddVinyl() {
       };
 
       await apiClient.addVinyl(vinylData);
-      setSuccessMessage(`✅ "${title}" by ${artist} added to your collection!`);
+      setSuccessMessage(`"${title}" by ${artist} added to your collection!`);
 
       // Reset form but keep current search mode
       const currentSearchMode = searchMode;
@@ -357,7 +358,7 @@ export default function AddVinyl() {
 
       if (missingFields.length > 0) {
         setError(
-          `ℹ️ Note: ${missingFields.join(
+          `Note: ${missingFields.join(
             ", "
           )} not found in Discogs - you can add these manually if needed`
         );
@@ -448,12 +449,10 @@ export default function AddVinyl() {
     return (
       <main className={styles.main}>
         <div className="container">
-          <div className="window">
-            <div className="title-bar">Loading...</div>
-            <div className={styles.contentSection}>
-              <p>Loading your vinyl collection...</p>
-            </div>
-          </div>
+          <LoadingSpinner 
+            size="large" 
+            text="Loading your vinyl collection..." 
+          />
         </div>
       </main>
     );
@@ -495,10 +494,10 @@ export default function AddVinyl() {
               </p>
               <div className={styles.browseActions}>
                 <Link href="/browse" className={styles.addButton}>
-                  🌍 Discover & Add
+                  Discover & Add
                 </Link>
                 <Link href="/collections" className={styles.manageButton}>
-                  📚 Manage Collections
+                  Manage Collections
                 </Link>
               </div>
             </div>
@@ -511,7 +510,7 @@ export default function AddVinyl() {
                   searchMode ? styles.active : ""
                 }`}
               >
-                🔍 Search
+                Search
               </button>
               <button
                 type="button"
@@ -520,7 +519,7 @@ export default function AddVinyl() {
                   !searchMode ? styles.active : ""
                 }`}
               >
-                ✏️ Manual
+                Manual
               </button>
             </div>
 
@@ -543,7 +542,7 @@ export default function AddVinyl() {
                     />
                     {isSearching && (
                       <div className={styles.searchingIndicator}>
-                        🔍 Searching...
+                        Searching...
                       </div>
                     )}
                     {suggestions.length > 0 && (
@@ -595,7 +594,7 @@ export default function AddVinyl() {
                   {/* Show fetched data */}
                   {dataFetched && (
                     <div className={styles.fetchedData}>
-                      <h4>✅ Found on Discogs:</h4>
+                      <h4>Found on Discogs:</h4>
                       <div className={styles.dataPreview}>
                         <div>
                           <p>
@@ -675,7 +674,7 @@ export default function AddVinyl() {
                   htmlFor="collection-select"
                   className={styles.selectorLabel}
                 >
-                  📁 Add to Collection:
+                  Add to Collection:
                 </label>
                 <select
                   id="collection-select"
@@ -721,16 +720,16 @@ export default function AddVinyl() {
               </p>
               <div className={styles.browseActions}>
                 <Link href="/" className={styles.manageButton}>
-                  🎧 My Collection
+                  My Collection
                 </Link>
                 <Link href="/browse" className={styles.browseButton}>
-                  🌍 Discover Music
+                  Discover Music
                 </Link>
                 <Link href="/collections" className={styles.statsButton}>
-                  📚 Manage Collections
+                  Manage Collections
                 </Link>
                 <Link href="/profile" className={styles.addButton}>
-                  📊 View Statistics
+                  View Statistics
                 </Link>
               </div>
             </div>

@@ -123,7 +123,7 @@ export default function EditVinylPage({ params }: { params: { id: string } }) {
 
       if (!res.ok) throw new Error("Failed to update vinyl");
 
-      setSuccessMessage(`✅ "${vinyl?.title}" updated successfully!`);
+      setSuccessMessage(`"${vinyl?.title}" updated successfully!`);
 
       // Redirect back to vinyl details after 2 seconds
       setTimeout(() => {
@@ -160,7 +160,7 @@ export default function EditVinylPage({ params }: { params: { id: string } }) {
           <div className="window">
             <div className={styles.contentSection}>
               <div className={styles.errorState}>
-                <p>❌ Vinyl not found</p>
+                <p>Error: Vinyl not found</p>
                 <Link href="/" className={styles.backButton}>
                   ← Back to Collection
                 </Link>
@@ -176,7 +176,7 @@ export default function EditVinylPage({ params }: { params: { id: string } }) {
     <main className={styles.main}>
       <div className="container">
         <div className="window">
-          <div className="title-bar">✏️ Edit Personal Details</div>
+          <div className="title-bar">Edit Personal Details</div>
           <div className={styles.contentSection}>
             {/* Album Info (Read-only) */}
             <div className="window" style={{ marginBottom: "20px" }}>
@@ -249,7 +249,7 @@ export default function EditVinylPage({ params }: { params: { id: string } }) {
                           fontWeight: "500",
                         }}
                       >
-                        💿 Media Condition
+                        Media Condition
                       </label>
                       <select
                         value={condition}
@@ -279,7 +279,7 @@ export default function EditVinylPage({ params }: { params: { id: string } }) {
                           fontWeight: "500",
                         }}
                       >
-                        📦 Sleeve Condition
+                        Sleeve Condition
                       </label>
                       <select
                         value={sleeveCondition}
@@ -309,7 +309,7 @@ export default function EditVinylPage({ params }: { params: { id: string } }) {
                           fontWeight: "500",
                         }}
                       >
-                        ⭐ Personal Rating
+                        Personal Rating
                       </label>
                       <select
                         value={rating || ""}
@@ -323,11 +323,11 @@ export default function EditVinylPage({ params }: { params: { id: string } }) {
                         style={{ width: "100%" }}
                       >
                         <option value="">No rating</option>
-                        <option value="1">⭐ 1 star</option>
-                        <option value="2">⭐⭐ 2 stars</option>
-                        <option value="3">⭐⭐⭐ 3 stars</option>
-                        <option value="4">⭐⭐⭐⭐ 4 stars</option>
-                        <option value="5">⭐⭐⭐⭐⭐ 5 stars</option>
+                        <option value="1">★ 1 star</option>
+                        <option value="2">★★ 2 stars</option>
+                        <option value="3">★★★ 3 stars</option>
+                        <option value="4">★★★★ 4 stars</option>
+                        <option value="5">★★★★★ 5 stars</option>
                       </select>
                     </div>
 
@@ -340,7 +340,7 @@ export default function EditVinylPage({ params }: { params: { id: string } }) {
                           fontWeight: "500",
                         }}
                       >
-                        📁 Collection
+                        Collection
                       </label>
                       <select
                         value={selectedCollectionId || ""}
@@ -370,7 +370,7 @@ export default function EditVinylPage({ params }: { params: { id: string } }) {
 
               {/* Personal Notes */}
               <div className="window" style={{ marginBottom: "20px" }}>
-                <div className="title-bar">📝 Personal Notes</div>
+                <div className="title-bar">Personal Notes</div>
                 <div className={styles.contentSection}>
                   <textarea
                     placeholder="Add your personal notes about this record... (listening notes, memories, where you got it, etc.)"
@@ -390,10 +390,10 @@ export default function EditVinylPage({ params }: { params: { id: string } }) {
                   disabled={saving}
                   className={styles.primaryButton}
                 >
-                  {saving ? "💾 Saving..." : "💾 Save Changes"}
+                  {saving ? "Saving..." : "Save Changes"}
                 </button>
                 <Link href={`/vinyl/${id}`} className={styles.cancelButton}>
-                  ❌ Cancel
+                  Cancel
                 </Link>
               </div>
             </form>

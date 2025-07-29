@@ -25,30 +25,12 @@ const AVATAR_COLORS = [
   "var(--ctp-maroon)", // maroon
 ];
 
-const AVATAR_EMOJIS = [
-  "🎵",
-  "🎶",
-  "🎸",
-  "🎹",
-  "🎺",
-  "🎷",
-  "🥁",
-  "🎤",
-  "🎧",
-  "📻",
-  "💿",
-  "📀",
-  "🎼",
-  "🎵",
-  "🔊",
-  "🎚️",
-  "🎛️",
-  "🔈",
-  "🔉",
-  "🔊",
+const AVATAR_LETTERS = [
+  "A", "B", "C", "D", "E", "F", "G", "H", "I", "J",
+  "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T",
 ];
 
-function generateAvatar(username: string): { emoji: string; color: string } {
+function generateAvatar(username: string): { letter: string; color: string } {
   // Create a simple hash from username to ensure consistency
   let hash = 0;
   for (let i = 0; i < username.length; i++) {
@@ -57,11 +39,11 @@ function generateAvatar(username: string): { emoji: string; color: string } {
     hash = hash & hash; // Convert to 32-bit integer
   }
 
-  const emojiIndex = Math.abs(hash) % AVATAR_EMOJIS.length;
+  const letterIndex = Math.abs(hash) % AVATAR_LETTERS.length;
   const colorIndex = Math.abs(hash >> 8) % AVATAR_COLORS.length;
 
   return {
-    emoji: AVATAR_EMOJIS[emojiIndex],
+    letter: AVATAR_LETTERS[letterIndex],
     color: AVATAR_COLORS[colorIndex],
   };
 }
@@ -93,27 +75,27 @@ export default function Avatar({
             target.style.display = "none";
             if (target.parentElement) {
               target.parentElement.style.backgroundColor = generated.color;
-              target.parentElement.textContent = generated.emoji;
+              target.parentElement.textContent = generated.letter;
             }
           }}
         />
       );
-    } else if (avatarType === "emoji" && avatar) {
-      return <span className={styles.avatarEmoji}>{avatar}</span>;
+    } else if (avatarType === "letter" && avatar) {
+      return <span className={styles.avatarLetter}>{avatar}</span>;
     } else {
       // Generated avatar
       const generated = generateAvatar(username);
       return (
-        <span className={styles.avatarEmoji} style={{ color: generated.color }}>
-          {generated.emoji}
+        <span className={styles.avatarLetter} style={{ color: generated.color }}>
+          {generated.letter}
         </span>
       );
     }
   };
 
-  const handleEmojiSelect = (emoji: string) => {
+  const handleLetterSelect = (letter: string) => {
     if (onAvatarChange) {
-      onAvatarChange(emoji, "emoji");
+      onAvatarChange(letter, "letter");
     }
     setShowPicker(false);
   };
@@ -126,20 +108,20 @@ export default function Avatar({
         title={editable ? "Click to change avatar" : username}
       >
         {renderAvatar()}
-        {editable && <div className={styles.editOverlay}>✏️</div>}
+        {editable && <div className={styles.editOverlay}>Edit</div>}
       </div>
 
       {editable && showPicker && (
-        <div className={styles.emojiPicker}>
+        <div className={styles.letterPicker}>
           <div className={styles.pickerHeader}>Choose an avatar</div>
-          <div className={styles.emojiGrid}>
-            {AVATAR_EMOJIS.map((emoji) => (
+          <div className={styles.letterGrid}>
+            {AVATAR_LETTERS.map((letter) => (
               <button
-                key={emoji}
-                className={styles.emojiOption}
-                onClick={() => handleEmojiSelect(emoji)}
+                key={letter}
+                className={styles.letterOption}
+                onClick={() => handleLetterSelect(letter)}
               >
-                {emoji}
+                {letter}
               </button>
             ))}
           </div>

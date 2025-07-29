@@ -121,7 +121,7 @@ export default function UserProfilePage({
       <div className="container">
         {/* User Profile Header */}
         <div className="window">
-          <div className="title-bar">👤 User Profile</div>
+          <div className="title-bar">User Profile</div>
           <div className={styles.contentSection}>
             <div className={styles.userProfileHeader}>
               <Avatar
@@ -153,7 +153,7 @@ export default function UserProfilePage({
 
         {/* User's Collections */}
         <div className="window">
-          <div className="title-bar">📚 Collections</div>
+          <div className="title-bar">Collections</div>
           <div className={styles.contentSection}>
             {userData.collections.length === 0 ? (
               <div className={styles.emptyState}>
@@ -184,7 +184,7 @@ export default function UserProfilePage({
                                     />
                                   ) : (
                                     <div className={styles.placeholderArt}>
-                                      🎵
+                                      [Album]
                                     </div>
                                   )}
                                 </div>
@@ -192,7 +192,7 @@ export default function UserProfilePage({
                           </div>
                         ) : (
                           <div className={styles.emptyCollection}>
-                            📀 Empty Collection
+                            Empty Collection
                           </div>
                         )}
                       </div>

@@ -121,7 +121,7 @@ export default function VinylComments({ discogsId }: VinylCommentsProps) {
                       newRating && newRating >= star ? styles.starActive : ""
                     }`}
                   >
-                    ⭐
+                    ★
                   </button>
                 ))}
               </div>
@@ -162,7 +162,7 @@ export default function VinylComments({ discogsId }: VinylCommentsProps) {
                     )}
                     {comment.rating && (
                       <div className={styles.commentRating}>
-                        {"⭐".repeat(comment.rating)}
+                        {"★".repeat(comment.rating)}
                       </div>
                     )}
                   </div>

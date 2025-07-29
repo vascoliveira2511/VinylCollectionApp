@@ -44,7 +44,7 @@ export default function VinylHeader({
   const backgroundImage = displayImages[0]; // Always use first image for background
 
   const renderRating = (rating: number) => {
-    return "⭐".repeat(rating) + "☆".repeat(5 - rating);
+    return "★".repeat(rating) + "☆".repeat(5 - rating);
   };
 
   const formatArtist = (artist: string | string[]) => {
