@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { apiClient } from "@/lib/api-client";
 import VinylCard from "./components/VinylCard";
 import LoadingSpinner from "./components/LoadingSpinner";
+import Button from "./components/Button";
 import styles from "./page.module.css";
 
 interface Vinyl {
@@ -48,8 +49,6 @@ interface Collection {
 }
 
 interface UserProfile {
-  recordsPerPage: any;
-  displayView: any;
   username: string;
   totalRecords: number;
   genreStats: Record<string, number>;
@@ -64,13 +63,8 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null);
 
   // Filter states
-  const [filterArtist, setFilterArtist] = useState("");
-  const [filterTitle, setFilterTitle] = useState("");
   const [filterGenre, setFilterGenre] = useState("");
-  const [filterYear, setFilterYear] = useState("");
   const [filterCollection, setFilterCollection] = useState<string>("all");
-  const [displayLimit, setDisplayLimit] = useState(20);
-  const [displayView, setDisplayView] = useState("grid");
 
   const router = useRouter();
 
@@ -80,14 +74,6 @@ export default function Home() {
         // Fetch user profile with caching
         const userData = (await apiClient.getCurrentUser()) as UserProfile;
         setUserProfile(userData as UserProfile);
-
-        // Set user preferences
-        if (userData.displayView) {
-          setDisplayView(userData.displayView);
-        }
-        if (userData.recordsPerPage) {
-          setDisplayLimit(userData.recordsPerPage);
-        }
 
         // Fetch collections with caching
         const collectionsData =
@@ -148,33 +134,14 @@ export default function Home() {
     }
   };
 
-  const filteredVinyls = vinyls
-    .filter((vinyl) => {
-      const matchesArtist =
-        filterArtist === "" ||
-        vinyl.artist.toLowerCase().includes(filterArtist.toLowerCase());
-      const matchesTitle =
-        filterTitle === "" ||
-        vinyl.title.toLowerCase().includes(filterTitle.toLowerCase());
-      const matchesGenre =
-        filterGenre === "" ||
-        vinyl.genre.some((g) =>
-          g.toLowerCase().includes(filterGenre.toLowerCase())
-        );
-      const matchesYear =
-        filterYear === "" || vinyl.year.toString().includes(filterYear);
-      return matchesArtist && matchesTitle && matchesGenre && matchesYear;
-    })
-    .slice(0, displayLimit);
-
   if (loading) {
     return (
       <main className={styles.main}>
         <div className={styles.heroSection}>
           <div className="content-wrapper">
-            <LoadingSpinner 
-              size="large" 
-              text="Loading Your Vinyl Universe..." 
+            <LoadingSpinner
+              size="large"
+              text="Loading Your Vinyl Universe..."
             />
           </div>
         </div>
@@ -208,24 +175,31 @@ export default function Home() {
           <div className={styles.heroContent}>
             <h1 className={styles.heroTitle}>Your Vinyl Universe</h1>
             <p className={styles.heroSubtitle}>
-              Discover, collect, and celebrate the vinyl records that define your musical journey
+              Discover, collect, and celebrate the vinyl records that define
+              your musical journey
             </p>
-            
+
             {/* Quick Stats */}
             {userProfile && (
               <div className={styles.statsGrid}>
                 <div className={styles.statCard}>
-                  <div className={styles.statNumber}>{userProfile.totalRecords || 0}</div>
+                  <div className={styles.statNumber}>
+                    {userProfile.totalRecords || 0}
+                  </div>
                   <div className={styles.statLabel}>Total Records</div>
                 </div>
                 <div className={styles.statCard}>
                   <div className={styles.statNumber}>
-                    {userProfile.genreStats ? Object.keys(userProfile.genreStats).length : 0}
+                    {userProfile.genreStats
+                      ? Object.keys(userProfile.genreStats).length
+                      : 0}
                   </div>
                   <div className={styles.statLabel}>Genres</div>
                 </div>
                 <div className={styles.statCard}>
-                  <div className={styles.statNumber}>{collections?.length || 0}</div>
+                  <div className={styles.statNumber}>
+                    {collections?.length || 0}
+                  </div>
                   <div className={styles.statLabel}>Collections</div>
                 </div>
                 <div className={styles.statCard}>
@@ -236,37 +210,42 @@ export default function Home() {
                 </div>
               </div>
             )}
-            
+
             <div className={styles.heroActions}>
-              <Link href="/browse" className={`${styles.heroButton} ${styles.heroPrimary}`}>
+              <Button href="/browse" variant="primary" size="large">
                 Discover Music
-              </Link>
-              <Link href="/collections" className={`${styles.heroButton} ${styles.heroSecondary}`}>
+              </Button>
+              <Button href="/collections" variant="outline" size="large">
                 Manage Collections
-              </Link>
+              </Button>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Featured/Recent Section */}
+      {/* Recently Added Spotlight */}
       {userProfile?.recentVinyls && userProfile.recentVinyls.length > 0 && (
         <div className={styles.section}>
           <div className="content-wrapper">
             <div className={styles.sectionHeader}>
-              <h2>Recently Added</h2>
-              <p>Your latest vinyl discoveries</p>
+              <h2>Latest Additions</h2>
+              <p>Fresh vinyl just added to your collection</p>
             </div>
-            <div className={styles.featuredGrid}>
-              {userProfile.recentVinyls.slice(0, 4).map((vinyl, index) => (
-                <VinylCard
+            <div className={styles.recentSpotlight}>
+              {userProfile.recentVinyls.slice(0, 3).map((vinyl, index) => (
+                <div
                   key={`recent-${vinyl.id}`}
-                  vinyl={vinyl}
-                  showDetails={false}
-                  onEdit={() => {}}
-                  onDelete={() => deleteVinyl(vinyl.id)}
-                  priority={index < 2} // Priority loading for first 2 images
-                />
+                  className={styles.spotlightCard}
+                >
+                  <VinylCard
+                    vinyl={vinyl}
+                    showDetails={true}
+                    onEdit={() => {}}
+                    onDelete={() => deleteVinyl(vinyl.id)}
+                    priority={index === 0}
+                  />
+                  <div className={styles.spotlightBadge}>New</div>
+                </div>
               ))}
             </div>
           </div>
@@ -274,171 +253,85 @@ export default function Home() {
       )}
 
       {/* Empty State for New Users */}
-      {userProfile && (!userProfile.recentVinyls || userProfile.recentVinyls.length === 0) && userProfile.totalRecords === 0 && (
-        <div className={styles.section}>
-          <div className="content-wrapper">
-            <div className={styles.emptyHero}>
-              <h2>Start Your Vinyl Journey</h2>
-              <p>Your collection is waiting to be discovered. Add your first record to get started!</p>
-              <div className={styles.heroActions}>
-                <Link href="/browse" className="btn-primary">
-                  Discover Your First Record
-                </Link>
+      {userProfile &&
+        (!userProfile.recentVinyls || userProfile.recentVinyls.length === 0) &&
+        userProfile.totalRecords === 0 && (
+          <div className={styles.section}>
+            <div className="content-wrapper">
+              <div className={styles.emptyHero}>
+                <h2>Start Your Vinyl Journey</h2>
+                <p>
+                  Your collection is waiting to be discovered. Add your first
+                  record to get started!
+                </p>
+                <div className={styles.heroActions}>
+                  <Button href="/browse" variant="primary" size="large">
+                    Start Collecting
+                  </Button>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
 
       {/* Genre Overview */}
-      {userProfile?.genreStats && Object.keys(userProfile.genreStats).length > 0 && (
-        <div className={styles.section}>
+      {userProfile?.genreStats &&
+        Object.keys(userProfile.genreStats).length > 0 && (
+          <div className={styles.section}>
+            <div className="content-wrapper">
+              <div className={styles.sectionHeader}>
+                <h2>Your Musical DNA</h2>
+                <p>Genre breakdown of your collection</p>
+              </div>
+              <div className={styles.genreGrid}>
+                {Object.entries(userProfile.genreStats)
+                  .sort(([, a], [, b]) => b - a)
+                  .slice(0, 6)
+                  .map(([genre, count]) => (
+                    <Link
+                      key={genre}
+                      href={`/collections?genre=${encodeURIComponent(genre)}`}
+                      className={styles.genreCard}
+                    >
+                      <div className={styles.genreName}>{genre}</div>
+                      <div className={styles.genreCount}>{count} records</div>
+                    </Link>
+                  ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+      {/* Collection Preview Section */}
+      {vinyls.length > 0 && (
+        <div className={styles.section} data-collection-section>
           <div className="content-wrapper">
             <div className={styles.sectionHeader}>
-              <h2>Your Musical DNA</h2>
-              <p>Genre breakdown of your collection</p>
+              <h2>Collection Overview</h2>
+              <p>Explore the highlights from your vinyl collection</p>
             </div>
-            <div className={styles.genreGrid}>
-              {Object.entries(userProfile.genreStats)
-                .sort(([,a], [,b]) => b - a)
-                .slice(0, 6)
-                .map(([genre, count]) => (
-                  <div 
-                    key={genre} 
-                    className={`${styles.genreCard} ${filterGenre === genre ? styles.genreCardActive : ''}`}
-                    onClick={() => {
-                      setFilterGenre(filterGenre === genre ? '' : genre);
-                      // Scroll to collection section
-                      document.querySelector('[data-collection-section]')?.scrollIntoView({ 
-                        behavior: 'smooth' 
-                      });
-                    }}
-                    role="button"
-                    tabIndex={0}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' || e.key === ' ') {
-                        setFilterGenre(filterGenre === genre ? '' : genre);
-                        document.querySelector('[data-collection-section]')?.scrollIntoView({ 
-                          behavior: 'smooth' 
-                        });
-                      }
-                    }}
-                  >
-                    <div className={styles.genreName}>{genre}</div>
-                    <div className={styles.genreCount}>{count} records</div>
-                  </div>
-                ))}
+
+            <div className={styles.collectionPreview}>
+              {vinyls.slice(0, 8).map((vinyl, index) => (
+                <VinylCard
+                  key={`preview-${vinyl.id}`}
+                  vinyl={vinyl}
+                  showDetails={false}
+                  onEdit={() => {}}
+                  onDelete={() => deleteVinyl(vinyl.id)}
+                  priority={index < 4}
+                />
+              ))}
+            </div>
+
+            <div className={styles.heroActions}>
+              <Button href="/collections" variant="secondary" size="medium">
+                View All {userProfile?.totalRecords || vinyls.length} Records →
+              </Button>
             </div>
           </div>
         </div>
       )}
-
-      {/* Full Collection Section */}
-      <div className={styles.section} data-collection-section>
-        <div className="content-wrapper">
-          <div className="window">
-            <div className="title-bar">Browse Your Collection</div>
-            <div className={styles.contentSection}>
-
-              {error && <div className={styles.errorMessage}>{error}</div>}
-
-              <div className={styles.filterSection}>
-                <h3>Filter Records</h3>
-                <div className={styles.filters}>
-                  <input
-                    type="text"
-                    placeholder="Filter by Artist"
-                    value={filterArtist}
-                    onChange={(e) => setFilterArtist(e.target.value)}
-                  />
-                  <input
-                    type="text"
-                    placeholder="Filter by Title"
-                    value={filterTitle}
-                    onChange={(e) => setFilterTitle(e.target.value)}
-                  />
-                  <input
-                    type="text"
-                    placeholder="Filter by Genre"
-                    value={filterGenre}
-                    onChange={(e) => setFilterGenre(e.target.value)}
-                  />
-                  <input
-                    type="number"
-                    placeholder="Filter by Year"
-                    value={filterYear}
-                    onChange={(e) => setFilterYear(e.target.value)}
-                  />
-                  <select
-                    value={filterCollection}
-                    onChange={(e) => setFilterCollection(e.target.value)}
-                  >
-                    <option value="all">All Collections</option>
-                    {collections.map((collection) => (
-                      <option
-                        key={collection.id}
-                        value={collection.id.toString()}
-                      >
-                        {collection.title} ({collection._count.vinyls})
-                      </option>
-                    ))}
-                  </select>
-                  <select
-                    value={displayLimit}
-                    onChange={(e) => setDisplayLimit(parseInt(e.target.value))}
-                  >
-                    <option value={12}>Show 12</option>
-                    <option value={20}>Show 20</option>
-                    <option value={24}>Show 24</option>
-                    <option value={48}>Show 48</option>
-                    <option value={vinyls.length}>Show All</option>
-                  </select>
-                  <select
-                    value={displayView}
-                    onChange={(e) => setDisplayView(e.target.value)}
-                    title="View Type (from your preferences)"
-                  >
-                    <option value="grid">Grid View</option>
-                    <option value="list">List View</option>
-                    <option value="compact">Compact View</option>
-                  </select>
-                </div>
-              </div>
-
-              <div
-                className={
-                  displayView === "list"
-                    ? styles.collectionList
-                    : displayView === "compact"
-                    ? styles.collectionCompact
-                    : styles.collectionGrid
-                }
-              >
-                {filteredVinyls.map((vinyl, index) => (
-                  <VinylCard
-                    key={`collection-${vinyl.id}`}
-                    vinyl={vinyl}
-                    showDetails={true}
-                    onEdit={() => {}}
-                    onDelete={() => deleteVinyl(vinyl.id)}
-                    priority={index < 6} // Priority loading for first 6 images in main collection
-                  />
-                ))}
-              </div>
-
-              {filteredVinyls.length === 0 && (
-                <div className={styles.emptyState}>
-                  <p>
-                    No vinyl records found. Try adjusting your filters or{" "}
-                    <Link href="/browse">discover music</Link> to add to your
-                    collection!
-                  </p>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
     </main>
   );
 }

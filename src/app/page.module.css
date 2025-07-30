@@ -122,12 +122,9 @@
 
 .heroTitle {
   font-size: clamp(3rem, 7vw, 5rem);
-  font-weight: 800;
+  font-weight: 100;
   margin-bottom: 0;
-  background: linear-gradient(135deg, var(--text) 0%, var(--beeswax) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--text);
   text-align: center;
   line-height: 1.1;
   letter-spacing: -0.04em;
@@ -163,14 +160,14 @@
 }
 
 .statCard {
-  background: rgba(255, 255, 255, 0.95);
-  border: 1px solid var(--border-subtle);
-  border-radius: 16px;
+  background: var(--surface-glass);
+  border: 1px solid var(--border);
+  border-radius: 32px;
   padding: 24px 20px;
   text-align: center;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   position: relative;
   overflow: hidden;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
@@ -183,7 +180,7 @@
   left: 0;
   right: 0;
   height: 3px;
-  background: linear-gradient(90deg, var(--beeswax), var(--beeswax-dark));
+  background: var(--primary);
   opacity: 0;
   transition: opacity 0.3s ease;
 }
@@ -193,19 +190,16 @@
 }
 
 .statCard:hover {
-  transform: translateY(-6px) scale(1.02);
-  border-color: var(--beeswax);
-  box-shadow: 0 12px 40px rgba(212, 175, 55, 0.2);
-  background: rgba(255, 255, 255, 1);
+  transform: translateY(-4px) scale(1.02);
+  border-color: var(--primary);
+  box-shadow: 0 12px 40px rgba(194, 82, 51, 0.2);
+  background: var(--surface-elevated);
 }
 
 .statNumber {
   font-size: clamp(2rem, 4vw, 2.8rem);
-  font-weight: 800;
-  background: linear-gradient(135deg, var(--beeswax) 0%, var(--beeswax-dark) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  font-weight: 100;
+  color: var(--text);
   line-height: 1;
   margin-bottom: 8px;
   transition: transform 0.3s ease;
@@ -219,7 +213,7 @@
 @supports not (-webkit-background-clip: text) {
   .statNumber {
     background: none;
-    color: var(--beeswax);
+    color: var(--text);
   }
 }
 
@@ -234,80 +228,51 @@
 /* Modern Hero Actions */
 .heroActions {
   display: flex;
-  gap: 20px;
+  gap: 16px;
   justify-content: center;
   flex-wrap: wrap;
-  margin-top: 16px;
-}
-
-.heroButton {
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
-  padding: 18px 32px;
-  border-radius: 50px;
-  font-family: "Inter", sans-serif;
-  font-size: 1rem;
-  font-weight: 600;
-  text-decoration: none;
-  text-transform: none;
-  letter-spacing: -0.01em;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
-  overflow: hidden;
-  border: 2px solid transparent;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-}
-
-.heroButton::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-  transition: left 0.6s;
-}
-
-.heroButton:hover::before {
-  left: 100%;
-}
-
-.heroPrimary {
-  background: linear-gradient(135deg, var(--beeswax) 0%, var(--beeswax-dark) 100%);
-  color: var(--text-inverse);
-  border-color: var(--beeswax);
-}
-
-.heroPrimary:hover {
-  transform: translateY(-3px) scale(1.05);
-  box-shadow: 0 8px 30px rgba(212, 175, 55, 0.4);
-  background: linear-gradient(135deg, var(--beeswax-dark) 0%, var(--beeswax-darker) 100%);
-}
-
-.heroSecondary {
-  background: rgba(255, 255, 255, 0.9);
-  color: var(--text);
-  border-color: var(--border);
-}
-
-.heroSecondary:hover {
-  transform: translateY(-3px) scale(1.05);
-  box-shadow: 0 8px 30px rgba(26, 26, 26, 0.15);
-  background: var(--surface);
-  border-color: var(--beeswax);
+  margin-top: 32px;
 }
 
 
-/* Featured Grid */
-.featuredGrid {
+
+/* Recently Added Spotlight */
+.recentSpotlight {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 24px;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 32px;
   max-width: 1000px;
+  margin: 0 auto;
+}
+
+.spotlightCard {
+  position: relative;
+  background: var(--ctp-surface0);
+  border-radius: 12px;
+  padding: 16px;
+  border: 2px solid var(--ctp-mauve);
+  box-shadow: 0 8px 24px rgba(203, 166, 247, 0.15);
+}
+
+.spotlightBadge {
+  position: absolute;
+  top: -8px;
+  right: 16px;
+  background: var(--ctp-mauve);
+  color: var(--ctp-base);
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  z-index: 2;
+}
+
+/* Collection Preview Grid */
+.collectionPreview {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+  max-width: 1200px;
   margin: 0 auto;
 }
 
@@ -383,11 +348,7 @@
   .heroActions {
     flex-direction: column;
     align-items: center;
-  }
-  
-  .heroActions a {
-    width: 100%;
-    max-width: 300px;
+    gap: 12px;
   }
   
   .featuredGrid {
@@ -472,30 +433,32 @@
   margin: 0;
 }
 
-/* A24-inspired Card Design */
+/* Telepathic-inspired Card Design */
 .card {
-  background: var(--surface);
-  border-radius: 12px;
+  background: var(--surface-glass);
+  border-radius: 40px;
   padding: 0;
   text-align: left;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  border: none;
+  border: 1px solid var(--border);
   position: relative;
   overflow: hidden;
   display: flex;
   flex-direction: column;
   aspect-ratio: 1;
   height: auto;
-  box-shadow: 0 4px 20px var(--shadow-subtle);
+  box-shadow: 0 4px 24px rgba(26, 25, 22, 0.05);
   cursor: pointer;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
 .card:hover {
-  transform: translateY(-3px);
+  transform: translateY(-2px);
   box-shadow: 
-    0 12px 32px var(--shadow-medium),
-    0 0 0 1px var(--border-focus);
-  border-color: var(--border-focus);
+    0 12px 40px rgba(26, 25, 22, 0.1),
+    0 0 0 1px var(--primary);
+  border-color: var(--primary);
 }
 
 /* A24-style image container with performance optimizations */
@@ -763,6 +726,10 @@ a.card:visited {
   letter-spacing: -0.01em;
   font-family: "Inter", sans-serif;
   text-shadow: var(--overlay-shadow);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
 }
 
 .cardArtist {
@@ -771,6 +738,10 @@ a.card:visited {
   font-size: 0.875em;
   font-weight: 500;
   text-shadow: var(--overlay-shadow);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
 }
 
 .card h3 {
@@ -2084,13 +2055,15 @@ Link.editButton:hover {
 }
 
 .publicBadge {
-  background: var(--ctp-green);
-  color: var(--ctp-base);
-  padding: 2px 8px;
-  border-radius: 12px;
-  font-size: 0.8em;
+  background: rgba(26, 26, 26, 0.15);
+  color: var(--text);
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 0.75em;
   margin-left: 8px;
   font-weight: 500;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 
 .searchInput {
@@ -2490,26 +2463,461 @@ Link.editButton:hover {
   font-family: var(--font-inter), sans-serif;
 }
 
-/* Collections Page Styles */
-.collectionsGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 20px;
-  margin-top: 24px;
+/* Modern Layout Styles */
+.modernContainer {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 32px;
 }
 
-.collectionCard {
-  background: var(--ctp-surface1);
-  border-radius: 8px;
-  padding: 20px;
-  border: 1px solid var(--ctp-surface2);
+/* Modern Home Page Styles */
+.homeHeroSection {
+  text-align: center;
+  padding: 80px 0 64px 0;
+}
+
+.homeHeroSection .heroContent h1 {
+  font-size: clamp(2.5rem, 5vw, 3.5rem);
+  font-weight: 100;
+  margin-bottom: 16px;
+  color: var(--text);
+}
+
+.homeHeroSection .heroContent p {
+  font-size: 1.2rem;
+  color: var(--text-secondary);
+  margin-bottom: 48px;
+}
+
+.homeHeroSection .statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 24px;
+  max-width: 500px;
+  margin: 0 auto 48px auto;
+}
+
+.homeHeroSection .heroActions {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* Modern Collections Page Styles */
+
+.heroSection {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 48px;
+  padding: 64px 0 32px 0;
+}
+
+.heroContent h1 {
+  font-size: clamp(2.5rem, 5vw, 3.5rem);
+  font-weight: 100;
+  margin-bottom: 8px;
+  color: var(--text);
+}
+
+.heroContent p {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.modernCreateButton {
+  background: var(--primary);
+  color: var(--text-inverse);
+  border: none;
+  padding: 16px 32px;
+  border-radius: 24px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 4px 16px rgba(194, 82, 51, 0.2);
+}
+
+.modernCreateButton:hover {
+  background: var(--primary-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(194, 82, 51, 0.3);
+}
+
+.modernForm {
+  background: rgba(224, 216, 198, 0.8);
+  border-radius: 24px;
+  padding: 32px;
+  margin-bottom: 48px;
+  border: 1px solid rgba(200, 191, 168, 0.3);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  box-shadow: 0 8px 40px rgba(26, 25, 22, 0.1);
+}
+
+.formHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.formHeader h2 {
+  font-size: 1.5rem;
+  font-weight: 200;
+  margin: 0;
+  color: var(--text);
+}
+
+.closeButton {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 18px;
+  cursor: pointer;
+  color: var(--text-secondary);
+  font-size: 1.2rem;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.closeButton:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: var(--text);
+}
+
+.formGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.formSection {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.modernInput,
+.modernTextarea {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(200, 191, 168, 0.3);
+  border-radius: 16px;
+  padding: 16px 20px;
+  font-size: 1rem;
+  color: var(--text);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: all 0.3s ease;
+  font-family: 'Space Grotesk', sans-serif;
+}
+
+.modernInput:focus,
+.modernTextarea:focus {
+  outline: none;
+  border-color: var(--primary);
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 0 0 3px rgba(194, 82, 51, 0.1);
+}
+
+.modernInput::placeholder,
+.modernTextarea::placeholder {
+  color: var(--text-tertiary);
+}
+
+.formMeta {
+  display: flex;
+  gap: 32px;
+  align-items: center;
+}
+
+.colorSection {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.colorSection label {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.modernColorPicker {
+  width: 48px;
+  height: 48px;
+  border-radius: 24px;
+  border: 2px solid rgba(200, 191, 168, 0.3);
+  cursor: pointer;
   transition: all 0.2s ease;
 }
 
+.modernColorPicker:hover {
+  border-color: var(--primary);
+}
+
+.modernCheckbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.modernCheckbox input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--primary);
+}
+
+.primaryButton {
+  background: var(--primary);
+  color: var(--text-inverse);
+  border: none;
+  padding: 16px 32px;
+  border-radius: 24px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  min-width: 180px;
+}
+
+.primaryButton:hover:not(:disabled) {
+  background: var(--primary-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(194, 82, 51, 0.3);
+}
+
+.primaryButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.collectionsContainer {
+  min-height: 400px;
+}
+
+.modernCollectionsList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.modernCollectionItem {
+  background: rgba(224, 216, 198, 0.6);
+  border-radius: 20px;
+  border: 1px solid rgba(200, 191, 168, 0.2);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.modernCollectionItem:hover {
+  background: rgba(224, 216, 198, 0.8);
+  border-color: rgba(194, 82, 51, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(26, 25, 22, 0.12);
+}
+
+.collectionLink {
+  flex: 1;
+  text-decoration: none;
+  color: inherit;
+  padding: 24px 32px;
+}
+
+.collectionInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.collectionTitle {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 4px;
+}
+
+.collectionTitle h3 {
+  font-size: 1.25rem;
+  font-weight: 400;
+  margin: 0;
+  color: var(--text);
+}
+
+.badges {
+  display: flex;
+  gap: 8px;
+}
+
+.collectionDescription {
+  color: var(--text-secondary);
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.collectionStats {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: var(--text-tertiary);
+  margin-top: 4px;
+}
+
+.collectionActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 24px 32px 24px 0;
+}
+
+.actionButton {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(200, 191, 168, 0.3);
+  color: var(--text-secondary);
+  padding: 8px 16px;
+  border-radius: 16px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.actionButton:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: var(--primary);
+  color: var(--text);
+}
+
+.dangerButton:hover {
+  background: rgba(220, 38, 38, 0.1);
+  border-color: #dc2626;
+  color: #dc2626;
+}
+
+.emptyState {
+  text-align: center;
+  padding: 80px 32px;
+  color: var(--text-secondary);
+}
+
+.emptyIcon {
+  font-size: 4rem;
+  margin-bottom: 24px;
+  opacity: 0.5;
+}
+
+.emptyState h3 {
+  font-size: 1.5rem;
+  font-weight: 300;
+  margin-bottom: 8px;
+  color: var(--text);
+}
+
+.emptyState p {
+  font-size: 1rem;
+  margin: 0;
+}
+
+/* Responsive Styles for Modern Collections */
+@media (max-width: 768px) {
+  .modernContainer {
+    padding: 0 24px;
+  }
+  
+  .heroSection {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 24px;
+    margin-bottom: 32px;
+  }
+  
+  .heroContent h1 {
+    font-size: 2.5rem;
+  }
+  
+  .modernCreateButton {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .modernForm {
+    padding: 24px;
+    border-radius: 20px;
+  }
+  
+  .formMeta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  
+  .modernCollectionItem {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .collectionLink {
+    padding: 20px 24px;
+  }
+  
+  .collectionActions {
+    padding: 0 24px 20px 24px;
+    justify-content: flex-start;
+  }
+  
+  .actionButton {
+    font-size: 0.8rem;
+    padding: 6px 12px;
+  }
+}
+
+/* Collections Page Styles - Legacy (keeping for backward compatibility) */
+.collectionsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 32px;
+  margin-top: 32px;
+}
+
+.collectionCard {
+  background: rgba(224, 216, 198, 0.7);
+  border-radius: 32px;
+  padding: 28px;
+  border: 1px solid rgba(200, 191, 168, 0.3);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  box-shadow: 0 8px 32px rgba(26, 25, 22, 0.08);
+  position: relative;
+  overflow: hidden;
+}
+
 .collectionCard:hover {
-  border-color: var(--border-focus);
-  transform: translateY(-3px);
-  box-shadow: 0 8px 24px var(--shadow-medium);
+  border-color: rgba(194, 82, 51, 0.4);
+  background: rgba(224, 216, 198, 0.85);
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 
+    0 12px 48px rgba(26, 25, 22, 0.15),
+    0 0 0 1px rgba(194, 82, 51, 0.2),
+    0 4px 16px rgba(194, 82, 51, 0.1);
 }
 
 .collectionHeader h3 {
@@ -2529,14 +2937,16 @@ Link.editButton:hover {
 }
 
 .defaultBadge {
-  background: var(--ctp-green);
-  color: var(--ctp-base);
-  padding: 2px 8px;
-  border-radius: 12px;
-  font-size: 0.7em;
+  background: rgba(194, 82, 51, 0.2);
+  color: var(--primary-dark);
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 0.75em;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   margin-left: 8px;
 }
 
@@ -2588,11 +2998,16 @@ Link.editButton:hover {
 /* Duplicate editButton - using the one defined earlier */
 
 .collectionForm {
-  background: var(--ctp-surface1);
-  border-radius: 8px;
-  padding: 20px;
-  margin-bottom: 24px;
-  border: 1px solid var(--ctp-surface2);
+  background: rgba(224, 216, 198, 0.8);
+  border-radius: 32px;
+  padding: 32px;
+  margin-bottom: 32px;
+  border: 1px solid rgba(200, 191, 168, 0.3);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  box-shadow: 
+    0 8px 40px rgba(26, 25, 22, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 .collectionForm h3 {
@@ -2741,24 +3156,29 @@ Link.editButton:hover {
 
 
 .collectionsIntro {
-  background: var(--ctp-surface1);
-  border-radius: 8px;
-  padding: 20px;
-  margin-bottom: 24px;
-  border: 1px solid var(--ctp-surface2);
+  background: rgba(224, 216, 198, 0.6);
+  border-radius: 28px;
+  padding: 32px;
+  margin-bottom: 32px;
+  border: 1px solid rgba(200, 191, 168, 0.2);
   text-align: center;
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  box-shadow: 0 4px 24px rgba(26, 25, 22, 0.08);
 }
 
 .collectionsIntro h2 {
-  color: var(--ctp-text);
-  margin-bottom: 12px;
+  color: var(--text);
+  margin-bottom: 16px;
+  font-weight: 200;
 }
 
 .collectionsIntro p {
-  color: var(--ctp-subtext1);
-  line-height: 1.6;
+  color: var(--text-secondary);
+  line-height: 1.7;
   max-width: 600px;
   margin: 0 auto;
+  font-size: 1.05rem;
 }
 
 /* A24-Inspired Login Page Styles */

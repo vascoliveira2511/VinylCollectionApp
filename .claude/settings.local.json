@@ -55,7 +55,9 @@
       "WebFetch(domain:www.magicpattern.design)",
       "WebFetch(domain:bansal.io)",
       "WebFetch(domain:muffingroup.com)",
-      "WebFetch(domain:webflow.com)"
+      "WebFetch(domain:webflow.com)",
+      "WebFetch(domain:www.awwwards.com)",
+      "WebFetch(domain:telepathicinstruments.com)"
     ],
     "deny": []
   }

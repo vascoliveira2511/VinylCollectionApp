@@ -1,50 +1,51 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400;1,600&family=JetBrains+Mono:wght@300;400;500;600;700&family=Editorial+New:wght@100;200;300;400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap");
 
 :root {
-  /* Modern Beeswax & Vinyl Theme - "Where Golden Records Meet Digital Collections" */
+  /* Telepathic Instruments Palette - Warm & Refined */
   
-  /* Base surfaces - 2025 warm neutrals inspired by Mocha Mousse trends */
-  --background: #F0ECE7;
-  --surface: #FEFDFB;
-  --surface-elevated: #F7F5F2;
-  --surface-subtle: #EFEBE6;
-  --surface-glass: rgba(250, 248, 245, 0.85);
-  --surface-warm: #F8F6F3;
+  /* Base surfaces - Darker warm beige like Telepathic */
+  --background: #D5CDBA;
+  --surface: #E0D8C6;
+  --surface-elevated: #E8E1D1;
+  --surface-subtle: #D0C7B4;
+  --surface-glass: rgba(213, 205, 186, 0.9);
+  --surface-warm: #CCC3B0;
   
-  /* Text hierarchy - Rich contrasts on light background */
-  --text: #1A1A1A;
-  --text-secondary: #4A4A4A;
-  --text-tertiary: #757575;
-  --text-inverse: #FFFFFF;
-  --text-muted: #8B8B8B;
+  /* Text hierarchy - Dark for contrast */
+  --text: #1A1916;
+  --text-secondary: #2D2A26;
+  --text-tertiary: #4A453F;
+  --text-inverse: #FEFCF8;
+  --text-muted: #6B6661;
   
-  /* Borders - Enhanced warm tones for 2025 neutrals */
-  --border: rgba(164, 120, 100, 0.15);
-  --border-subtle: rgba(232, 213, 183, 0.2);
-  --border-focus: rgba(212, 175, 55, 0.4);
-  --border-strong: rgba(164, 120, 100, 0.3);
+  /* Borders - Ultra-subtle */
+  --border: #C8BFA8;
+  --border-subtle: #D5CDBA;
+  --border-focus: #C25233;
+  --border-strong: #B8AE9B;
   
-  /* Accents - Modern minimalism */
-  --accent: #1A1A1A;
-  --accent-secondary: #2D2D2D;
-  --accent-muted: #757575;
+  /* Accents - Warm orange primary */
+  --accent: #C25233;
+  --accent-secondary: #B04A2E;
+  --accent-muted: #D46B44;
   
-  /* Beeswax palette - Enhanced warm honey tones for 2025 */
-  --beeswax: #D4AF37;
-  --beeswax-light: #F5E6D3;
-  --beeswax-lighter: #FAF0E6;
-  --beeswax-dark: #B8941F;
-  --beeswax-darker: #9C7E1A;
-  --beeswax-transparent: rgba(212, 175, 55, 0.1);
-  --beeswax-hover: rgba(212, 175, 55, 0.15);
-  --beeswax-active: rgba(212, 175, 55, 0.25);
-  --beeswax-glow: rgba(212, 175, 55, 0.3);
+  /* Primary colors - Warm orange system with better contrast */
+  --primary: #C25233;
+  --primary-light: #D46B44;
+  --primary-lighter: #E08356;
+  --primary-dark: #B04A2E;
+  --primary-darker: #9E4229;
+  --primary-transparent: rgba(194, 82, 51, 0.1);
+  --primary-hover: rgba(194, 82, 51, 0.15);
+  --primary-active: rgba(194, 82, 51, 0.25);
+  --primary-glow: rgba(194, 82, 51, 0.2);
   
-  /* 2025 Warm Neutral Accents - Mocha Mousse inspired */
-  --mocha: #A47864;
-  --cream: #FDFBD4;
-  --wheatfield: #F4E4BC;
-  --warm-stone: #E8DDD4;
+  /* System colors - Muted earth tones */
+  --danger: #D87B47;
+  --warning: #E6B84D;
+  --success: #8B9A73;
+  --info: #7A8FA3;
   
   /* Vinyl accents - Deep sophisticated tones */
   --vinyl: #1A1A1A;
@@ -62,18 +63,18 @@
   --info: #2563EB;
   --info-light: #DBEAFE;
   
-  /* Shadows - Enhanced for warm backgrounds */
-  --shadow: rgba(164, 120, 100, 0.08);
-  --shadow-subtle: rgba(164, 120, 100, 0.04);
-  --shadow-medium: rgba(164, 120, 100, 0.12);
-  --shadow-strong: rgba(164, 120, 100, 0.16);
-  --shadow-beeswax: rgba(212, 175, 55, 0.15);
-  --shadow-warm: rgba(156, 126, 26, 0.1);
+  /* Shadows - Warm and subtle */
+  --shadow: rgba(74, 69, 63, 0.08);
+  --shadow-subtle: rgba(74, 69, 63, 0.04);
+  --shadow-medium: rgba(74, 69, 63, 0.12);
+  --shadow-strong: rgba(74, 69, 63, 0.16);
+  --shadow-warm: rgba(216, 123, 71, 0.1);
+  --shadow-earthy: rgba(139, 133, 127, 0.12);
   
   /* Interactive states */
-  --hover-overlay: rgba(212, 175, 55, 0.08);
-  --active-overlay: rgba(212, 175, 55, 0.12);
-  --focus-ring: rgba(212, 175, 55, 0.3);
+  --hover-overlay: rgba(194, 82, 51, 0.08);
+  --active-overlay: rgba(194, 82, 51, 0.12);
+  --focus-ring: rgba(194, 82, 51, 0.3);
   
   /* Card overlay colors - For dark overlays on album art */
   --overlay-background: linear-gradient(to top, rgba(26, 26, 26, 0.95) 0%, rgba(26, 26, 26, 0.85) 30%, rgba(26, 26, 26, 0.6) 60%, transparent 100%);
@@ -97,66 +98,25 @@ body {
 }
 
 body {
-  background: var(--background);
+  background: 
+    linear-gradient(135deg, var(--background) 0%, #DDD5C2 25%, var(--background) 50%, #E0D7C4 75%, var(--background) 100%),
+    radial-gradient(ellipse at top left, rgba(194, 82, 51, 0.03) 0%, transparent 50%),
+    radial-gradient(ellipse at bottom right, rgba(26, 26, 26, 0.02) 0%, transparent 50%);
+  background-size: 100% 100%, 800px 800px, 600px 600px;
+  background-attachment: fixed, fixed, fixed;
   color: var(--text);
-  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family: "Space Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   font-size: 16px;
-  line-height: 1.6;
+  line-height: 1.5;
   font-weight: 400;
   letter-spacing: -0.01em;
   position: relative;
   min-height: 100vh;
+  overflow-x: hidden;
+  padding-top: 80px;
 }
 
-/* Subtle vinyl groove pattern background */
-body::before {
-  content: "";
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: 
-    /* Vinyl groove pattern inspired by real records */
-    repeating-radial-gradient(
-      circle at center,
-      transparent 0px,
-      transparent 8px,
-      rgba(164, 120, 100, 0.08) 8px,
-      rgba(164, 120, 100, 0.08) 9px,
-      transparent 9px,
-      transparent 16px,
-      rgba(164, 120, 100, 0.05) 16px,
-      rgba(164, 120, 100, 0.05) 17px,
-      transparent 17px
-    ),
-    var(--background);
-  pointer-events: none;
-  z-index: -1;
-}
 
-/* Diagonal lines pattern overlay for texture */
-body::after {
-  content: "";
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: 
-    /* Subtle diagonal texture */
-    repeating-linear-gradient(
-      45deg,
-      transparent 0px,
-      transparent 40px,
-      rgba(212, 175, 55, 0.02) 40px,
-      rgba(212, 175, 55, 0.02) 41px,
-      transparent 41px,
-      transparent 80px
-    );
-  pointer-events: none;
-  z-index: -1;
-}
 
 /* Typography */
 .mono {
@@ -170,37 +130,37 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: "Inter", sans-serif;
-  font-weight: 700;
-  line-height: 1.2;
-  letter-spacing: -0.025em;
+  font-family: "Editorial New", "Space Grotesk", serif;
+  font-weight: 100;
+  line-height: 1.1;
+  letter-spacing: -0.04em;
   color: var(--text);
   margin: 0 0 24px 0;
 }
 
 h1 {
   font-size: clamp(2.5rem, 5vw, 4rem);
-  font-weight: 800;
-  letter-spacing: -0.04em;
-  line-height: 1.1;
+  font-weight: 100;
+  letter-spacing: -0.05em;
+  line-height: 1.05;
   margin-bottom: 32px;
 }
 
 h2 {
   font-size: clamp(1.75rem, 3.5vw, 2.5rem);
-  font-weight: 700;
+  font-weight: 100;
   margin-bottom: 24px;
 }
 
 h3 {
   font-size: clamp(1.25rem, 2.5vw, 1.75rem);
-  font-weight: 600;
+  font-weight: 200;
   margin-bottom: 16px;
 }
 
 h4 {
   font-size: clamp(1.1rem, 2vw, 1.25rem);
-  font-weight: 600;
+  font-weight: 300;
   margin-bottom: 12px;
 }
 
@@ -209,7 +169,7 @@ p,
 span,
 label,
 div {
-  font-family: "Inter", sans-serif;
+  font-family: "Space Grotesk", sans-serif;
   line-height: 1.6;
   letter-spacing: -0.01em;
 }
@@ -341,7 +301,7 @@ p {
   left: 50%;
   width: 8px;
   height: 8px;
-  background: var(--beeswax);
+  background: var(--primary);
   border-radius: 50%;
   transform: translate(-50%, -50%);
   box-shadow: 0 1px 3px var(--shadow-subtle);
@@ -402,25 +362,28 @@ p {
 }
 
 .window {
-  background: var(--surface);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border-radius: 16px;
+  background: rgba(224, 216, 198, 0.7);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border-radius: 40px;
   margin-bottom: 24px;
-  border: 1px solid var(--border);
+  border: 1px solid rgba(200, 191, 168, 0.3);
   position: relative;
-  transition: all 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 
-    0 4px 24px var(--shadow-subtle),
-    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    0 8px 40px rgba(26, 25, 22, 0.1),
+    0 1px 1px rgba(255, 255, 255, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 .window:hover {
-  border-color: var(--border-focus);
+  border-color: rgba(194, 82, 51, 0.4);
+  background: rgba(224, 216, 198, 0.85);
   box-shadow: 
-    0 8px 32px var(--shadow-medium),
-    0 0 0 1px var(--beeswax),
-    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    0 12px 48px rgba(26, 25, 22, 0.15),
+    0 0 0 1px rgba(194, 82, 51, 0.3),
+    0 2px 8px rgba(194, 82, 51, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
   transform: translateY(-2px);
 }
 
@@ -428,13 +391,13 @@ p {
   background: var(--surface-elevated);
   color: var(--text);
   padding: 18px 24px;
-  font-weight: 600;
+  font-weight: 400;
   font-size: 1.05em;
   border-bottom: 1px solid var(--border);
   letter-spacing: -0.01em;
   position: relative;
   z-index: 2;
-  border-radius: 16px 16px 0 0;
+  border-radius: 40px 40px 0 0;
 }
 
 /* Typography styles moved to main typography section above */
@@ -519,8 +482,8 @@ button {
 
 /* Primary button variant */
 .btn-primary {
-  background: var(--beeswax);
-  border-color: var(--beeswax);
+  background: var(--primary);
+  border-color: var(--primary);
   color: var(--text-inverse);
 }
 
@@ -567,8 +530,8 @@ button:hover {
 }
 
 .btn-primary:hover {
-  background: var(--beeswax-dark);
-  border-color: var(--beeswax-dark);
+  background: var(--primary-dark);
+  border-color: var(--primary-dark);
 }
 
 .btn-secondary:hover {
@@ -578,7 +541,7 @@ button:hover {
 
 .btn-text:hover {
   text-decoration-thickness: 2px;
-  color: var(--beeswax);
+  color: var(--primary);
 }
 
 button.delete-btn {
@@ -615,7 +578,7 @@ input:focus,
 textarea:focus,
 select:focus {
   outline: none;
-  border-color: var(--beeswax);
+  border-color: var(--primary);
   background-color: var(--surface-elevated);
   box-shadow: 
     0 0 0 3px var(--focus-ring),
@@ -692,7 +655,7 @@ textarea::placeholder {
   input:focus,
   select:focus,
   textarea:focus {
-    outline: 2px solid var(--beeswax);
+    outline: 2px solid var(--primary);
     outline-offset: 2px;
   }
 

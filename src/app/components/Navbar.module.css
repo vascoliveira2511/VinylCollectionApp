@@ -1,36 +1,38 @@
 .navbar {
-  background: var(--surface);
-  border-bottom: 1px solid var(--border);
-  padding: 16px 24px;
+  background: rgba(213, 205, 186, 0.95);
+  padding: 24px 32px;
   margin-bottom: 0;
-  position: relative;
-  box-shadow: 0 2px 12px var(--shadow-subtle);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
 }
 
 .navContent {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
-  max-width: 1200px;
+  max-width: 1000px;
   margin: 0 auto;
+  position: relative;
 }
 
 .navBrand {
+  position: absolute;
+  left: 0;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   text-decoration: none;
-  transition: opacity 0.2s ease;
-  padding: 4px 8px;
-  border-radius: 4px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  padding: 4px 0;
 }
 
 .navBrand:hover {
-  opacity: 0.9;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 16px var(--beeswax-glow);
+  opacity: 0.8;
 }
 
 .brandIcon {
@@ -57,7 +59,7 @@
   left: 50%;
   width: 6px;
   height: 6px;
-  background: var(--beeswax);
+  background: var(--primary);
   border-radius: 50%;
   transform: translate(-50%, -50%);
   box-shadow: 0 1px 2px var(--shadow-subtle);
@@ -96,29 +98,34 @@
   color: var(--text-secondary);
   text-decoration: none;
   font-weight: 500;
-  font-size: 0.875rem;
+  font-size: 0.9rem;
   letter-spacing: -0.01em;
-  transition: color 0.2s ease;
-  padding: 8px 12px;
-  border-radius: 4px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  padding: 8px 0;
   position: relative;
-  font-family: "Inter", sans-serif;
+  font-family: "Space Grotesk", sans-serif;
+  white-space: nowrap;
 }
 
 .navItem a:hover {
   color: var(--text);
-  background: var(--beeswax-hover);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
 }
 
 .activeLink {
-  color: var(--beeswax-dark) !important;
-  background: var(--beeswax-transparent) !important;
-  backdrop-filter: blur(8px) !important;
-  -webkit-backdrop-filter: blur(8px) !important;
+  color: var(--primary) !important;
   font-weight: 600 !important;
-  border: 1px solid var(--beeswax) !important;
+  position: relative;
+}
+
+.activeLink::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--primary);
+  border-radius: 1px;
 }
 
 .profileLink {
@@ -134,7 +141,7 @@
 
 .profileLink:hover {
   background: var(--surface-warm);
-  border-color: var(--beeswax);
+  border-color: var(--primary);
   text-decoration: none;
 }
 
@@ -163,9 +170,9 @@
 }
 
 .authLink:hover {
-  color: var(--beeswax-dark) !important;
+  color: var(--primary-dark) !important;
   background: var(--surface-warm);
-  border-color: var(--beeswax);
+  border-color: var(--primary);
 }
 
 /* Hamburger menu styles */
