@@ -1,5 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  images: {
+    domains: ['via.placeholder.com'],
+  },
   env: {
     JWT_SECRET: 'your-super-secret-key', // IMPORTANT: Change this to a strong, unique secret!
     // Development Discogs OAuth

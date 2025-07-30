@@ -81,7 +81,7 @@
 /* A24-inspired Collection Grid */
 .collectionGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 32px;
   width: 100%;
   margin: 0;
@@ -90,7 +90,7 @@
 
 @media (max-width: 768px) {
   .collectionGrid {
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 24px;
   }
 }
@@ -305,7 +305,7 @@
 /* Featured Grid */
 .featuredGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 24px;
   max-width: 1000px;
   margin: 0 auto;
@@ -391,7 +391,7 @@
   }
   
   .featuredGrid {
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 16px;
   }
   
