@@ -73,6 +73,7 @@ export const config = {
      * - api/auth/signup (signup endpoint)
      * - api/auth/logout (logout endpoint)
      * - api/auth/discogs (discogs oauth endpoints)
+     * - api/image-proxy (image proxy endpoint)
      * - login (login page)
      * - signup (signup page)
      * - _next/static (static files)
@@ -80,6 +81,6 @@ export const config = {
      * - favicon.svg (favicon file)
      * - favicon.ico (favicon file)
      */
-    "/((?!api/auth/login|api/auth/signup|api/auth/logout|api/auth/discogs|api/auth/google|login|signup|_next/static|_next/image|favicon).*)",
+    "/((?!api/auth/login|api/auth/signup|api/auth/logout|api/auth/discogs|api/auth/google|api/image-proxy|login|signup|_next/static|_next/image|favicon).*)",
   ],
 };
