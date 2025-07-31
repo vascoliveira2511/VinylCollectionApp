@@ -1,7 +1,16 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ['via.placeholder.com'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'via.placeholder.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'i.discogs.com',
+      },
+    ],
   },
   env: {
     JWT_SECRET: 'your-super-secret-key', // IMPORTANT: Change this to a strong, unique secret!
