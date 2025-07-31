@@ -1,51 +1,56 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400;1,600&family=JetBrains+Mono:wght@300;400;500;600;700&family=Editorial+New:wght@100;200;300;400;500;600;700&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Inter:wght@300;400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap");
 
 :root {
-  /* Telepathic Instruments Palette - Warm & Refined */
+  /* Telepathic Instruments Palette - Exact Match */
   
-  /* Base surfaces - Darker warm beige like Telepathic */
-  --background: #D5CDBA;
-  --surface: #E0D8C6;
-  --surface-elevated: #E8E1D1;
-  --surface-subtle: #D0C7B4;
-  --surface-glass: rgba(213, 205, 186, 0.9);
-  --surface-warm: #CCC3B0;
+  /* Base surfaces - Warm beige/khaki tones */
+  --background: #F5F2E8;
+  --surface: #F8F5F0;
+  --surface-elevated: #FDFCF8;
+  --surface-subtle: #F0EDE0;
+  --surface-glass: rgba(245, 242, 232, 0.9);
+  --surface-warm: #F2EFE2;
   
-  /* Text hierarchy - Dark for contrast */
-  --text: #1A1916;
-  --text-secondary: #2D2A26;
-  --text-tertiary: #4A453F;
+  /* Text hierarchy - Deep blacks and charcoal greys */
+  --text: #1A1A1A;
+  --text-secondary: #2A2A2A;
+  --text-tertiary: #454545;
   --text-inverse: #FEFCF8;
-  --text-muted: #6B6661;
+  --text-muted: #6B6B6B;
   
-  /* Borders - Ultra-subtle */
-  --border: #C8BFA8;
-  --border-subtle: #D5CDBA;
-  --border-focus: #C25233;
-  --border-strong: #B8AE9B;
+  /* Borders - Subtle warm tones */
+  --border: #E8E3D5;
+  --border-subtle: #F0EDE0;
+  --border-focus: #E76037;
+  --border-strong: #D5D0C2;
   
-  /* Accents - Warm orange primary */
-  --accent: #C25233;
-  --accent-secondary: #B04A2E;
-  --accent-muted: #D46B44;
+  /* Accents - Telepathic burnt orange */
+  --accent: #E76037;
+  --accent-secondary: #D55530;
+  --accent-muted: #ED7A54;
   
-  /* Primary colors - Warm orange system with better contrast */
-  --primary: #C25233;
-  --primary-light: #D46B44;
-  --primary-lighter: #E08356;
-  --primary-dark: #B04A2E;
-  --primary-darker: #9E4229;
-  --primary-transparent: rgba(194, 82, 51, 0.1);
-  --primary-hover: rgba(194, 82, 51, 0.15);
-  --primary-active: rgba(194, 82, 51, 0.25);
-  --primary-glow: rgba(194, 82, 51, 0.2);
+  /* Primary colors - Burnt orange system */
+  --primary: #E76037;
+  --primary-light: #ED7A54;
+  --primary-lighter: #F2936F;
+  --primary-dark: #D55530;
+  --primary-darker: #C24A29;
+  --primary-transparent: rgba(231, 96, 55, 0.1);
+  --primary-hover: rgba(231, 96, 55, 0.15);
+  --primary-active: rgba(231, 96, 55, 0.25);
+  --primary-glow: rgba(231, 96, 55, 0.2);
   
-  /* System colors - Muted earth tones */
-  --danger: #D87B47;
-  --warning: #E6B84D;
-  --success: #8B9A73;
-  --info: #7A8FA3;
+  /* System colors - Rich earth tones */
+  --danger: #C8542A;
+  --warning: #D4A54B;
+  --success: #6B7A55;
+  --info: #5A758A;
+  
+  /* Neon accent for CTAs - Telepathic's signature bright green */
+  --neon-green: #39FF14;
+  --neon-green-dark: #2ECC11;
+  --neon-green-light: #66FF55;
   
   /* Vinyl accents - Deep sophisticated tones */
   --vinyl: #1A1A1A;
@@ -99,21 +104,24 @@ body {
 
 body {
   background: 
-    linear-gradient(135deg, var(--background) 0%, #DDD5C2 25%, var(--background) 50%, #E0D7C4 75%, var(--background) 100%),
-    radial-gradient(ellipse at top left, rgba(194, 82, 51, 0.03) 0%, transparent 50%),
-    radial-gradient(ellipse at bottom right, rgba(26, 26, 26, 0.02) 0%, transparent 50%);
-  background-size: 100% 100%, 800px 800px, 600px 600px;
-  background-attachment: fixed, fixed, fixed;
+    linear-gradient(45deg, 
+      #F5F2E8 0%, 
+      #E8E1D1 25%, 
+      #DDD6C4 50%, 
+      #F2EBD9 75%, 
+      #E5DDD0 100%
+    );
+  background-attachment: fixed;
   color: var(--text);
-  font-family: "Space Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   font-size: 16px;
-  line-height: 1.5;
+  line-height: 1.6;
   font-weight: 400;
   letter-spacing: -0.01em;
   position: relative;
   min-height: 100vh;
   overflow-x: hidden;
-  padding-top: 80px;
+  padding-top: 100px;
 }
 
 
@@ -123,45 +131,49 @@ body {
   font-family: "JetBrains Mono", monospace !important;
 }
 
-/* A24-inspired Typography System */
+/* Telepathic Instruments Typography System */
 h1,
 h2,
 h3,
 h4,
 h5,
 h6 {
-  font-family: "Editorial New", "Space Grotesk", serif;
-  font-weight: 100;
-  line-height: 1.1;
-  letter-spacing: -0.04em;
+  font-family: "Playfair Display", Georgia, serif;
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
   color: var(--text);
   margin: 0 0 24px 0;
 }
 
 h1 {
   font-size: clamp(2.5rem, 5vw, 4rem);
-  font-weight: 100;
-  letter-spacing: -0.05em;
-  line-height: 1.05;
+  font-weight: 400;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
   margin-bottom: 32px;
+  font-style: normal;
 }
 
 h2 {
   font-size: clamp(1.75rem, 3.5vw, 2.5rem);
-  font-weight: 100;
+  font-weight: 400;
   margin-bottom: 24px;
+  font-style: normal;
 }
 
 h3 {
   font-size: clamp(1.25rem, 2.5vw, 1.75rem);
-  font-weight: 200;
+  font-weight: 500;
   margin-bottom: 16px;
+  font-style: normal;
 }
 
 h4 {
   font-size: clamp(1.1rem, 2vw, 1.25rem);
-  font-weight: 300;
+  font-weight: 500;
   margin-bottom: 12px;
+  font-style: normal;
 }
 
 /* Body text */
@@ -169,7 +181,7 @@ p,
 span,
 label,
 div {
-  font-family: "Space Grotesk", sans-serif;
+  font-family: "Inter", sans-serif;
   line-height: 1.6;
   letter-spacing: -0.01em;
 }
@@ -362,42 +374,43 @@ p {
 }
 
 .window {
-  background: rgba(224, 216, 198, 0.7);
+  background: rgba(253, 252, 248, 0.8);
   backdrop-filter: blur(24px) saturate(180%);
   -webkit-backdrop-filter: blur(24px) saturate(180%);
-  border-radius: 40px;
+  border-radius: 24px;
   margin-bottom: 24px;
-  border: 1px solid rgba(200, 191, 168, 0.3);
+  border: 1px solid rgba(232, 227, 213, 0.4);
   position: relative;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 
-    0 8px 40px rgba(26, 25, 22, 0.1),
+    0 8px 32px rgba(26, 26, 26, 0.08),
     0 1px 1px rgba(255, 255, 255, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 
 .window:hover {
-  border-color: rgba(194, 82, 51, 0.4);
-  background: rgba(224, 216, 198, 0.85);
+  border-color: rgba(231, 96, 55, 0.4);
+  background: rgba(253, 252, 248, 0.9);
   box-shadow: 
-    0 12px 48px rgba(26, 25, 22, 0.15),
-    0 0 0 1px rgba(194, 82, 51, 0.3),
-    0 2px 8px rgba(194, 82, 51, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    0 12px 48px rgba(26, 26, 26, 0.12),
+    0 0 0 1px rgba(231, 96, 55, 0.3),
+    0 2px 8px rgba(231, 96, 55, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
   transform: translateY(-2px);
 }
 
 .title-bar {
   background: var(--surface-elevated);
   color: var(--text);
-  padding: 18px 24px;
-  font-weight: 400;
-  font-size: 1.05em;
+  padding: 20px 28px;
+  font-weight: 500;
+  font-size: 1.1em;
   border-bottom: 1px solid var(--border);
   letter-spacing: -0.01em;
   position: relative;
   z-index: 2;
-  border-radius: 40px 40px 0 0;
+  border-radius: 24px 24px 0 0;
+  font-family: "Playfair Display", Georgia, serif;
 }
 
 /* Typography styles moved to main typography section above */
@@ -461,37 +474,39 @@ button,
   border-bottom: none !important;
 }
 
-/* A24-inspired Button System */
+/* Telepathic Instruments Button System */
 button {
   background: var(--text);
   color: var(--text-inverse);
   border: 1px solid var(--text);
-  padding: 16px 32px;
+  padding: 14px 28px;
   font-family: "Inter", sans-serif;
   font-size: 0.9rem;
   font-weight: 500;
   cursor: pointer;
-  border-radius: 0;
+  border-radius: 50px;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   letter-spacing: -0.01em;
-  text-transform: uppercase;
-  box-shadow: none;
+  text-transform: none;
+  box-shadow: 0 2px 8px rgba(26, 26, 26, 0.1);
   position: relative;
   overflow: hidden;
 }
 
-/* Primary button variant */
+/* Primary button variant - Neon green CTA */
 .btn-primary {
-  background: var(--primary);
-  border-color: var(--primary);
-  color: var(--text-inverse);
+  background: var(--neon-green);
+  border-color: var(--neon-green);
+  color: var(--text);
+  font-weight: 600;
+  box-shadow: 0 4px 16px rgba(57, 255, 20, 0.2);
 }
 
 /* Secondary button variant */
 .btn-secondary {
   background: transparent;
-  border: 1px solid var(--text);
-  color: var(--text);
+  border: 1px solid var(--primary);
+  color: var(--primary);
 }
 
 /* Text button variant */
@@ -530,12 +545,13 @@ button:hover {
 }
 
 .btn-primary:hover {
-  background: var(--primary-dark);
-  border-color: var(--primary-dark);
+  background: var(--neon-green-dark);
+  border-color: var(--neon-green-dark);
+  box-shadow: 0 6px 24px rgba(57, 255, 20, 0.3);
 }
 
 .btn-secondary:hover {
-  background: var(--text);
+  background: var(--primary);
   color: var(--text-inverse);
 }
 

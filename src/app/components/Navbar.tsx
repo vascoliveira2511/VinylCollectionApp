@@ -114,15 +114,6 @@ export default function Navbar() {
               </li>
               <li className={styles.navItem}>
                 <Link
-                  href="/stats"
-                  className={pathname === "/stats" ? styles.activeLink : ""}
-                  onClick={closeMenu}
-                >
-                  Stats
-                </Link>
-              </li>
-              <li className={styles.navItem}>
-                <Link
                   href="/friends"
                   className={pathname === "/friends" ? styles.activeLink : ""}
                   onClick={closeMenu}
@@ -133,18 +124,10 @@ export default function Navbar() {
               <li className={styles.navItem}>
                 <Link
                   href="/profile"
-                  className={`${styles.profileLink} ${
-                    pathname === "/profile" ? styles.activeProfile : ""
-                  }`}
+                  className={pathname === "/profile" ? styles.activeLink : ""}
                   onClick={closeMenu}
                 >
-                  <Avatar
-                    username={user.username}
-                    avatar={user.avatar}
-                    avatarType={user.avatarType}
-                    size="small"
-                  />
-                  <span className={styles.username}>{user.username}</span>
+                  Profile
                 </Link>
               </li>
             </>
