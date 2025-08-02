@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import PageLoader from "../../../../components/PageLoader";
 import Avatar from "../../../../components/Avatar";
 import VinylCard from "../../../../components/VinylCard";
 import styles from "../../../../page.module.css";
@@ -93,18 +94,7 @@ export default function FriendCollectionPage({
   };
 
   if (loading) {
-    return (
-      <main className={styles.main}>
-        <div className="container">
-          <div className="window">
-            <div className="title-bar">Loading...</div>
-            <div className={styles.contentSection}>
-              <p>Loading collection...</p>
-            </div>
-          </div>
-        </div>
-      </main>
-    );
+    return <PageLoader text="Loading collection..." />;
   }
 
   if (error || !collection) {

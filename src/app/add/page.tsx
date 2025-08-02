@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { apiClient } from "@/lib/api-client";
-import LoadingSpinner from "../components/LoadingSpinner";
+import PageLoader from "../components/PageLoader";
 import styles from "../page.module.css";
 
 interface Vinyl {
@@ -446,16 +446,7 @@ export default function AddVinyl() {
     .slice(0, displayLimit);
 
   if (loading) {
-    return (
-      <main className={styles.main}>
-        <div className="container">
-          <LoadingSpinner 
-            size="large" 
-            text="Loading your vinyl collection..." 
-          />
-        </div>
-      </main>
-    );
+    return <PageLoader text="Loading your vinyl collection..." />;
   }
 
   if (error) {

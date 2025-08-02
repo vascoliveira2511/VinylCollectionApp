@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { apiClient } from "@/lib/api-client";
 import VinylCard from "../../components/VinylCard";
+import PageLoader from "../../components/PageLoader";
 import styles from "../../page.module.css";
 
 interface Vinyl {
@@ -109,17 +110,7 @@ export default function CollectionView({ params }: { params: { id: string } }) {
     : [];
 
   if (loading) {
-    return (
-      <main className={styles.main}>
-        <div className="container">
-          <div className="window">
-            <div className={styles.contentSection}>
-              <p>Loading collection...</p>
-            </div>
-          </div>
-        </div>
-      </main>
-    );
+    return <PageLoader text="Loading collection..." />;
   }
 
   if (error || !collection) {

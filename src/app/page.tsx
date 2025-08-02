@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { apiClient } from "@/lib/api-client";
 import VinylCard from "./components/VinylCard";
-import LoadingSpinner from "./components/LoadingSpinner";
+import PageLoader from "./components/PageLoader";
 import Button from "./components/Button";
 import styles from "./page.module.css";
 
@@ -135,18 +135,7 @@ export default function Home() {
   };
 
   if (loading) {
-    return (
-      <main className={styles.main}>
-        <div className={styles.heroSection}>
-          <div className="content-wrapper">
-            <LoadingSpinner
-              size="large"
-              text="Loading Your Vinyl Universe..."
-            />
-          </div>
-        </div>
-      </main>
-    );
+    return <PageLoader text="Loading Your Vinyl Universe..." />;
   }
 
   if (error) {

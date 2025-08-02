@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { apiClient } from "@/lib/api-client";
+import PageLoader from "../components/PageLoader";
 import styles from "../page.module.css";
 
 interface Collection {
@@ -196,17 +197,7 @@ export default function Collections() {
   };
 
   if (loading) {
-    return (
-      <main className={styles.main}>
-        <div className="container">
-          <div className="window">
-            <div className={styles.contentSection}>
-              <p>Loading collections...</p>
-            </div>
-          </div>
-        </div>
-      </main>
-    );
+    return <PageLoader text="Loading collections..." />;
   }
 
   return (

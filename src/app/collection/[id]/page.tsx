@@ -3,6 +3,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import PageLoader from '../../components/PageLoader'
 import styles from '../../page.module.css' // Adjust path as needed
 
 interface Vinyl {
@@ -70,17 +71,7 @@ export default function VinylDetailPage({ params }: { params: { id: string } }) 
   }, [id, router])
 
   if (loading) {
-    return (
-      <main className={styles.main}>
-        <div className="container">
-          <div className="window">
-            <div className={styles.contentSection}>
-              <p>Loading Vinyl Details...</p>
-            </div>
-          </div>
-        </div>
-      </main>
-    )
+    return <PageLoader text="Loading vinyl details..." />;
   }
 
   if (error) {

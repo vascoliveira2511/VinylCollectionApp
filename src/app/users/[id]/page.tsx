@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Avatar from "../../components/Avatar";
+import PageLoader from "../../components/PageLoader";
 import styles from "../../page.module.css";
 
 interface User {
@@ -80,18 +81,7 @@ export default function UserProfilePage({
   };
 
   if (loading) {
-    return (
-      <main className={styles.main}>
-        <div className="container">
-          <div className="window">
-            <div className="title-bar">Loading...</div>
-            <div className={styles.contentSection}>
-              <p>Loading user profile...</p>
-            </div>
-          </div>
-        </div>
-      </main>
-    );
+    return <PageLoader text="Loading user profile..." />;
   }
 
   if (error || !userData) {

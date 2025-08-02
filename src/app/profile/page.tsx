@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { apiClient } from "@/lib/api-client";
 import Avatar from "../components/Avatar";
+import PageLoader from "../components/PageLoader";
 import styles from "../page.module.css";
 
 interface Vinyl {
@@ -387,17 +388,7 @@ export default function Profile() {
   }, []);
 
   if (loading) {
-    return (
-      <main className={styles.main}>
-        <div className="container">
-          <div className="window">
-            <div className={styles.contentSection}>
-              <p>Loading profile...</p>
-            </div>
-          </div>
-        </div>
-      </main>
-    );
+    return <PageLoader text="Loading profile..." />;
   }
 
   if (!user) {

@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import PageLoader from "../../../components/PageLoader";
 import styles from "../../../page.module.css";
 
 interface Vinyl {
@@ -137,20 +138,7 @@ export default function EditVinylPage({ params }: { params: { id: string } }) {
   };
 
   if (loading) {
-    return (
-      <main className={styles.main}>
-        <div className="container">
-          <div className="window">
-            <div className={styles.contentSection}>
-              <div className={styles.loadingState}>
-                <div className={styles.spinner}></div>
-                <p>Loading vinyl details...</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </main>
-    );
+    return <PageLoader text="Loading vinyl details..." />;
   }
 
   if (!vinyl) {

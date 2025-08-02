@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { apiClient } from "@/lib/api-client";
+import PageLoader from "../../components/PageLoader";
 import VinylHeader from "../../components/VinylHeader";
 import SimpleReleaseInfo from "../../components/SimpleReleaseInfo";
 import VinylVideos from "../../components/VinylVideos";
@@ -171,20 +172,7 @@ export default function BrowseDetailPage({
   };
 
   if (loading) {
-    return (
-      <main className={styles.main}>
-        <div className="container">
-          <div className="window">
-            <div className={styles.contentSection}>
-              <div className={styles.loadingState}>
-                <div className={styles.spinner}></div>
-                <p>Loading release details...</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </main>
-    );
+    return <PageLoader text="Loading release details..." />;
   }
 
   if (error || !release) {

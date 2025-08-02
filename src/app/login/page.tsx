@@ -158,12 +158,12 @@ export default function Login() {
                   className={styles.loginButton}
                 >
                   {loading ? (
-                    <>
-                      <div className="vinyl-loader" style={{width: '20px', height: '20px', marginRight: '8px'}}>
+                    <div style={{display: 'flex', alignItems: 'center', gap: '8px'}}>
+                      <div className="vinyl-loader" style={{width: '20px', height: '20px'}}>
                         <div className="vinyl-record"></div>
                       </div>
                       Signing in...
-                    </>
+                    </div>
                   ) : (
                     "Sign In"
                   )}
@@ -181,12 +181,12 @@ export default function Login() {
                 className={styles.googleButton}
               >
                 {googleLoading ? (
-                  <>
-                    <div className="vinyl-loader" style={{width: '20px', height: '20px', marginRight: '8px'}}>
+                  <div style={{display: 'flex', alignItems: 'center', gap: '8px'}}>
+                    <div className="vinyl-loader" style={{width: '20px', height: '20px'}}>
                       <div className="vinyl-record"></div>
                     </div>
                     Signing in...
-                  </>
+                  </div>
                 ) : (
                   <>
                     <svg

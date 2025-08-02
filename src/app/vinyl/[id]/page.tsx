@@ -7,6 +7,7 @@ import { apiClient } from "@/lib/api-client";
 import SimpleReleaseInfo from "../../components/SimpleReleaseInfo";
 import VinylVideos from "../../components/VinylVideos";
 import VinylComments from "../../components/VinylComments";
+import PageLoader from "../../components/PageLoader";
 import styles from "../../page.module.css";
 
 interface Vinyl {
@@ -298,20 +299,7 @@ export default function VinylDetailPage({
   };
 
   if (loading) {
-    return (
-      <main className={styles.main}>
-        <div className="container">
-          <div className="window">
-            <div className={styles.contentSection}>
-              <div className={styles.loadingState}>
-                <div className={styles.spinner}></div>
-                <p>Loading vinyl details...</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </main>
-    );
+    return <PageLoader text="Loading vinyl details..." />;
   }
 
   if (error || !vinyl) {
