@@ -40,6 +40,7 @@ interface VinylCardProps {
   // New props for collection selection
   addToCollectionComponent?: React.ReactNode;
   priority?: boolean; // For above-the-fold images
+  hideCommunityStats?: boolean; // Hide community stats (have/want)
 }
 
 const VinylCard = memo(function VinylCard({
@@ -52,6 +53,7 @@ const VinylCard = memo(function VinylCard({
   onAdd,
   addToCollectionComponent,
   priority = false,
+  hideCommunityStats = false,
 }: VinylCardProps) {
   const [imageError, setImageError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -104,6 +106,8 @@ const VinylCard = memo(function VinylCard({
             }}
           />
         </div>
+        
+        
         <div className={styles.cardInfo}>
           <div className={styles.cardHeader}>
             <h3 className={styles.cardTitle}>{vinyl.title}</h3>
@@ -141,7 +145,7 @@ const VinylCard = memo(function VinylCard({
                   Barcode: {vinyl.barcode[0]}
                 </div>
               )}
-              {vinyl.community && (
+              {vinyl.community && !hideCommunityStats && (
                 <div className={styles.metaCommunity}>
                   <span className={styles.communityHave}>
                     Have: {vinyl.community.have}

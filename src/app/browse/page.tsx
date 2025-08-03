@@ -6,6 +6,7 @@ import Link from "next/link";
 import { apiClient } from "@/lib/api-client";
 import VinylCard from "../components/VinylCard";
 import AddToCollectionButton from "../components/AddToCollectionButton";
+import Button from "../components/Button";
 import styles from "../page.module.css";
 
 interface BrowseItem {
@@ -350,59 +351,85 @@ function BrowsePageContent() {
 
   return (
     <main className={styles.main}>
-      <div className="container">
-        {/* Header */}
-        <div className="window">
-          <div className="title-bar">Browse & Discover Music</div>
-          <div className={styles.contentSection}>
-            <div className={styles.browseIntro}>
-              <h2>Explore Music Database</h2>
-              <p>
-                Discover millions of releases from around the world. Search by
-                artist, album, label, genre and more to find new music for your
-                collection.
-                <br />
-                <small style={{ color: "var(--ctp-subtext1)" }}>
-                  Try searches like: "Pink Floyd", "Kind of Blue", "Blue Note
-                  Records", or "Jazz Vinyl"
-                </small>
-              </p>
-              <div className={styles.browseActions}>
-                <Link href="/" className={styles.manageButton}>
-                  My Collection
-                </Link>
-                <Link href="/collections" className={styles.statsButton}>
-                  Collections
-                </Link>
-              </div>
+      <div className={styles.modernContainer}>
+        {/* Hero Section */}
+        <div className={styles.heroSection}>
+          <div className="content-wrapper">
+            <h1 className={styles.heroTitle}>Browse & Discover Music</h1>
+            <p className={styles.heroSubtitle}>
+              Discover millions of releases from around the world. Search by
+              artist, album, label, genre and more to find new music for your
+              collection.
+            </p>
+            <div className={styles.heroActions}>
+              <Button href="/" variant="outline" size="large">
+                My Collection
+              </Button>
+              <Button href="/collections" variant="outline" size="large">
+                Collections
+              </Button>
             </div>
+          </div>
+        </div>
 
+        {/* Search Section */}
+        <div className={styles.contentSection}>
+          <div className="content-wrapper">
             {error && <div className={styles.errorMessage}>{error}</div>}
 
-            {/* Search Form */}
-            <div className={styles.filterSection}>
-              <h3>Search Music Database</h3>
+            <div className={styles.searchSection}>
+              <h2 className={styles.sectionTitle}>Search Music Database</h2>
+              <p className={styles.searchHint}>
+                Try: "Pink Floyd", "Kind of Blue", "Blue Note Records" • Press Enter to search
+              </p>
+              
               <div className={styles.searchContainer}>
-                <div className={styles.inputContainer}>
-                  <input
-                    type="text"
-                    placeholder="Search for artist, album, label..."
-                    value={filters.query || ""}
-                    onChange={handleSearchInputChange}
-                    className={styles.searchInput}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter") {
-                        e.preventDefault();
+                <div className={styles.searchInputGroup}>
+                  <div className={styles.inputContainer}>
+                    <input
+                      type="text"
+                      placeholder="Search artist, album..."
+                      value={filters.query || ""}
+                      onChange={handleSearchInputChange}
+                      className={styles.searchInput}
+                      aria-label="Search music database"
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          e.preventDefault();
+                          setSuggestions([]);
+                          handleSearch(filters);
+                        }
+                      }}
+                    />
+                    <Button
+                      onClick={() => {
                         setSuggestions([]);
                         handleSearch(filters);
-                      }
-                    }}
-                  />
+                      }}
+                      disabled={loading || !filters.query}
+                      variant="secondary"
+                      size="medium"
+                      className={styles.searchButton}
+                    >
+                      {loading ? (
+                        <div className="vinyl-loader" style={{width: '18px', height: '18px'}}>
+                          <div className="vinyl-record"></div>
+                        </div>
+                      ) : (
+                        "Search"
+                      )}
+                    </Button>
+                  </div>
+                  
                   {isSearching && (
                     <div className={styles.searchingIndicator}>
-                      Searching...
+                      <div className="vinyl-loader" style={{width: '14px', height: '14px', marginRight: '8px'}}>
+                        <div className="vinyl-record"></div>
+                      </div>
+                      Finding suggestions...
                     </div>
                   )}
+                  
                   {suggestions.length > 0 && (
                     <ul className={styles.suggestionsList}>
                       {suggestions.map((s, index) => (
@@ -443,26 +470,6 @@ function BrowsePageContent() {
                     </ul>
                   )}
                 </div>
-                <button
-                  onClick={() => {
-                    setSuggestions([]);
-                    handleSearch(filters);
-                  }}
-                  disabled={loading}
-                  className={styles.createButton}
-                  style={{ marginTop: "12px" }}
-                >
-                  {loading ? (
-                    <>
-                      <div className="vinyl-loader" style={{width: '16px', height: '16px', marginRight: '8px'}}>
-                        <div className="vinyl-record"></div>
-                      </div>
-                      Searching...
-                    </>
-                  ) : (
-                    "Search"
-                  )}
-                </button>
               </div>
             </div>
           </div>
@@ -470,66 +477,22 @@ function BrowsePageContent() {
 
         {/* Filter Controls */}
         {hasSearched && results.length > 0 && (
-          <div className="window">
-            <div
-              className="title-bar"
-              style={{ cursor: "pointer" }}
-              onClick={() => setShowFilters(!showFilters)}
-            >
-              Filter & Sort Results {showFilters ? "▲" : "▼"}
-            </div>
-            {showFilters && (
-              <div className={styles.contentSection}>
-                <div className={styles.filterGrid}>
-                  <div className={styles.filterGroup}>
-                    <label>Genre/Style:</label>
-                    <input
-                      type="text"
-                      placeholder="e.g. Jazz, Rock, Electronic..."
-                      value={genreFilter}
-                      onChange={(e) => setGenreFilter(e.target.value)}
-                    />
-                  </div>
-                  <div className={styles.filterGroup}>
-                    <label>Format:</label>
-                    <input
-                      type="text"
-                      placeholder="e.g. Vinyl, CD, Cassette..."
-                      value={formatFilter}
-                      onChange={(e) => setFormatFilter(e.target.value)}
-                    />
-                  </div>
-                  <div className={styles.filterGroup}>
-                    <label>Country:</label>
-                    <input
-                      type="text"
-                      placeholder="e.g. US, UK, Germany..."
-                      value={countryFilter}
-                      onChange={(e) => setCountryFilter(e.target.value)}
-                    />
-                  </div>
-                  <div className={styles.filterGroup}>
-                    <label>Year:</label>
-                    <input
-                      type="text"
-                      placeholder="e.g. 1970, 198..."
-                      value={yearFilter}
-                      onChange={(e) => setYearFilter(e.target.value)}
-                    />
-                  </div>
-                  <div className={styles.filterGroup}>
-                    <label>Sort by:</label>
-                    <select
-                      value={sortBy}
-                      onChange={(e) => setSortBy(e.target.value as any)}
-                    >
-                      <option value="relevance">Relevance</option>
-                      <option value="artist">Artist A-Z</option>
-                      <option value="title">Title A-Z</option>
-                      <option value="year">Year (Newest)</option>
-                    </select>
-                  </div>
-                  <div className={styles.filterGroup}>
+          <div className={styles.contentSection}>
+            <div className="content-wrapper">
+              <div className={styles.filterHeader}>
+                <Button
+                  onClick={() => setShowFilters(!showFilters)}
+                  variant="secondary"
+                  size="medium"
+                >
+                  Filter & Sort Results {showFilters ? "▲" : "▼"}
+                </Button>
+              </div>
+              
+              {showFilters && (
+                <div className={styles.filterCard}>
+                  <div className={styles.filterCardHeader}>
+                    <h3 className={styles.filterTitle}>Refine Your Search</h3>
                     <button
                       onClick={() => {
                         setGenreFilter("");
@@ -538,28 +501,91 @@ function BrowsePageContent() {
                         setYearFilter("");
                         setSortBy("relevance");
                       }}
-                      className={styles.clearButton}
+                      className={styles.clearAllButton}
+                      aria-label="Clear all filters"
                     >
                       Clear All
                     </button>
                   </div>
+                  
+                  <div className={styles.filterGrid}>
+                    <div className={styles.filterGroup}>
+                      <label>Genre/Style</label>
+                      <input
+                        type="text"
+                        placeholder="Jazz, Rock, Electronic..."
+                        value={genreFilter}
+                        onChange={(e) => setGenreFilter(e.target.value)}
+                        aria-label="Filter by genre or style"
+                      />
+                    </div>
+                    <div className={styles.filterGroup}>
+                      <label>Format</label>
+                      <input
+                        type="text"
+                        placeholder="Vinyl, CD, Cassette..."
+                        value={formatFilter}
+                        onChange={(e) => setFormatFilter(e.target.value)}
+                        aria-label="Filter by format"
+                      />
+                    </div>
+                    <div className={styles.filterGroup}>
+                      <label>Country</label>
+                      <input
+                        type="text"
+                        placeholder="US, UK, Germany..."
+                        value={countryFilter}
+                        onChange={(e) => setCountryFilter(e.target.value)}
+                        aria-label="Filter by country"
+                      />
+                    </div>
+                    <div className={styles.filterGroup}>
+                      <label>Year</label>
+                      <input
+                        type="text"
+                        placeholder="1970, 198..."
+                        value={yearFilter}
+                        onChange={(e) => setYearFilter(e.target.value)}
+                        aria-label="Filter by year"
+                      />
+                    </div>
+                    <div className={styles.filterGroup}>
+                      <label>Sort by</label>
+                      <select
+                        value={sortBy}
+                        onChange={(e) => setSortBy(e.target.value as any)}
+                        aria-label="Sort results by"
+                      >
+                        <option value="relevance">Relevance</option>
+                        <option value="artist">Artist A-Z</option>
+                        <option value="title">Title A-Z</option>
+                        <option value="year">Year (Newest)</option>
+                      </select>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         )}
 
         {/* Results */}
         {hasSearched && (
-          <div className="window">
-            <div className="title-bar">
-              {loading
-                ? "Searching..."
-                : `Search Results (${filteredAndSortedResults.length} of ${totalResults} shown)`}
-            </div>
-            <div className={styles.contentSection}>
+          <div className={styles.contentSection}>
+            <div className="content-wrapper">
+              <div className={styles.resultsHeader}>
+                <h2 className={styles.sectionTitle}>
+                  {loading
+                    ? "Searching..."
+                    : `Search Results (${filteredAndSortedResults.length} of ${totalResults} shown)`}
+                </h2>
+              </div>
+
               {loading && (
-                <div style={{ textAlign: "center", padding: "2rem" }}>
+                <div className={styles.loadingState}>
+                  <div className="vinyl-loader" style={{width: '40px', height: '40px'}}>
+                    <div className="vinyl-record"></div>
+                  </div>
                   <p>Searching music database...</p>
                 </div>
               )}
@@ -570,13 +596,7 @@ function BrowsePageContent() {
                 filteredAndSortedResults.length === 0 &&
                 hasSearched &&
                 !error && (
-                  <div
-                    style={{
-                      textAlign: "center",
-                      padding: "2rem",
-                      color: "var(--ctp-subtext1)",
-                    }}
-                  >
+                  <div className={styles.emptyState}>
                     <p>
                       No results found. Try adjusting your search terms or
                       filters.
@@ -585,62 +605,61 @@ function BrowsePageContent() {
                 )}
 
               {!loading && filteredAndSortedResults.length > 0 && (
-                <>
-                  <div className={styles.collectionGrid}>
-                    {filteredAndSortedResults.map((item) => (
-                      <VinylCard
-                        key={`${item.type}-${item.id}`}
-                        vinyl={{
-                          ...item,
-                          genre: [...(item.genre || []), ...(item.style || [])],
-                        }}
-                        showDetails={true}
-                        linkPrefix="/browse"
-                        addToCollectionComponent={
-                          <AddToCollectionButton
-                            collections={collections}
-                            onAdd={(collectionId) =>
-                              addToCollection(item, collectionId)
-                            }
-                          />
-                        }
-                      />
-                    ))}
-                  </div>
-
-                  {/* Pagination */}
-                  {totalPages > 1 && (
-                    <div
-                      className={styles.displayControls}
-                      style={{ marginTop: "20px", justifyContent: "center" }}
-                    >
-                      <button
-                        onClick={() => handlePageChange(filters.page! - 1)}
-                        disabled={filters.page === 1}
-                        className={styles.viewButton}
-                      >
-                        ← Previous
-                      </button>
-
-                      <span
-                        style={{
-                          padding: "8px 16px",
-                          color: "var(--ctp-text)",
-                        }}
-                      >
-                        Page {filters.page} of {totalPages}
-                      </span>
-
-                      <button
-                        onClick={() => handlePageChange(filters.page! + 1)}
-                        disabled={filters.page === totalPages}
-                        className={styles.viewButton}
-                      >
-                        Next →
-                      </button>
+                <div className={styles.section}>
+                  <div className="content-wrapper">
+                    <div className={styles.collectionPreview}>
+                      {filteredAndSortedResults.map((item) => {
+                      // Create a working imageUrl - convert HTTP to HTTPS and ensure it's valid
+                      let workingImageUrl = item.thumb;
+                      if (workingImageUrl && workingImageUrl.startsWith('http://')) {
+                        workingImageUrl = workingImageUrl.replace('http://', 'https://');
+                      }
+                      
+                      return (
+                        <VinylCard
+                          key={`${item.type}-${item.id}`}
+                          vinyl={{
+                            ...item,
+                            imageUrl: workingImageUrl,
+                            thumb: workingImageUrl,
+                          }}
+                          showDetails={false}
+                          linkPrefix="/browse"
+                          hideCommunityStats={true}
+                          showActions={false}
+                        />
+                      );
+                      })}
                     </div>
-                  )}
-                </>
+
+                    {/* Pagination */}
+                    {totalPages > 1 && (
+                      <div className={styles.paginationControls}>
+                        <Button
+                          onClick={() => handlePageChange(filters.page! - 1)}
+                          disabled={filters.page === 1}
+                          variant="outline"
+                          size="medium"
+                        >
+                          ← Previous
+                        </Button>
+
+                        <span className={styles.paginationInfo}>
+                          Page {filters.page} of {totalPages}
+                        </span>
+
+                        <Button
+                          onClick={() => handlePageChange(filters.page! + 1)}
+                          disabled={filters.page === totalPages}
+                          variant="outline"
+                          size="medium"
+                        >
+                          Next →
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+                </div>
               )}
             </div>
           </div>

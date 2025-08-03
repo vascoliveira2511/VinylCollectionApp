@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Button from "./Button";
 import styles from "../page.module.css";
 
 interface Collection {
@@ -42,43 +43,46 @@ export default function AddToCollectionButton({
   
   if (collections.length === 0) {
     return (
-      <button className={styles.createButton} disabled>
+      <Button variant="secondary" size="small" disabled>
         ➕ Loading...
-      </button>
+      </Button>
     );
   }
   
   if (collections.length === 1) {
     // If only one collection, just add directly
     return (
-      <button
+      <Button
         onClick={() => onAdd(collections[0].id)}
         disabled={disabled}
-        className={styles.createButton}
+        variant="primary"
+        size="small"
       >
         ➕ Add
-      </button>
+      </Button>
     );
   }
   
   return (
     <div className={styles.addButtonContainer}>
-      <button
+      <Button
         onClick={handleQuickAdd}
         disabled={disabled}
-        className={styles.createButton}
-        title={`Add to ${defaultCollection?.title || "default collection"}`}
+        variant="primary"
+        size="small"
+        className={styles.addButtonPrimary}
       >
         ➕ Add
-      </button>
-      <button
+      </Button>
+      <Button
         onClick={() => setShowDropdown(!showDropdown)}
         disabled={disabled}
-        className={styles.dropdownToggle}
-        title="Choose collection"
+        variant="secondary"
+        size="small"
+        className={styles.addButtonDropdown}
       >
         ▼
-      </button>
+      </Button>
       
       {showDropdown && (
         <div className={styles.collectionDropdown}>

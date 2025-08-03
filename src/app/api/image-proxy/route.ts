@@ -15,7 +15,7 @@ export async function GET(request: Request) {
   try {
     const url = new URL(imageUrl);
     // Only allow HTTPS URLs from trusted domains
-    if (url.protocol !== 'https:' || !url.hostname.includes('discogs.com')) {
+    if (url.protocol !== 'https:' || !(url.hostname.includes('discogs.com') || url.hostname === 'i.discogs.com')) {
       return NextResponse.json(
         { error: "Invalid image URL" },
         { status: 400 }
