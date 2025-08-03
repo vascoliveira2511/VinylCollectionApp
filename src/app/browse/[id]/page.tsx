@@ -5,13 +5,12 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { apiClient } from "@/lib/api-client";
 import PageLoader from "../../components/PageLoader";
-import VinylHeader from "../../components/VinylHeader";
 import SimpleReleaseInfo from "../../components/SimpleReleaseInfo";
 import VinylVideos from "../../components/VinylVideos";
 import VinylComments from "../../components/VinylComments";
-import TrackList from "../../components/TrackList";
-import CollapsibleSection from "../../components/CollapsibleSection";
 import StatusButtons from "../../components/StatusButtons";
+import Button from "../../components/Button";
+import { SiSpotify, SiYoutube, SiApplemusic } from "react-icons/si";
 import styles from "../../page.module.css";
 
 interface DiscogsRelease {
@@ -107,8 +106,11 @@ export default function BrowseDetailPage({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [addingToCollection, setAddingToCollection] = useState(false);
-  const [showNotes, setShowNotes] = useState(false);
-  const [userStatus, setUserStatus] = useState<"want" | "have" | null>(null);
+  const [selectedImage, setSelectedImage] = useState(0);
+  const [showReleaseInfo, setShowReleaseInfo] = useState(true);
+  const [showVideos, setShowVideos] = useState(false);
+  const [showCommunityReviews, setShowCommunityReviews] = useState(false);
+  const [defaultCollection, setDefaultCollection] = useState<any>(null);
 
   const router = useRouter();
 
@@ -116,15 +118,17 @@ export default function BrowseDetailPage({
     const fetchData = async () => {
       try {
         setLoading(true);
-        const [releaseData, statusData] = await Promise.all([
+        const [releaseData, collectionsData] = await Promise.all([
           apiClient.getDiscogsRelease(id),
-          fetch(`/api/vinyl-status?discogsId=${id}`).then((res) =>
-            res.ok ? res.json() : { status: null }
-          ),
+          apiClient.getCollections(),
         ]);
 
         setRelease(releaseData as DiscogsRelease);
-        setUserStatus(statusData.status);
+        
+        // Find default collection
+        const collections = collectionsData as any[];
+        const defaultColl = collections.find((c: any) => c.isDefault) || collections[0];
+        setDefaultCollection(defaultColl);
       } catch (err) {
         setError(
           err instanceof Error ? err.message : "Failed to load release details"
@@ -159,7 +163,7 @@ export default function BrowseDetailPage({
       });
 
       alert(
-        `"${release.title}" by ${release.artists?.[0]?.name} added to your collection!`
+        `"${release.title}" by ${release.artists?.[0]?.name} added to ${defaultCollection?.title || 'your collection'}!`
       );
     } catch (err) {
       alert(
@@ -170,6 +174,7 @@ export default function BrowseDetailPage({
       setAddingToCollection(false);
     }
   };
+
 
   if (loading) {
     return <PageLoader text="Loading release details..." />;
@@ -183,9 +188,13 @@ export default function BrowseDetailPage({
             <div className={styles.contentSection}>
               <div className={styles.errorState}>
                 <p>Error: {error || "Release not found"}</p>
-                <Link href="/browse" className={styles.backButton}>
+                <Button
+                  href="/browse"
+                  variant="outline"
+                  size="medium"
+                >
                   ← Back to Browse
-                </Link>
+                </Button>
               </div>
             </div>
           </div>
@@ -194,137 +203,263 @@ export default function BrowseDetailPage({
     );
   }
 
+  // Get the best available image - priority: Discogs high-res
+  const displayImages =
+    release?.images && release.images.length > 0
+      ? release.images
+      : [];
+
+  const currentImage = displayImages[selectedImage] || displayImages[0];
+  const backgroundImage = displayImages[0]; // Always use first image for background
+
   return (
     <main className={styles.main}>
-      <VinylHeader
-        title={release.title}
-        artist={release.artists?.map((a) => a.name) || []}
-        year={release.year}
-        country={release.country}
-        genres={release.genres}
-        images={release.images}
-        showBackground={true}
-        actions={
-          <>
-            <button
-              onClick={addToCollection}
-              disabled={addingToCollection}
-              className={styles.addToCollectionButton}
-            >
-              {addingToCollection ? "Adding..." : "Add to Collection"}
-            </button>
-
-            <StatusButtons
-              discogsId={release.id}
-              onStatusChange={(status) => setUserStatus(status)}
-            />
-
-            <Link href="/browse" className={styles.backButton}>
-              ← Back to Browse
-            </Link>
-          </>
-        }
-      />
-
-      <div className="container">
-        <div className="window">
-          <div className={styles.contentSection}>
-            {/* Community Status Section */}
+      {/* Enhanced background with vinyl groove effect */}
+      {backgroundImage && (
+        <>
+          <div className={styles.vinylPageBackground}>
             <div
-              className="window"
+              className={styles.albumCoverBackground}
               style={{
-                marginBottom: "20px",
-                backgroundColor: "var(--ctp-surface0)",
-                border: "2px solid var(--ctp-mauve)",
+                backgroundImage: `url(/api/image-proxy?url=${encodeURIComponent(
+                  backgroundImage.uri500 || backgroundImage.uri
+                )})`,
               }}
-            >
-              <div
-                className="title-bar"
-                style={{
-                  backgroundColor: "var(--ctp-mauve)",
-                  color: "var(--ctp-crust)",
-                }}
-              >
-                Your Status
-              </div>
-              <div className={styles.contentSection}>
-                <div
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "1fr 1fr",
-                    gap: "15px",
-                    fontSize: "0.9em",
-                  }}
-                >
-                  <div>
-                    <strong>Collection Status:</strong>
-                    <div style={{ marginTop: "5px" }}>
-                      {userStatus === "want" && (
-                        <span style={{ color: "var(--ctp-red)" }}>
-                          In Wantlist
-                        </span>
-                      )}
-                      {userStatus === "have" && (
-                        <span style={{ color: "var(--ctp-green)" }}>
-                          Have
-                        </span>
-                      )}
-                      {!userStatus && (
-                        <span style={{ color: "var(--ctp-subtext1)" }}>
-                          Not in your collection
-                        </span>
-                      )}
-                    </div>
+            ></div>
+            <div className={styles.vinylGrooveOverlay}></div>
+          </div>
+        </>
+      )}
+
+      <div className={styles.vinylPageContainer}>
+        {/* Hero Section with Album Art and Info */}
+        <div className={styles.vinylHeroSection}>
+          <div className={styles.vinylHeroContent}>
+            {/* Album Art */}
+            <div className={styles.vinylAlbumArt}>
+              {displayImages && displayImages.length > 0 && (
+                <>
+                  <div className={styles.mainAlbumCover}>
+                    <img
+                      src={`/api/image-proxy?url=${encodeURIComponent(
+                        currentImage.uri500 || currentImage.uri
+                      )}`}
+                      alt={`${release.title} cover`}
+                      className={styles.coverImage}
+                    />
                   </div>
-                  <div>
-                    <strong>Community:</strong>
-                    <div
-                      style={{
-                        marginTop: "5px",
-                        color: "var(--ctp-subtext1)",
-                        fontSize: "0.85em",
-                      }}
-                    >
-                      Community reviews and comments available below
+                  {displayImages.length > 1 && (
+                    <div className={styles.imageThumbnails}>
+                      {displayImages.map((img, idx) => (
+                        <img
+                          key={idx}
+                          src={`/api/image-proxy?url=${encodeURIComponent(
+                            img.uri150 || img.uri
+                          )}`}
+                          alt={`${release.title} ${img.type}`}
+                          className={`${styles.thumbnail} ${
+                            idx === selectedImage ? styles.thumbnailActive : ""
+                          }`}
+                          onClick={() => setSelectedImage(idx)}
+                        />
+                      ))}
                     </div>
-                  </div>
+                  )}
+                </>
+              )}
+            </div>
+
+            {/* Vinyl Info */}
+            <div className={styles.vinylHeroInfo}>
+              <div className={styles.vinylTitleSection}>
+                <h1 className={styles.modernVinylTitle}>{release.title}</h1>
+                <h2 className={styles.modernVinylArtist}>
+                  {release.artists?.map((a) => a.name).join(", ") || "Unknown Artist"}
+                </h2>
+                <div className={styles.vinylMetaInfo}>
+                  <span className={styles.vinylYear}>{release.year}</span>
+                  {release.country && (
+                    <>
+                      <span className={styles.metaSeparator}>•</span>
+                      <span className={styles.vinylCountry}>
+                        {release.country}
+                      </span>
+                    </>
+                  )}
                 </div>
               </div>
-            </div>
 
-            <div className="window" style={{ marginBottom: "20px" }}>
-              <div className={styles.contentSection}>
-                <SimpleReleaseInfo
-                  labels={release.labels}
-                  formats={release.formats}
-                  released={release.released}
-                  companies={release.companies}
-                  extraartists={release.extraartists}
-                  identifiers={release.identifiers}
-                  master_id={release.master_id}
-                  country={release.country}
-                  tracklist={release.tracklist}
-                  notes={release.notes}
-                />
+              {/* Genre Pills */}
+              {(release.genres?.length > 0 ||
+                release.styles?.length > 0) && (
+                <div className={styles.modernGenrePills}>
+                  {release.genres?.map((g, idx) => (
+                    <span
+                      key={`genre-${idx}`}
+                      className={styles.modernGenrePill}
+                    >
+                      {g}
+                    </span>
+                  ))}
+                  {release.styles?.map((s, idx) => (
+                    <span
+                      key={`style-${idx}`}
+                      className={styles.modernGenrePill}
+                    >
+                      {s}
+                    </span>
+                  ))}
+                </div>
+              )}
+
+              {/* Action Buttons */}
+              <div className={styles.actionButtons}>
+                <Button
+                  onClick={addToCollection}
+                  disabled={addingToCollection}
+                  variant="primary"
+                  size="medium"
+                >
+                  {addingToCollection 
+                    ? "Adding..." 
+                    : `Add to ${defaultCollection?.title || 'Collection'}`
+                  }
+                </Button>
+                <Button
+                  href="/browse"
+                  variant="outline"
+                  size="medium"
+                >
+                  ← Back to Browse
+                </Button>
               </div>
+
+              {/* Streaming Links */}
+              <div className={styles.streamingLinks}>
+                <span className={styles.streamingLabel}>
+                  Find on streaming:
+                </span>
+                <div className={styles.streamingButtons}>
+                  <a
+                    href={`https://open.spotify.com/search/${encodeURIComponent(
+                      `${release.artists?.map((a) => a.name).join(", ") || ""} ${release.title}`
+                    )}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={styles.streamingButton}
+                    style={{ backgroundColor: '#1DB954', color: 'white' }}
+                    title="Search on Spotify"
+                  >
+                    <SiSpotify size={16} style={{ marginRight: '6px' }} />
+                    Spotify
+                  </a>
+                  <a
+                    href={`https://music.youtube.com/search?q=${encodeURIComponent(
+                      `${release.artists?.map((a) => a.name).join(", ") || ""} ${release.title}`
+                    )}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={styles.streamingButton}
+                    style={{ backgroundColor: '#FF0000', color: 'white' }}
+                    title="Search on YouTube Music"
+                  >
+                    <SiYoutube size={16} style={{ marginRight: '6px' }} />
+                    YouTube
+                  </a>
+                  <a
+                    href={`https://music.apple.com/search?term=${encodeURIComponent(
+                      `${release.artists?.map((a) => a.name).join(", ") || ""} ${release.title}`
+                    )}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={styles.streamingButton}
+                    style={{ backgroundColor: '#FA243C', color: 'white' }}
+                    title="Search on Apple Music"
+                  >
+                    <SiApplemusic size={16} style={{ marginRight: '6px' }} />
+                    Apple Music
+                  </a>
+                </div>
+              </div>
+
             </div>
+          </div>
+        </div>
 
-            <VinylVideos videos={release.videos || []} />
+        {/* Additional Info - Simplified */}
+        <div className={styles.vinylSimpleContent}>
+          {/* Release Info */}
+          <div className={styles.infoSection}>
+            <h3
+              onClick={() => setShowReleaseInfo(!showReleaseInfo)}
+              className={styles.toggleHeader}
+            >
+              Release Information{" "}
+              <span className={styles.toggleIcon}>
+                {showReleaseInfo ? "−" : "+"}
+              </span>
+            </h3>
+            {showReleaseInfo && (
+              <SimpleReleaseInfo
+                labels={release.labels}
+                formats={release.formats}
+                released={release.released}
+                master_id={release.master_id}
+                country={release.country}
+                companies={release.companies}
+                extraartists={release.extraartists}
+                identifiers={release.identifiers}
+                tracklist={release.tracklist}
+                notes={release.notes}
+              />
+            )}
+          </div>
 
-            <VinylComments discogsId={release.id} />
+          {/* Videos */}
+          {release?.videos && release.videos.length > 0 && (
+            <div className={styles.infoSection}>
+              <h3
+                onClick={() => setShowVideos(!showVideos)}
+                className={styles.toggleHeader}
+              >
+                Videos{" "}
+                <span className={styles.toggleIcon}>
+                  {showVideos ? "−" : "+"}
+                </span>
+              </h3>
+              {showVideos && <VinylVideos videos={release.videos} />}
+            </div>
+          )}
 
-            {/* External Links */}
-            <div style={{ textAlign: "center", marginTop: "30px" }}>
+          {/* Comments */}
+          <div className={styles.infoSection}>
+            <h3
+              onClick={() => setShowCommunityReviews(!showCommunityReviews)}
+              className={styles.toggleHeader}
+            >
+              Community Reviews{" "}
+              <span className={styles.toggleIcon}>
+                {showCommunityReviews ? "−" : "+"}
+              </span>
+            </h3>
+            {showCommunityReviews && (
+              <VinylComments discogsId={release.id} />
+            )}
+          </div>
+
+          {/* External Link */}
+          {release?.uri && (
+            <div className={styles.infoSection}>
               <a
                 href={release.uri}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={styles.externalLink}
+                className={styles.discogsLink}
               >
                 View on Discogs →
               </a>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </main>

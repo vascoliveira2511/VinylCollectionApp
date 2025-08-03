@@ -3820,6 +3820,327 @@ Link.editButton:hover {
   border-color: #fa243c;
 }
 
+/* New Professional Streaming Buttons */
+.streamingButtons {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.streamingButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 16px;
+  border-radius: 12px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow: hidden;
+  line-height: 1;
+  min-height: 40px;
+}
+
+.streamingButton:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  filter: brightness(1.05);
+}
+
+.streamingButton:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.streamingButton::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+/* Clean Collections Page Styles */
+.collectionsHeroSection {
+  padding: 40px 0;
+  margin-bottom: 32px;
+}
+
+.collectionsHeroContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+}
+
+.collectionsTitle h1 {
+  font-size: 2rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 8px 0;
+}
+
+.collectionsTitle p {
+  color: var(--text-secondary);
+  margin: 0;
+  font-size: 1rem;
+}
+
+/* Fixed Modal */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.modernFormModal {
+  background: white;
+  border-radius: 12px;
+  max-width: 500px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 24px 0 24px;
+}
+
+.modalTitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0;
+}
+
+.modernFormGrid {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.inputLabel {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+}
+
+.modernFormInput,
+.modernFormTextarea {
+  padding: 12px 16px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background: white;
+  color: #1f2937;
+  font-size: 0.875rem;
+  transition: border-color 0.2s ease;
+}
+
+.modernFormInput:focus,
+.modernFormTextarea:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.modernFormTextarea {
+  resize: vertical;
+  min-height: 80px;
+  font-family: inherit;
+}
+
+.formOptionsSection {
+  display: flex;
+  gap: 24px;
+  align-items: flex-end;
+}
+
+.modernFormColorPicker {
+  width: 60px;
+  height: 40px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.modernFormCheckbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.checkboxLabel {
+  font-size: 0.875rem;
+  color: #374151;
+}
+
+.modalActions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  padding-top: 20px;
+  border-top: 1px solid #e5e7eb;
+}
+
+/* Clean Collections Grid */
+.collectionsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.collectionCard {
+  background: var(--bg-primary);
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+
+.collectionCard:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-color: var(--border-dark);
+}
+
+.cardLink {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+
+.cardContent {
+  padding: 20px;
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.cardTitle {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.cardBadges {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.defaultBadge,
+.publicBadge {
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 0.7rem;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.defaultBadge {
+  background: #e3f2fd;
+  color: #1565c0;
+}
+
+.publicBadge {
+  background: #f3e5f5;
+  color: #7b1fa2;
+}
+
+.cardDescription {
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  line-height: 1.4;
+  margin: 0 0 12px 0;
+}
+
+.cardStats {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.recordCount {
+  font-weight: 500;
+}
+
+.statsSeparator {
+  opacity: 0.5;
+}
+
+.cardActions {
+  display: flex;
+  gap: 8px;
+  padding: 16px 20px;
+  background: var(--bg-subtle);
+  border-top: 1px solid var(--border-light);
+}
+
+/* Clean Empty State */
+.modernEmptyState {
+  text-align: center;
+  padding: 60px 20px;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.emptyStateIcon {
+  font-size: 3rem;
+  margin-bottom: 16px;
+  opacity: 0.5;
+}
+
+.emptyStateTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 8px 0;
+}
+
+.emptyStateDescription {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+  margin: 0 0 24px 0;
+}
+
 .statusButtons {
   display: flex;
   gap: 12px;
@@ -4189,8 +4510,69 @@ Link.editButton:hover {
     height: 36px;
   }
 
+  .streamingButtons {
+    gap: 8px;
+    flex-direction: column;
+  }
+
+  .streamingButton {
+    padding: 8px 12px;
+    font-size: 0.8rem;
+    min-height: 36px;
+    width: 100%;
+    max-width: 200px;
+  }
+
   .streamingLabel {
     font-size: 0.85rem;
+  }
+
+  /* Collections Page Mobile */
+  .collectionsHeroContent {
+    flex-direction: column;
+    gap: 16px;
+    text-align: center;
+  }
+
+  .collectionsTitle h1 {
+    font-size: 1.5rem;
+  }
+
+  .modalOverlay {
+    padding: 16px;
+  }
+
+  .modernFormModal {
+    max-height: 95vh;
+  }
+
+  .modalHeader {
+    padding: 16px 20px;
+  }
+
+  .modernFormGrid {
+    padding: 20px;
+    gap: 14px;
+  }
+
+  .formOptionsSection {
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+  }
+
+  .collectionsGrid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .cardContent {
+    padding: 16px;
+  }
+
+  .cardActions {
+    padding: 12px 16px;
+    gap: 6px;
   }
 }
 

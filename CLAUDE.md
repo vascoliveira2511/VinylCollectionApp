@@ -2,3 +2,4 @@
 - Noted the 'memorize' command instruction
 - Memorialized the 'memproze this convo' instruction
 - Added to memory
+- Currently working on adding the current step to the memory file
