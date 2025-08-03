@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Button from "./Button";
 import styles from "../page.module.css";
 
 interface Comment {
@@ -83,98 +84,96 @@ export default function VinylComments({ discogsId }: VinylCommentsProps) {
 
   if (loading) {
     return (
-      <div className="window" style={{ marginBottom: "20px" }}>
-        <div className="title-bar">Community Reviews & Comments</div>
-        <div className={styles.contentSection}>
-          <p>Loading comments...</p>
-        </div>
+      <div className={styles.commentsContainer}>
+        <p className={styles.loadingText}>Loading comments...</p>
       </div>
     );
   }
 
   return (
-    <div className="window" style={{ marginBottom: "20px" }}>
-      <div className="title-bar">
-        Community Reviews & Comments ({comments.length})
-      </div>
-      <div className={styles.contentSection}>
-        {/* Comment Form */}
-        <div className={styles.commentForm}>
-          <div className={styles.commentFormHeader}>
-            <label>
-              <input
-                type="checkbox"
-                checked={isReview}
-                onChange={(e) => setIsReview(e.target.checked)}
-              />
-              This is a review (include rating)
-            </label>
-            {isReview && (
-              <div className={styles.ratingInput}>
-                <label>Rating: </label>
+    <div className={styles.commentsContainer}>
+      {/* Comment Form */}
+      <div className={styles.cleanCommentForm}>
+        <div className={styles.formControls}>
+          <label className={styles.checkboxLabel}>
+            <input
+              type="checkbox"
+              checked={isReview}
+              onChange={(e) => setIsReview(e.target.checked)}
+              className={styles.checkbox}
+            />
+            <span>This is a review</span>
+          </label>
+          {isReview && (
+            <div className={styles.cleanRatingInput}>
+              <span className={styles.ratingLabel}>Rating:</span>
+              <div className={styles.starButtons}>
                 {[1, 2, 3, 4, 5].map((star) => (
                   <button
                     key={star}
                     type="button"
                     onClick={() => setNewRating(star)}
-                    className={`${styles.starButton} ${
-                      newRating && newRating >= star ? styles.starActive : ""
+                    className={`${styles.cleanStarButton} ${
+                      newRating && newRating >= star ? styles.starSelected : ""
                     }`}
                   >
                     ★
                   </button>
                 ))}
               </div>
-            )}
-          </div>
-          <textarea
-            value={newComment}
-            onChange={(e) => setNewComment(e.target.value)}
-            placeholder={
-              isReview ? "Write your review..." : "Write a comment..."
-            }
-            className={styles.commentTextarea}
-            rows={3}
-          />
-          <button
-            onClick={handleCommentSubmit}
-            disabled={!newComment.trim()}
-            className={styles.commentSubmitButton}
-          >
-            {isReview ? "Post Review" : "Post Comment"}
-          </button>
-        </div>
-
-        {/* Comments List */}
-        <div className={styles.commentsList}>
-          {comments.length === 0 ? (
-            <p className={styles.noComments}>
-              No comments yet. Be the first to share your thoughts!
-            </p>
-          ) : (
-            comments.map((comment) => (
-              <div key={comment.id} className={styles.commentItem}>
-                <div className={styles.commentHeader}>
-                  <div className={styles.commentUser}>
-                    <strong>{comment.user.username}</strong>
-                    {comment.isReview && (
-                      <span className={styles.reviewBadge}>Review</span>
-                    )}
-                    {comment.rating && (
-                      <div className={styles.commentRating}>
-                        {"★".repeat(comment.rating)}
-                      </div>
-                    )}
-                  </div>
-                  <span className={styles.commentDate}>
-                    {new Date(comment.createdAt).toLocaleDateString()}
-                  </span>
-                </div>
-                <div className={styles.commentContent}>{comment.content}</div>
-              </div>
-            ))
+            </div>
           )}
         </div>
+        <textarea
+          value={newComment}
+          onChange={(e) => setNewComment(e.target.value)}
+          placeholder={
+            isReview ? "Write your review..." : "Share your thoughts..."
+          }
+          className={styles.cleanTextarea}
+          rows={4}
+        />
+        <div className={styles.formActions}>
+          <Button
+            onClick={handleCommentSubmit}
+            disabled={!newComment.trim()}
+            variant="primary"
+            size="medium"
+          >
+            {isReview ? "Post Review" : "Post Comment"}
+          </Button>
+        </div>
+      </div>
+
+      {/* Comments List */}
+      <div className={styles.cleanCommentsList}>
+        {comments.length === 0 ? (
+          <p className={styles.emptyState}>
+            No comments yet. Be the first to share your thoughts!
+          </p>
+        ) : (
+          comments.map((comment) => (
+            <div key={comment.id} className={styles.cleanCommentItem}>
+              <div className={styles.cleanCommentHeader}>
+                <div className={styles.commentAuthor}>
+                  <span className={styles.username}>{comment.user.username}</span>
+                  {comment.isReview && (
+                    <span className={styles.cleanReviewBadge}>Review</span>
+                  )}
+                  {comment.rating && (
+                    <div className={styles.cleanRating}>
+                      {"★".repeat(comment.rating)}
+                    </div>
+                  )}
+                </div>
+                <span className={styles.cleanDate}>
+                  {new Date(comment.createdAt).toLocaleDateString()}
+                </span>
+              </div>
+              <div className={styles.cleanCommentContent}>{comment.content}</div>
+            </div>
+          ))
+        )}
       </div>
     </div>
   );

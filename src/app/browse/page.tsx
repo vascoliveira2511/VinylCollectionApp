@@ -197,8 +197,14 @@ function BrowsePageContent() {
         pagination: apiResponse.pagination ?? { pages: 0, items: 0 },
       };
       setResults(data.results);
-      setTotalPages(data.pagination?.pages || 0);
-      setTotalResults(data.pagination?.items || 0);
+      console.log("Pagination data received:", data.pagination);
+
+      // Limit pagination to reasonable values - Discogs sometimes returns unrealistic page counts
+      const actualPages = Math.min(data.pagination?.pages || 0, 20); // Limit to 20 pages max
+      const actualItems = data.pagination?.items || 0;
+
+      setTotalPages(actualPages);
+      setTotalResults(actualItems);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Search failed");
       setResults([]);
@@ -267,8 +273,14 @@ function BrowsePageContent() {
         pagination?: { pages?: number; items?: number };
       };
       setResults(data.results || []);
-      setTotalPages(data.pagination?.pages || 0);
-      setTotalResults(data.pagination?.items || 0);
+      console.log("Pagination data received (page change):", data.pagination);
+
+      // Limit pagination to reasonable values - Discogs sometimes returns unrealistic page counts
+      const actualPages = Math.min(data.pagination?.pages || 0, 20); // Limit to 20 pages max
+      const actualItems = data.pagination?.items || 0;
+
+      setTotalPages(actualPages);
+      setTotalResults(actualItems);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Search failed");
       setResults([]);
@@ -380,56 +392,87 @@ function BrowsePageContent() {
             <div className={styles.searchSection}>
               <h2 className={styles.sectionTitle}>Search Music Database</h2>
               <p className={styles.searchHint}>
-                Try: "Pink Floyd", "Kind of Blue", "Blue Note Records" • Press Enter to search
+                Try: "Pink Floyd", "Kind of Blue", "Blue Note Records" • Press
+                Enter to search
               </p>
-              
+
               <div className={styles.searchContainer}>
                 <div className={styles.searchInputGroup}>
-                  <div className={styles.inputContainer}>
-                    <input
-                      type="text"
-                      placeholder="Search artist, album..."
-                      value={filters.query || ""}
-                      onChange={handleSearchInputChange}
-                      className={styles.searchInput}
-                      aria-label="Search music database"
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter") {
-                          e.preventDefault();
-                          setSuggestions([]);
-                          handleSearch(filters);
-                        }
-                      }}
-                    />
-                    <Button
-                      onClick={() => {
+                  <div className={styles.unifiedSearchBar}>
+                    <form
+                      onSubmit={(e) => {
+                        e.preventDefault();
                         setSuggestions([]);
                         handleSearch(filters);
                       }}
-                      disabled={loading || !filters.query}
-                      variant="secondary"
-                      size="medium"
-                      className={styles.searchButton}
+                      style={{ display: "flex", flex: 1 }}
                     >
-                      {loading ? (
-                        <div className="vinyl-loader" style={{width: '18px', height: '18px'}}>
-                          <div className="vinyl-record"></div>
-                        </div>
-                      ) : (
-                        "Search"
-                      )}
-                    </Button>
+                      <input
+                        type="text"
+                        placeholder="Search artist, album..."
+                        value={filters.query || ""}
+                        onChange={handleSearchInputChange}
+                        className={styles.searchInput}
+                        aria-label="Search music database"
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") {
+                            e.preventDefault();
+                            setSuggestions([]);
+                            handleSearch(filters);
+                          }
+                        }}
+                      />
+                      <Button
+                        type="submit"
+                        onClick={() => {
+                          setSuggestions([]);
+                          handleSearch(filters);
+                        }}
+                        disabled={loading || !filters.query}
+                        variant="secondary"
+                        size="medium"
+                        className={styles.searchButton}
+                      >
+                        {loading ? (
+                          <div
+                            className="vinyl-loader"
+                            style={{ width: "18px", height: "18px" }}
+                          >
+                            <div className="vinyl-record"></div>
+                          </div>
+                        ) : (
+                          "Search"
+                        )}
+                      </Button>
+                    </form>
+                    {hasSearched && results.length > 0 && (
+                      <Button
+                        onClick={() => setShowFilters(!showFilters)}
+                        variant="secondary"
+                        size="medium"
+                        className={styles.filterButton}
+                      >
+                        Filters {showFilters ? "▲" : "▼"}
+                      </Button>
+                    )}
                   </div>
-                  
+
                   {isSearching && (
                     <div className={styles.searchingIndicator}>
-                      <div className="vinyl-loader" style={{width: '14px', height: '14px', marginRight: '8px'}}>
+                      <div
+                        className="vinyl-loader"
+                        style={{
+                          width: "14px",
+                          height: "14px",
+                          marginRight: "8px",
+                        }}
+                      >
                         <div className="vinyl-record"></div>
                       </div>
                       Finding suggestions...
                     </div>
                   )}
-                  
+
                   {suggestions.length > 0 && (
                     <ul className={styles.suggestionsList}>
                       {suggestions.map((s, index) => (
@@ -476,95 +519,83 @@ function BrowsePageContent() {
         </div>
 
         {/* Filter Controls */}
-        {hasSearched && results.length > 0 && (
+        {hasSearched && results.length > 0 && showFilters && (
           <div className={styles.contentSection}>
             <div className="content-wrapper">
-              <div className={styles.filterHeader}>
-                <Button
-                  onClick={() => setShowFilters(!showFilters)}
-                  variant="secondary"
-                  size="medium"
-                >
-                  Filter & Sort Results {showFilters ? "▲" : "▼"}
-                </Button>
-              </div>
-              
-              {showFilters && (
-                <div className={styles.filterCard}>
-                  <div className={styles.filterCardHeader}>
-                    <h3 className={styles.filterTitle}>Refine Your Search</h3>
-                    <button
-                      onClick={() => {
-                        setGenreFilter("");
-                        setFormatFilter("");
-                        setCountryFilter("");
-                        setYearFilter("");
-                        setSortBy("relevance");
-                      }}
-                      className={styles.clearAllButton}
-                      aria-label="Clear all filters"
-                    >
-                      Clear All
-                    </button>
+              <div className={styles.filterCard}>
+                <div className={styles.filterCardHeader}>
+                  <h3 className={styles.filterTitle}>Refine Your Search</h3>
+                  <button
+                    onClick={() => {
+                      setGenreFilter("");
+                      setFormatFilter("");
+                      setCountryFilter("");
+                      setYearFilter("");
+                      setSortBy("relevance");
+                    }}
+                    className={styles.clearAllButton}
+                    aria-label="Clear all filters"
+                  >
+                    Clear All
+                  </button>
+                </div>
+
+                <div className={styles.filterGrid}>
+                  <div className={styles.filterGroup}>
+                    <label>Genre/Style</label>
+                    <input
+                      type="text"
+                      placeholder="Jazz, Rock, Electronic..."
+                      value={genreFilter}
+                      onChange={(e) => setGenreFilter(e.target.value)}
+                      aria-label="Filter by genre or style"
+                    />
                   </div>
-                  
-                  <div className={styles.filterGrid}>
-                    <div className={styles.filterGroup}>
-                      <label>Genre/Style</label>
-                      <input
-                        type="text"
-                        placeholder="Jazz, Rock, Electronic..."
-                        value={genreFilter}
-                        onChange={(e) => setGenreFilter(e.target.value)}
-                        aria-label="Filter by genre or style"
-                      />
-                    </div>
-                    <div className={styles.filterGroup}>
-                      <label>Format</label>
-                      <input
-                        type="text"
-                        placeholder="Vinyl, CD, Cassette..."
-                        value={formatFilter}
-                        onChange={(e) => setFormatFilter(e.target.value)}
-                        aria-label="Filter by format"
-                      />
-                    </div>
-                    <div className={styles.filterGroup}>
-                      <label>Country</label>
-                      <input
-                        type="text"
-                        placeholder="US, UK, Germany..."
-                        value={countryFilter}
-                        onChange={(e) => setCountryFilter(e.target.value)}
-                        aria-label="Filter by country"
-                      />
-                    </div>
-                    <div className={styles.filterGroup}>
-                      <label>Year</label>
-                      <input
-                        type="text"
-                        placeholder="1970, 198..."
-                        value={yearFilter}
-                        onChange={(e) => setYearFilter(e.target.value)}
-                        aria-label="Filter by year"
-                      />
-                    </div>
-                    <div className={styles.filterGroup}>
-                      <label>Sort by</label>
-                      <select
-                        value={sortBy}
-                        onChange={(e) => setSortBy(e.target.value as any)}
-                        aria-label="Sort results by"
-                      >
-                        <option value="relevance">Relevance</option>
-                        <option value="artist">Artist A-Z</option>
-                        <option value="title">Title A-Z</option>
-                        <option value="year">Year (Newest)</option>
-                      </select>
-                    </div>
+                  <div className={styles.filterGroup}>
+                    <label>Format</label>
+                    <input
+                      type="text"
+                      placeholder="Vinyl, CD, Cassette..."
+                      value={formatFilter}
+                      onChange={(e) => setFormatFilter(e.target.value)}
+                      aria-label="Filter by format"
+                    />
+                  </div>
+                  <div className={styles.filterGroup}>
+                    <label>Country</label>
+                    <input
+                      type="text"
+                      placeholder="US, UK, Germany..."
+                      value={countryFilter}
+                      onChange={(e) => setCountryFilter(e.target.value)}
+                      aria-label="Filter by country"
+                    />
+                  </div>
+                  <div className={styles.filterGroup}>
+                    <label>Year</label>
+                    <input
+                      type="text"
+                      placeholder="1970, 198..."
+                      value={yearFilter}
+                      onChange={(e) => setYearFilter(e.target.value)}
+                      aria-label="Filter by year"
+                    />
+                  </div>
+                  <div className={styles.filterGroup}>
+                    <label>Sort by</label>
+                    <select
+                      value={sortBy}
+                      onChange={(e) => setSortBy(e.target.value as any)}
+                      aria-label="Sort results by"
+                    >
+                      <option value="relevance">Relevance</option>
+                      <option value="artist">Artist A-Z</option>
+                      <option value="title">Title A-Z</option>
+                      <option value="year">Year (Newest)</option>
+                    </select>
                   </div>
                 </div>
-              )}
+              </div>
             </div>
           </div>
         )}
@@ -583,7 +614,10 @@ function BrowsePageContent() {
 
               {loading && (
                 <div className={styles.loadingState}>
-                  <div className="vinyl-loader" style={{width: '40px', height: '40px'}}>
+                  <div
+                    className="vinyl-loader"
+                    style={{ width: "40px", height: "40px" }}
+                  >
                     <div className="vinyl-record"></div>
                   </div>
                   <p>Searching music database...</p>
@@ -609,26 +643,32 @@ function BrowsePageContent() {
                   <div className="content-wrapper">
                     <div className={styles.collectionPreview}>
                       {filteredAndSortedResults.map((item) => {
-                      // Create a working imageUrl - convert HTTP to HTTPS and ensure it's valid
-                      let workingImageUrl = item.thumb;
-                      if (workingImageUrl && workingImageUrl.startsWith('http://')) {
-                        workingImageUrl = workingImageUrl.replace('http://', 'https://');
-                      }
-                      
-                      return (
-                        <VinylCard
-                          key={`${item.type}-${item.id}`}
-                          vinyl={{
-                            ...item,
-                            imageUrl: workingImageUrl,
-                            thumb: workingImageUrl,
-                          }}
-                          showDetails={false}
-                          linkPrefix="/browse"
-                          hideCommunityStats={true}
-                          showActions={false}
-                        />
-                      );
+                        // Create a working imageUrl - convert HTTP to HTTPS and ensure it's valid
+                        let workingImageUrl = item.thumb;
+                        if (
+                          workingImageUrl &&
+                          workingImageUrl.startsWith("http://")
+                        ) {
+                          workingImageUrl = workingImageUrl.replace(
+                            "http://",
+                            "https://"
+                          );
+                        }
+
+                        return (
+                          <VinylCard
+                            key={`${item.type}-${item.id}`}
+                            vinyl={{
+                              ...item,
+                              imageUrl: workingImageUrl,
+                              thumb: workingImageUrl,
+                            }}
+                            showDetails={false}
+                            linkPrefix="/browse"
+                            hideCommunityStats={true}
+                            showActions={false}
+                          />
+                        );
                       })}
                     </div>
 
