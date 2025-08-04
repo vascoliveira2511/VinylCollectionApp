@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Avatar from "../../components/Avatar";
 import PageLoader from "../../components/PageLoader";
+import Button from "../../components/Button";
 import styles from "../../page.module.css";
 
 interface User {
@@ -88,16 +89,23 @@ export default function UserProfilePage({
     return (
       <main className={styles.main}>
         <div className="container">
-          <div className="window">
-            <div className="title-bar">Error</div>
-            <div className={styles.contentSection}>
-              <div className={styles.errorMessage}>
+          <div className={styles.contentSection}>
+            <div className={styles.modernEmptyState}>
+              <div className={styles.emptyStateIcon}>❌</div>
+              <h3 className={styles.emptyStateTitle}>
                 {error || "User not found"}
-              </div>
-              <div className={styles.formActions}>
-                <Link href="/friends" className={styles.backButton}>
+              </h3>
+              <p className={styles.emptyStateDescription}>
+                {error === "You are not friends with this user"
+                  ? "You need to be friends with this user to view their profile."
+                  : error === "User not found"
+                  ? "The user you're looking for doesn't exist."
+                  : "Something went wrong while loading the user profile."}
+              </p>
+              <div className={styles.heroActions}>
+                <Button href="/friends" variant="primary" size="medium">
                   ← Back to Friends
-                </Link>
+                </Button>
               </div>
             </div>
           </div>
@@ -109,97 +117,84 @@ export default function UserProfilePage({
   return (
     <main className={styles.main}>
       <div className="container">
-        {/* User Profile Header */}
-        <div className="window">
-          <div className="title-bar">User Profile</div>
-          <div className={styles.contentSection}>
-            <div className={styles.userProfileHeader}>
-              <Avatar
-                username={userData.user.username}
-                avatar={userData.user.avatar}
-                avatarType={userData.user.avatarType}
-                size="large"
-              />
-              <div className={styles.userProfileInfo}>
-                <h1>{userData.user.username}</h1>
-                <p>
-                  {userData.collections.length} collections •{" "}
-                  {userData.collections.reduce(
-                    (total, col) => total + col._count.vinyls,
-                    0
-                  )}{" "}
-                  total records
-                </p>
-              </div>
-            </div>
+        <div className={styles.contentSection}>
+          {/* Back Button */}
+          <div className={styles.heroActions} style={{ marginBottom: '48px' }}>
+            <Button href="/friends" variant="outline" size="medium">
+              ← Back to Friends
+            </Button>
+          </div>
 
-            <div className={styles.formActions}>
-              <Link href="/friends" className={styles.backButton}>
-                ← Back to Friends
-              </Link>
+          {/* User Profile Hero Section */}
+          <div className={styles.friendsHeroSection}>
+            <div className={styles.friendsHeroContent}>
+              <div className={styles.friendsHeroLeft}>
+                <div className={styles.modernUserCard}>
+                  <Avatar
+                    username={userData.user.username}
+                    avatar={userData.user.avatar}
+                    avatarType={userData.user.avatarType}
+                    size="large"
+                  />
+                  <div className={styles.modernUserInfo}>
+                    <h1 className={styles.friendsPageTitle}>{userData.user.username}</h1>
+                    <p className={styles.friendsPageDescription}>
+                      {userData.collections.length} collections • {userData.collections.reduce(
+                        (total, col) => total + col._count.vinyls,
+                        0
+                      )} total records
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* User's Collections */}
-        <div className="window">
-          <div className="title-bar">Collections</div>
-          <div className={styles.contentSection}>
+          {/* Collections Section */}
+          <div className={styles.section}>
+            <div className={styles.sectionHeader}>
+              <h2>Collections</h2>
+              <p>Browse {userData.user.username}'s public record collections</p>
+            </div>
+
             {userData.collections.length === 0 ? (
-              <div className={styles.emptyState}>
-                <p>This user has no public collections.</p>
+              <div className={styles.modernEmptyState}>
+                <div className={styles.emptyStateIcon}>📚</div>
+                <h3 className={styles.emptyStateTitle}>No public collections</h3>
+                <p className={styles.emptyStateDescription}>
+                  This user hasn't made any collections public yet.
+                </p>
               </div>
             ) : (
-              <div className={styles.collectionsGrid}>
+              <div className={styles.collectionGrid}>
                 {userData.collections.map((collection) => (
-                  <div key={collection.id} className={styles.collectionCard}>
-                    <Link
-                      href={`/users/${userData.user.id}/collections/${collection.id}`}
-                    >
-                      <div className={styles.collectionPreview}>
-                        {collection.vinyls.length > 0 ? (
-                          <div className={styles.vinylPreviewGrid}>
-                            {collection.vinyls
-                              .slice(0, 3)
-                              .map((vinyl, index) => (
-                                <div
-                                  key={vinyl.id}
-                                  className={styles.vinylPreview}
-                                >
-                                  {vinyl.imageUrl ? (
-                                    <img
-                                      src={vinyl.imageUrl}
-                                      alt={`${vinyl.artist} - ${vinyl.title}`}
-                                      className={styles.previewAlbumArt}
-                                    />
-                                  ) : (
-                                    <div className={styles.placeholderArt}>
-                                      [Album]
-                                    </div>
-                                  )}
-                                </div>
-                              ))}
-                          </div>
+                  <div key={collection.id} className={styles.card}>
+                    <Link href={`/users/${userData.user.id}/collections/${collection.id}`}>
+                      <div className={styles.imageContainer}>
+                        {collection.vinyls.length > 0 && collection.vinyls[0].imageUrl ? (
+                          <img
+                            src={collection.vinyls[0].imageUrl}
+                            alt={collection.title}
+                            className={styles.albumArt}
+                          />
                         ) : (
-                          <div className={styles.emptyCollection}>
-                            Empty Collection
+                          <div className={styles.imagePlaceholder}>
+                            <span style={{ fontSize: '2rem' }}>📚</span>
                           </div>
                         )}
                       </div>
-
-                      <div className={styles.collectionInfo}>
-                        <h3>{collection.title}</h3>
-                        {collection.description && (
-                          <p className={styles.collectionDescription}>
-                            {collection.description}
-                          </p>
-                        )}
-                        <div className={styles.collectionStats}>
-                          {collection._count.vinyls} records
-                          {collection.isPublic && (
-                            <span className={styles.publicBadge}>Public</span>
+                      
+                      <div className={styles.cardInfo}>
+                        <div className={styles.cardHeader}>
+                          <h3 className={styles.cardTitle}>{collection.title}</h3>
+                          {collection.description && (
+                            <p className={styles.cardArtist}>{collection.description}</p>
                           )}
                         </div>
+                        <p className={styles.addedDate}>
+                          {collection._count.vinyls} records
+                          {collection.isPublic && " • Public"}
+                        </p>
                       </div>
                     </Link>
                   </div>
