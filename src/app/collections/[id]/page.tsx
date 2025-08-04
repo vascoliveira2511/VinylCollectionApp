@@ -6,6 +6,7 @@ import Link from "next/link";
 import { apiClient } from "@/lib/api-client";
 import VinylCard from "../../components/VinylCard";
 import PageLoader from "../../components/PageLoader";
+import Button from "../../components/Button";
 import styles from "../../page.module.css";
 
 interface Vinyl {
@@ -54,7 +55,6 @@ export default function CollectionView({ params }: { params: { id: string } }) {
   const [filterGenre, setFilterGenre] = useState("");
   const [filterYear, setFilterYear] = useState("");
   const [displayLimit, setDisplayLimit] = useState(12);
-  const [displayView, setDisplayView] = useState("grid");
 
   const router = useRouter();
 
@@ -117,13 +117,15 @@ export default function CollectionView({ params }: { params: { id: string } }) {
     return (
       <main className={styles.main}>
         <div className="container">
-          <div className="window">
-            <div className={styles.contentSection}>
-              <p style={{ color: "var(--ctp-red)" }}>
+          <div className={styles.contentSection}>
+            <div className={styles.errorState}>
+              <p className={styles.errorMessage}>
                 {error || "Collection not found"}
               </p>
               <Link href="/collections">
-                <button>Back to Collections</button>
+                <Button variant="outline" size="medium">
+                  Back to Collections
+                </Button>
               </Link>
             </div>
           </div>
@@ -135,104 +137,102 @@ export default function CollectionView({ params }: { params: { id: string } }) {
   return (
     <main className={styles.main}>
       <div className="container">
-        {/* Collection Header */}
-        <div className="window">
-          <div className="title-bar">
-            {collection.title}
-            {collection.isDefault && (
-              <span className={styles.defaultBadge}>Default</span>
-            )}
-          </div>
-          <div className={styles.contentSection}>
-            <div className={styles.collectionHeader}>
-              <div className={styles.collectionInfo}>
-                {collection.description && (
-                  <p className={styles.collectionDescription}>
-                    {collection.description}
-                  </p>
-                )}
-                <p className={styles.collectionStats}>
-                  {collection._count.vinyls} record
-                  {collection._count.vinyls !== 1 ? "s" : ""} in this collection
-                </p>
+        <div className={styles.contentSection}>
+          {/* Collection Hero Section */}
+          <div className={styles.collectionHeroSection}>
+            <div className={styles.collectionHeroContent}>
+              <div className={styles.collectionHeroLeft}>
+                <div className={styles.collectionTitleSection}>
+                  <h1 className={styles.collectionPageTitle}>
+                    {collection.title}
+                    {collection.isDefault && (
+                      <span className={styles.defaultBadge}>Default</span>
+                    )}
+                  </h1>
+                  {collection.description && (
+                    <p className={styles.collectionPageDescription}>
+                      {collection.description}
+                    </p>
+                  )}
+                </div>
+                <div className={styles.collectionStats}>
+                  <span className={styles.recordCount}>
+                    {collection._count.vinyls} record{collection._count.vinyls !== 1 ? "s" : ""}
+                  </span>
+                </div>
               </div>
-              <div className={styles.collectionActions}>
+              <div className={styles.collectionHeroActions}>
                 <Link href="/collections">
-                  <button className={styles.backButton}>
-                    Back to Collections
-                  </button>
+                  <Button variant="outline" size="medium">
+                    ← Back to Collections
+                  </Button>
                 </Link>
               </div>
             </div>
           </div>
-        </div>
 
-        {/* Filters */}
-        {collection.vinyls.length > 0 && (
-          <div className="window">
-            <div className="title-bar">Filter Records</div>
-            <div className={styles.contentSection}>
-              <div className={styles.filters}>
-                <input
-                  type="text"
-                  placeholder="Filter by Artist"
-                  value={filterArtist}
-                  onChange={(e) => setFilterArtist(e.target.value)}
-                />
-                <input
-                  type="text"
-                  placeholder="Filter by Title"
-                  value={filterTitle}
-                  onChange={(e) => setFilterTitle(e.target.value)}
-                />
-                <input
-                  type="text"
-                  placeholder="Filter by Genre"
-                  value={filterGenre}
-                  onChange={(e) => setFilterGenre(e.target.value)}
-                />
-                <input
-                  type="number"
-                  placeholder="Filter by Year"
-                  value={filterYear}
-                  onChange={(e) => setFilterYear(e.target.value)}
-                />
-                <select
-                  value={displayView}
-                  onChange={(e) => setDisplayView(e.target.value)}
-                >
-                  <option value="grid">Grid View</option>
-                  <option value="list">List View</option>
-                  <option value="compact">Compact View</option>
-                </select>
-                <select
-                  value={displayLimit}
-                  onChange={(e) => setDisplayLimit(parseInt(e.target.value))}
-                >
-                  <option value={12}>Show 12</option>
-                  <option value={24}>Show 24</option>
-                  <option value={48}>Show 48</option>
-                  <option value={collection.vinyls.length}>Show All</option>
-                </select>
+          {/* Modern Filters Section */}
+          {collection.vinyls.length > 0 && (
+            <div className={styles.filtersSection}>
+              <div className={styles.filtersHeader}>
+                <h2 className={styles.sectionTitle}>Filter & View</h2>
+              </div>
+              <div className={styles.modernFilters}>
+                <div className={styles.filterInputs}>
+                  <input
+                    type="text"
+                    placeholder="Search by artist..."
+                    value={filterArtist}
+                    onChange={(e) => setFilterArtist(e.target.value)}
+                    className={styles.modernFilterInput}
+                  />
+                  <input
+                    type="text"
+                    placeholder="Search by title..."
+                    value={filterTitle}
+                    onChange={(e) => setFilterTitle(e.target.value)}
+                    className={styles.modernFilterInput}
+                  />
+                  <input
+                    type="text"
+                    placeholder="Filter by genre..."
+                    value={filterGenre}
+                    onChange={(e) => setFilterGenre(e.target.value)}
+                    className={styles.modernFilterInput}
+                  />
+                  <input
+                    type="number"
+                    placeholder="Year..."
+                    value={filterYear}
+                    onChange={(e) => setFilterYear(e.target.value)}
+                    className={styles.modernFilterInput}
+                  />
+                </div>
+                <div className={styles.viewControls}>
+                  <select
+                    value={displayLimit}
+                    onChange={(e) => setDisplayLimit(parseInt(e.target.value))}
+                    className={styles.modernSelect}
+                  >
+                    <option value={12}>Show 12</option>
+                    <option value={24}>Show 24</option>
+                    <option value={48}>Show 48</option>
+                    <option value={collection.vinyls.length}>Show All</option>
+                  </select>
+                </div>
               </div>
             </div>
-          </div>
-        )}
+          )}
 
-        {/* Records Grid */}
-        <div className="window">
-          <div className="title-bar">Records ({filteredVinyls.length})</div>
-          <div className={styles.contentSection}>
+          {/* Records Section */}
+          <div className={styles.recordsSection}>
+            <div className={styles.recordsHeader}>
+              <h2 className={styles.sectionTitle}>
+                Records <span className={styles.recordCountBadge}>({filteredVinyls.length})</span>
+              </h2>
+            </div>
             {filteredVinyls.length > 0 ? (
-              <div
-                className={
-                  displayView === "list"
-                    ? styles.collectionList
-                    : displayView === "compact"
-                    ? styles.collectionCompact
-                    : styles.collectionGrid
-                }
-              >
+              <div className={styles.modernCollectionGrid}>
                 {filteredVinyls.map((vinyl) => (
                   <VinylCard
                     key={vinyl.id}
@@ -244,13 +244,22 @@ export default function CollectionView({ params }: { params: { id: string } }) {
                 ))}
               </div>
             ) : (
-              <div className={styles.emptyState}>
+              <div className={styles.modernEmptyState}>
+                <div className={styles.emptyStateIcon}>🎵</div>
                 {collection.vinyls.length === 0 ? (
-                  <p>
-                    This collection is empty. Add some records to get started!
-                  </p>
+                  <>
+                    <h3 className={styles.emptyStateTitle}>No records yet</h3>
+                    <p className={styles.emptyStateDescription}>
+                      This collection is empty. Add some records to get started!
+                    </p>
+                  </>
                 ) : (
-                  <p>No records match your current filters.</p>
+                  <>
+                    <h3 className={styles.emptyStateTitle}>No matches found</h3>
+                    <p className={styles.emptyStateDescription}>
+                      No records match your current filters. Try adjusting your search.
+                    </p>
+                  </>
                 )}
               </div>
             )}

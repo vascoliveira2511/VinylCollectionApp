@@ -229,8 +229,7 @@ export default function Home() {
                   <VinylCard
                     vinyl={vinyl}
                     showDetails={true}
-                    onEdit={() => {}}
-                    onDelete={() => deleteVinyl(vinyl.id)}
+                    showActions={false}
                     priority={index === 0}
                   />
                   <div className={styles.spotlightBadge}>New</div>

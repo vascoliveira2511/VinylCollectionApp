@@ -204,226 +204,226 @@ export default function Collections() {
   return (
     <main className={styles.main}>
       <div className="container">
-        <div className="window">
-          <div className={styles.contentSection}>
-            {/* Hero Section */}
-            <div className={styles.collectionsHeroSection}>
-              <div className={styles.collectionsHeroContent}>
-                <div className={styles.collectionsTitle}>
-                  <h1>Collections</h1>
-                  <p>Organize your vinyl records into curated collections</p>
-                </div>
-                
-                {!showCreateForm && !editingCollection && (
-                  <Button
-                    onClick={() => setShowCreateForm(true)}
-                    variant="primary"
-                    size="medium"
-                  >
-                    New Collection
-                  </Button>
-                )}
+        <div className={styles.contentSection}>
+          {/* Hero Section */}
+          <div className={styles.collectionsHeroSection}>
+            <div className={styles.collectionsHeroContent}>
+              <div className={styles.collectionsTitle}>
+                <h1>Collections</h1>
+                <p>Organize your vinyl records into curated collections</p>
               </div>
-            </div>
 
-        {error && <div className={styles.errorMessage}>{error}</div>}
-
-        {/* Create/Edit Form Modal */}
-        {(showCreateForm || editingCollection) && (
-          <div className={styles.modalOverlay}>
-            <div className={styles.modernFormModal}>
-              <div className={styles.modalHeader}>
-                <h2 className={styles.modalTitle}>
-                  {editingCollection ? "Edit Collection" : "Create Collection"}
-                </h2>
+              {!showCreateForm && !editingCollection && (
                 <Button
-                  onClick={editingCollection ? cancelEditing : () => setShowCreateForm(false)}
-                  variant="outline"
-                  size="small"
+                  onClick={() => setShowCreateForm(true)}
+                  variant="primary"
+                  size="medium"
                 >
-                  ✕
+                  New Collection
                 </Button>
-              </div>
-              
-              <form
-                onSubmit={editingCollection ? handleEditCollection : handleCreateCollection}
-                className={styles.modernFormGrid}
-              >
-                <div className={styles.formInputSection}>
-                  <div className={styles.inputGroup}>
-                    <label className={styles.inputLabel}>Collection Name</label>
-                    <input
-                      type="text"
-                      placeholder="Enter collection name"
-                      value={title}
-                      onChange={(e) => setTitle(e.target.value)}
-                      required
-                      maxLength={100}
-                      className={styles.modernFormInput}
-                    />
-                  </div>
-                  
-                  <div className={styles.inputGroup}>
-                    <label className={styles.inputLabel}>Description</label>
-                    <textarea
-                      placeholder="Enter description (optional)"
-                      value={description}
-                      onChange={(e) => setDescription(e.target.value)}
-                      rows={3}
-                      maxLength={500}
-                      className={styles.modernFormTextarea}
-                    />
-                  </div>
-
-                  <div className={styles.inputGroup}>
-                    <label className={styles.inputLabel}>Cover Image URL</label>
-                    <input
-                      type="url"
-                      placeholder="Enter image URL (optional)"
-                      value={imageUrl}
-                      onChange={(e) => setImageUrl(e.target.value)}
-                      className={styles.modernFormInput}
-                    />
-                  </div>
-                </div>
-
-                <div className={styles.formOptionsSection}>
-                  <div className={styles.inputGroup}>
-                    <label htmlFor="collection-color" className={styles.inputLabel}>Theme Color</label>
-                    <input
-                      id="collection-color"
-                      type="color"
-                      value={color}
-                      onChange={(e) => setColor(e.target.value)}
-                      className={styles.modernFormColorPicker}
-                    />
-                  </div>
-
-                  <div className={styles.inputGroup}>
-                    <label className={styles.modernFormCheckbox}>
-                      <input
-                        type="checkbox"
-                        checked={isPublic}
-                        onChange={(e) => setIsPublic(e.target.checked)}
-                      />
-                      <span className={styles.checkboxLabel}>Make collection public</span>
-                    </label>
-                  </div>
-                </div>
-
-                <div className={styles.modalActions}>
-                  <Button
-                    onClick={editingCollection ? cancelEditing : () => setShowCreateForm(false)}
-                    variant="outline"
-                    size="medium"
-                    type="button"
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    type="submit"
-                    disabled={formLoading}
-                    variant="primary"
-                    size="medium"
-                  >
-                    {formLoading
-                      ? "Saving..."
-                      : editingCollection
-                      ? "Update Collection"
-                      : "Create Collection"}
-                  </Button>
-                </div>
-              </form>
+              )}
             </div>
           </div>
-        )}
 
-            {/* Collections Content */}
-            {collections.length === 0 ? (
-              <div className={styles.modernEmptyState}>
-                <div className={styles.emptyStateIcon}>📚</div>
-                <h3 className={styles.emptyStateTitle}>No collections yet</h3>
-                <p className={styles.emptyStateDescription}>
-                  Create your first collection to start organizing your vinyl records
-                </p>
-                {!showCreateForm && (
+          {error && <div className={styles.errorMessage}>{error}</div>}
+
+          {/* Create/Edit Form Modal */}
+          {(showCreateForm || editingCollection) && (
+            <div className={styles.modalOverlay}>
+              <div className={styles.modernFormModal}>
+                <div className={styles.modalHeader}>
+                  <h2 className={styles.modalTitle}>
+                    {editingCollection
+                      ? "Edit Collection"
+                      : "Create Collection"}
+                  </h2>
                   <Button
-                    onClick={() => setShowCreateForm(true)}
-                    variant="primary"
-                    size="medium"
+                    onClick={
+                      editingCollection
+                        ? cancelEditing
+                        : () => setShowCreateForm(false)
+                    }
+                    variant="outline"
+                    size="small"
                   >
-                    Create Collection
+                    ✕
                   </Button>
-                )}
-              </div>
-            ) : (
-              <div className={styles.collectionsGrid}>
-                {collections.map((collection) => (
-                  <div key={collection.id} className={styles.collectionCard}>
-                    <Link href={`/collections/${collection.id}`} className={styles.cardLink}>
-                      <div className={styles.cardContent}>
-                        <div className={styles.cardHeader}>
-                          <h3 className={styles.cardTitle}>{collection.title}</h3>
-                          <div className={styles.cardBadges}>
-                            {collection.isDefault && (
-                              <span className={styles.defaultBadge}>Default</span>
-                            )}
-                            {collection.isPublic && (
-                              <span className={styles.publicBadge}>Public</span>
-                            )}
-                          </div>
-                        </div>
-                        
-                        {collection.description && (
-                          <p className={styles.cardDescription}>
-                            {collection.description}
-                          </p>
-                        )}
-                        
-                        <div className={styles.cardStats}>
-                          <span className={styles.recordCount}>
-                            {collection._count.vinyls} {collection._count.vinyls === 1 ? 'record' : 'records'}
-                          </span>
-                          <span className={styles.statsSeparator}>•</span>
-                          <span className={styles.createdDate}>
-                            Created {new Date(collection.createdAt).toLocaleDateString()}
-                          </span>
-                        </div>
-                      </div>
-                    </Link>
-                    
-                    <div className={styles.cardActions}>
-                      <Button
-                        onClick={() => startEditing(collection)}
-                        variant="outline"
-                        size="small"
-                      >
-                        Edit
-                      </Button>
-                      {!collection.isDefault && (
-                        <>
-                          <Button
-                            onClick={() => handleSetDefault(collection)}
-                            variant="outline"
-                            size="small"
-                          >
-                            Set Default
-                          </Button>
-                          <Button
-                            onClick={() => handleDeleteCollection(collection)}
-                            variant="danger"
-                            size="small"
-                          >
-                            Delete
-                          </Button>
-                        </>
-                      )}
+                </div>
+
+                <form
+                  onSubmit={
+                    editingCollection
+                      ? handleEditCollection
+                      : handleCreateCollection
+                  }
+                  className={styles.modernFormGrid}
+                >
+                  <div className={styles.formInputSection}>
+                    <div className={styles.inputGroup}>
+                      <label className={styles.inputLabel}>
+                        Collection Name
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="Enter collection name"
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
+                        required
+                        maxLength={100}
+                        className={styles.modernFormInput}
+                      />
+                    </div>
+
+                    <div className={styles.inputGroup}>
+                      <label className={styles.inputLabel}>Description</label>
+                      <textarea
+                        placeholder="Enter description (optional)"
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
+                        rows={3}
+                        maxLength={500}
+                        className={styles.modernFormTextarea}
+                      />
                     </div>
                   </div>
-                ))}
+                  <div className={styles.formOptionsSection}>
+                    <div className={styles.inputGroup}>
+                      <label className={styles.modernFormCheckbox}>
+                        <input
+                          type="checkbox"
+                          checked={isPublic}
+                          onChange={(e) => setIsPublic(e.target.checked)}
+                        />
+                        <span className={styles.checkboxLabel}>
+                          Make collection public
+                        </span>
+                      </label>
+                    </div>
+                  </div>
+                  <div className={styles.modalActions}>
+                    <Button
+                      onClick={
+                        editingCollection
+                          ? cancelEditing
+                          : () => setShowCreateForm(false)
+                      }
+                      variant="outline"
+                      size="medium"
+                      type="button"
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      type="submit"
+                      disabled={formLoading}
+                      variant="primary"
+                      size="medium"
+                    >
+                      {formLoading
+                        ? "Saving..."
+                        : editingCollection
+                        ? "Update Collection"
+                        : "Create Collection"}
+                    </Button>
+                  </div>
+                </form>
               </div>
-            )}
-          </div>
+            </div>
+          )}
+
+          {/* Collections Content */}
+          {collections.length === 0 ? (
+            <div className={styles.modernEmptyState}>
+              <div className={styles.emptyStateIcon}>📚</div>
+              <h3 className={styles.emptyStateTitle}>No collections yet</h3>
+              <p className={styles.emptyStateDescription}>
+                Create your first collection to start organizing your vinyl
+                records
+              </p>
+              {!showCreateForm && (
+                <Button
+                  onClick={() => setShowCreateForm(true)}
+                  variant="primary"
+                  size="medium"
+                >
+                  Create Collection
+                </Button>
+              )}
+            </div>
+          ) : (
+            <div className={styles.collectionsList}>
+              {collections.map((collection) => (
+                <div key={collection.id} className={styles.collectionItem}>
+                  {/* Left: Collection Name & Badges */}
+                  <div className={styles.collectionLeft}>
+                    <div className={styles.titleRow}>
+                      <Link
+                        href={`/collections/${collection.id}`}
+                        className={styles.collectionLink}
+                      >
+                        <h3 className={styles.collectionTitle}>
+                          {collection.title}
+                        </h3>
+                      </Link>
+                      <div className={styles.inlineBadges}>
+                        {collection.isDefault && (
+                          <span className={styles.defaultBadge}>Default</span>
+                        )}
+                        {collection.isPublic && (
+                          <span className={styles.publicBadge}>Public</span>
+                        )}
+                      </div>
+                    </div>
+                    {collection.description && (
+                      <p className={styles.collectionDescription}>
+                        {collection.description}
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Middle: Stats */}
+                  <div className={styles.collectionMiddle}>
+                    <span className={styles.recordCount}>
+                      {collection._count.vinyls}{" "}
+                      {collection._count.vinyls === 1 ? "record" : "records"}
+                    </span>
+                    <span className={styles.createdDate}>
+                      {new Date(collection.createdAt).toLocaleDateString()}
+                    </span>
+                  </div>
+
+                  {/* Right: Actions */}
+                  <div className={styles.collectionRight}>
+                    <Button
+                      onClick={() => startEditing(collection)}
+                      variant="outline"
+                      size="small"
+                    >
+                      Edit
+                    </Button>
+                    {!collection.isDefault && (
+                      <>
+                        <Button
+                          onClick={() => handleSetDefault(collection)}
+                          variant="outline"
+                          size="small"
+                        >
+                          Set Default
+                        </Button>
+                        <Button
+                          onClick={() => handleDeleteCollection(collection)}
+                          variant="danger"
+                          size="small"
+                        >
+                          Delete
+                        </Button>
+                      </>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </main>

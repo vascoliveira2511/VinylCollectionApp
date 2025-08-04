@@ -3902,73 +3902,90 @@ Link.editButton:hover {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(26, 25, 22, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
-  z-index: 1000;
-  padding: 20px;
+  z-index: 99999;
+  padding: 120px 20px 40px 20px;
 }
 
 .modernFormModal {
-  background: white;
-  border-radius: 12px;
-  max-width: 500px;
+  background: var(--surface-glass);
+  border-radius: 40px;
+  max-width: 520px;
   width: 100%;
-  max-height: 90vh;
-  overflow-y: auto;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  max-height: 80vh;
+  overflow: hidden;
+  box-shadow: 0 4px 24px rgba(26, 25, 22, 0.05);
+  border: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
 .modalHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 24px 24px 0 24px;
+  padding: 24px 24px 16px 24px;
+  border-bottom: 1px solid #f1f5f9;
+  flex-shrink: 0;
 }
 
 .modalTitle {
-  font-size: 1.5rem;
+  font-size: 1.375rem;
   font-weight: 600;
-  color: #1a1a1a;
+  color: #0f172a;
   margin: 0;
+  letter-spacing: -0.01em;
 }
 
 .modernFormGrid {
   padding: 24px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 28px;
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
 }
 
 .inputGroup {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
 }
 
 .inputLabel {
   font-size: 0.875rem;
   font-weight: 500;
-  color: #374151;
+  color: #334155;
+  margin-bottom: 6px;
+  letter-spacing: -0.01em;
 }
 
 .modernFormInput,
 .modernFormTextarea {
-  padding: 12px 16px;
-  border: 1px solid #d1d5db;
-  border-radius: 8px;
-  background: white;
-  color: #1f2937;
-  font-size: 0.875rem;
-  transition: border-color 0.2s ease;
+  padding: 14px 16px;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  background: #fafbfc;
+  color: #0f172a;
+  font-size: 0.9375rem;
+  transition: all 0.2s ease;
+  font-family: inherit;
 }
 
 .modernFormInput:focus,
 .modernFormTextarea:focus {
   outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  border-color: #6366f1;
+  background: white;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.08);
 }
 
 .modernFormTextarea {
@@ -3983,83 +4000,166 @@ Link.editButton:hover {
   align-items: flex-end;
 }
 
-.modernFormColorPicker {
-  width: 60px;
-  height: 40px;
-  border: 1px solid #d1d5db;
-  border-radius: 6px;
+.colorSwatchGrid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 8px;
+  max-width: 240px;
+}
+
+.colorSwatch {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: 2px solid transparent;
   cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.colorSwatch:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.colorSwatchActive {
+  border-color: #334155;
+  transform: scale(1.15);
+  box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #334155;
 }
 
 .modernFormCheckbox {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
   cursor: pointer;
   user-select: none;
+  padding: 16px;
+  border-radius: 12px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  transition: all 0.2s ease;
+}
+
+.modernFormCheckbox:hover {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+}
+
+.modernFormCheckbox input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: #6366f1;
+  border-radius: 4px;
 }
 
 .checkboxLabel {
-  font-size: 0.875rem;
-  color: #374151;
+  font-size: 0.9rem;
+  color: #475569;
+  font-weight: 500;
 }
 
 .modalActions {
   display: flex;
   gap: 12px;
   justify-content: flex-end;
-  padding-top: 20px;
-  border-top: 1px solid #e5e7eb;
+  padding: 16px 24px 24px 24px;
+  flex-shrink: 0;
 }
 
-/* Clean Collections Grid */
-.collectionsGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 20px;
+/* Simple Collections List */
+.collectionsList {
+  margin-top: 24px;
 }
 
-.collectionCard {
-  background: var(--bg-primary);
-  border: 1px solid var(--border-light);
-  border-radius: 8px;
-  overflow: hidden;
+.collectionItem {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 20px 24px;
+  margin-bottom: 12px;
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-radius: 16px;
+  gap: 32px;
   transition: all 0.2s ease;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 
-.collectionCard:hover {
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  border-color: var(--border-dark);
+.collectionItem:hover {
+  background: rgba(255, 255, 255, 0.8);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
-.cardLink {
-  display: block;
+/* Left Column */
+.collectionLeft {
+  flex: 1;
+  min-width: 0;
+}
+
+.collectionLink {
   text-decoration: none;
   color: inherit;
 }
 
-.cardContent {
-  padding: 20px;
+.collectionLink:hover .collectionTitle {
+  color: var(--accent-primary);
 }
 
-.cardHeader {
+.titleRow {
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
   gap: 12px;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 }
 
-.cardTitle {
-  font-size: 1.125rem;
-  font-weight: 600;
+.collectionTitle {
+  font-size: 1.25rem;
+  font-weight: 700;
   color: var(--text-primary);
   margin: 0;
+  letter-spacing: -0.02em;
 }
 
-.cardBadges {
+.inlineBadges {
   display: flex;
-  gap: 6px;
+  gap: 8px;
+}
+
+.collectionDescription {
+  margin: 4px 0 0 0;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  font-weight: 400;
+}
+
+/* Middle Column */
+.collectionMiddle {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  white-space: nowrap;
+}
+
+.recordCount {
+  font-weight: 500;
+  color: var(--text-primary);
+  font-size: 0.875rem;
+}
+
+.createdDate {
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+}
+
+/* Right Column */
+.collectionRight {
+  display: flex;
+  gap: 8px;
   flex-shrink: 0;
 }
 
@@ -4073,8 +4173,10 @@ Link.editButton:hover {
 }
 
 .defaultBadge {
-  background: #e3f2fd;
-  color: #1565c0;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  color: #64748b;
+  font-weight: 500;
 }
 
 .publicBadge {
@@ -4082,23 +4184,222 @@ Link.editButton:hover {
   color: #7b1fa2;
 }
 
-.cardDescription {
-  color: var(--text-secondary);
-  font-size: 0.875rem;
-  line-height: 1.4;
-  margin: 0 0 12px 0;
+/* Collection Page Styles */
+.collectionHeroSection {
+  margin-bottom: 32px;
 }
 
-.cardStats {
+.collectionHeroContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 32px;
+}
+
+.collectionHeroLeft {
+  flex: 1;
+}
+
+.collectionTitleSection {
+  margin-bottom: 16px;
+}
+
+.collectionPageTitle {
+  font-size: 2.25rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin: 0 0 12px 0;
+  letter-spacing: -0.03em;
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 0.8rem;
+  gap: 16px;
+}
+
+.collectionPageDescription {
+  font-size: 1.125rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin: 0;
+  font-weight: 400;
+}
+
+.collectionHeroActions {
+  flex-shrink: 0;
+}
+
+/* Filters Section */
+.filtersSection {
+  margin-bottom: 32px;
+  padding: 24px;
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-radius: 16px;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.filtersHeader {
+  margin-bottom: 20px;
+}
+
+.sectionTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+.modernFilters {
+  display: flex;
+  gap: 24px;
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+
+.filterInputs {
+  display: flex;
+  gap: 16px;
+  flex: 1;
+  min-width: 300px;
+}
+
+.modernFilterInput {
+  padding: 12px 16px;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  background: #fafbfc;
+  color: #0f172a;
+  font-size: 0.9375rem;
+  transition: all 0.2s ease;
+  font-family: inherit;
+  flex: 1;
+  min-width: 120px;
+}
+
+.modernFilterInput:focus {
+  outline: none;
+  border-color: #6366f1;
+  background: white;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.08);
+}
+
+.viewControls {
+  display: flex;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.modernSelect {
+  padding: 12px 16px;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  background: #fafbfc;
+  color: #0f172a;
+  font-size: 0.9375rem;
+  transition: all 0.2s ease;
+  font-family: inherit;
+  cursor: pointer;
+  min-width: 120px;
+}
+
+.modernSelect:focus {
+  outline: none;
+  border-color: #6366f1;
+  background: white;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.08);
+}
+
+/* Records Section */
+.recordsSection {
+  margin-bottom: 32px;
+}
+
+.recordsHeader {
+  margin-bottom: 24px;
+}
+
+.recordCountBadge {
+  font-size: 1.125rem;
+  font-weight: 500;
   color: var(--text-secondary);
 }
 
-.recordCount {
-  font-weight: 500;
+.modernCollectionGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
+  margin-top: 24px;
+}
+
+.modernCollectionList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.modernCollectionCompact {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.errorState {
+  text-align: center;
+  padding: 48px 24px;
+}
+
+/* Mobile responsive styles */
+@media (max-width: 768px) {
+  .collectionItem {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+  }
+
+  .collectionMiddle {
+    align-items: flex-start;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .collectionRight {
+    justify-content: flex-end;
+  }
+}
+
+@media (max-width: 480px) {
+  .collectionsList {
+    margin-top: 16px;
+  }
+
+  .collectionItem {
+    padding: 16px 0;
+    gap: 12px;
+  }
+
+  .titleRow {
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .collectionTitle {
+    font-size: 1rem;
+  }
+
+  .collectionMiddle {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+  }
+
+  .collectionRight {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
 }
 
 .statsSeparator {
@@ -4539,20 +4840,36 @@ Link.editButton:hover {
   }
 
   .modalOverlay {
-    padding: 16px;
+    padding: 20px 16px;
   }
 
   .modernFormModal {
-    max-height: 95vh;
+    max-height: 85vh;
+    margin: 16px;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
   }
 
   .modalHeader {
-    padding: 16px 20px;
+    padding: 24px 24px 16px 24px;
+  }
+
+  .modalTitle {
+    font-size: 1.25rem;
   }
 
   .modernFormGrid {
-    padding: 20px;
-    gap: 14px;
+    padding: 24px;
+    gap: 20px;
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+  }
+
+  .modalActions {
+    padding: 16px 24px 24px 24px;
+    flex-shrink: 0;
   }
 
   .formOptionsSection {
@@ -4573,6 +4890,55 @@ Link.editButton:hover {
   .cardActions {
     padding: 12px 16px;
     gap: 6px;
+  }
+
+  /* Collection Page Mobile Styles */
+  .collectionHeroContent {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .collectionPageTitle {
+    font-size: 1.75rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .collectionPageDescription {
+    font-size: 1rem;
+  }
+
+  .modernFilters {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .filterInputs {
+    min-width: auto;
+    flex-wrap: wrap;
+  }
+
+  .modernFilterInput {
+    min-width: 100px;
+  }
+
+  .viewControls {
+    justify-content: stretch;
+  }
+
+  .modernSelect {
+    flex: 1;
+  }
+
+  .modernCollectionGrid {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 16px;
+  }
+
+  .modernCollectionCompact {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 12px;
   }
 }
 
