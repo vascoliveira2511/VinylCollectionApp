@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Avatar from "../components/Avatar";
 import PageLoader from "../components/PageLoader";
+import Button from "../components/Button";
 import styles from "../page.module.css";
 
 interface User {
@@ -180,17 +181,31 @@ export default function FriendsPage() {
   return (
     <main className={styles.main}>
       <div className="container">
-        {/* Search Section */}
-        <div className="window">
-          <div className="title-bar">Find Friends</div>
-          <div className={styles.contentSection}>
-            <div className={styles.inputContainer}>
+        <div className={styles.contentSection}>
+          {/* Friends Hero Section */}
+          <div className={styles.friendsHeroSection}>
+            <div className={styles.friendsHeroContent}>
+              <div className={styles.friendsHeroLeft}>
+                <h1 className={styles.friendsPageTitle}>Friends</h1>
+                <p className={styles.friendsPageDescription}>
+                  Connect with other vinyl collectors and discover their collections
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Search Section */}
+          <div className={styles.searchSection}>
+            <div className={styles.searchHeader}>
+              <h2 className={styles.sectionTitle}>Find Friends</h2>
+            </div>
+            <div className={styles.modernSearchContainer}>
               <input
                 type="text"
                 placeholder="Search by username..."
                 value={searchQuery}
                 onChange={handleSearchChange}
-                className={styles.searchInput}
+                className={styles.modernFilterInput}
               />
               {isSearching && (
                 <div className={styles.searchingIndicator}>Searching...</div>
@@ -199,26 +214,27 @@ export default function FriendsPage() {
 
             {searchResults.length > 0 && (
               <div className={styles.searchResults}>
-                <h3>Search Results</h3>
-                <div className={styles.usersList}>
+                <h3 className={styles.resultsTitle}>Search Results</h3>
+                <div className={styles.modernUsersList}>
                   {searchResults.map((user) => (
-                    <div key={user.id} className={styles.userCard}>
+                    <div key={user.id} className={styles.modernUserCard}>
                       <Avatar
                         username={user.username}
                         avatar={user.avatar}
                         avatarType={user.avatarType}
                         size="medium"
                       />
-                      <div className={styles.userInfo}>
-                        <h4>{user.username}</h4>
-                        <div className={styles.userActions}>
+                      <div className={styles.modernUserInfo}>
+                        <h4 className={styles.userName}>{user.username}</h4>
+                        <div className={styles.modernUserActions}>
                           {user.friendshipStatus === "none" && (
-                            <button
+                            <Button
                               onClick={() => sendFriendRequest(user.id)}
-                              className={styles.addButton}
+                              variant="primary"
+                              size="small"
                             >
                               Add Friend
-                            </button>
+                            </Button>
                           )}
                           {user.friendshipStatus === "sent" && (
                             <span className={styles.statusText}>
@@ -231,11 +247,10 @@ export default function FriendsPage() {
                             </span>
                           )}
                           {user.friendshipStatus === "friends" && (
-                            <Link
-                              href={`/users/${user.id}`}
-                              className={styles.viewButton}
-                            >
-                              View Profile
+                            <Link href={`/users/${user.id}`}>
+                              <Button variant="outline" size="small">
+                                View Profile
+                              </Button>
                             </Link>
                           )}
                         </div>
@@ -246,22 +261,24 @@ export default function FriendsPage() {
               </div>
             )}
           </div>
-        </div>
 
-        {/* Friends Management */}
-        <div className="window">
-          <div className="title-bar">Friends</div>
-          <div className={styles.contentSection}>
-            {error && <div className={styles.errorMessage}>{error}</div>}
+          {/* Friends Management Section */}
+          <div className={styles.friendsManagementSection}>
+            <div className={styles.friendsManagementHeader}>
+              <h2 className={styles.sectionTitle}>Your Friends</h2>
+            </div>
+            {error && (
+              <div className={styles.modernErrorMessage}>{error}</div>
+            )}
 
-            {/* Tabs */}
-            <div className={styles.tabNav}>
+            {/* Modern Tabs */}
+            <div className={styles.modernTabNav}>
               <button
                 onClick={() => setActiveTab("friends")}
                 className={
                   activeTab === "friends"
-                    ? styles.tabActive
-                    : styles.tabInactive
+                    ? styles.modernTabActive
+                    : styles.modernTabInactive
                 }
               >
                 Friends ({friends.length})
@@ -270,8 +287,8 @@ export default function FriendsPage() {
                 onClick={() => setActiveTab("received")}
                 className={
                   activeTab === "received"
-                    ? styles.tabActive
-                    : styles.tabInactive
+                    ? styles.modernTabActive
+                    : styles.modernTabInactive
                 }
               >
                 Requests ({receivedRequests.length})
@@ -279,52 +296,60 @@ export default function FriendsPage() {
               <button
                 onClick={() => setActiveTab("sent")}
                 className={
-                  activeTab === "sent" ? styles.tabActive : styles.tabInactive
+                  activeTab === "sent"
+                    ? styles.modernTabActive
+                    : styles.modernTabInactive
                 }
               >
                 Sent ({sentRequests.length})
               </button>
             </div>
 
-            <div className={styles.tabContent}>
+            <div className={styles.modernTabContent}>
               {/* Friends Tab */}
               {activeTab === "friends" && (
-                <div className={styles.friendsList}>
+                <div className={styles.modernFriendsList}>
                   {friends.length === 0 ? (
-                    <div className={styles.emptyState}>
-                      <p>No friends yet. Start by searching for users above!</p>
+                    <div className={styles.modernEmptyState}>
+                      <div className={styles.emptyStateIcon}>👥</div>
+                      <h3 className={styles.emptyStateTitle}>No friends yet</h3>
+                      <p className={styles.emptyStateDescription}>
+                        Start by searching for users above!
+                      </p>
                     </div>
                   ) : (
                     friends.map((friendship) => (
-                      <div key={friendship.id} className={styles.friendCard}>
+                      <div key={friendship.id} className={styles.modernFriendCard}>
                         <Avatar
                           username={friendship.friend?.username || ""}
                           avatar={friendship.friend?.avatar}
                           avatarType={friendship.friend?.avatarType}
                           size="medium"
                         />
-                        <div className={styles.friendInfo}>
-                          <h4>{friendship.friend?.username}</h4>
-                          <p>
+                        <div className={styles.modernFriendInfo}>
+                          <h4 className={styles.friendName}>
+                            {friendship.friend?.username}
+                          </h4>
+                          <p className={styles.friendMeta}>
                             Friends since{" "}
                             {new Date(
                               friendship.createdAt
                             ).toLocaleDateString()}
                           </p>
                         </div>
-                        <div className={styles.friendActions}>
-                          <Link
-                            href={`/users/${friendship.friend?.id}`}
-                            className={styles.viewButton}
-                          >
-                            View Collections
+                        <div className={styles.modernFriendActions}>
+                          <Link href={`/users/${friendship.friend?.id}`}>
+                            <Button variant="outline" size="small">
+                              View Collections
+                            </Button>
                           </Link>
-                          <button
+                          <Button
                             onClick={() => removeFriend(friendship.id)}
-                            className={styles.deleteButton}
+                            variant="outline"
+                            size="small"
                           >
                             Remove Friend
-                          </button>
+                          </Button>
                         </div>
                       </div>
                     ))
@@ -334,44 +359,52 @@ export default function FriendsPage() {
 
               {/* Received Requests Tab */}
               {activeTab === "received" && (
-                <div className={styles.requestsList}>
+                <div className={styles.modernRequestsList}>
                   {receivedRequests.length === 0 ? (
-                    <div className={styles.emptyState}>
-                      <p>No pending friend requests.</p>
+                    <div className={styles.modernEmptyState}>
+                      <div className={styles.emptyStateIcon}>📨</div>
+                      <h3 className={styles.emptyStateTitle}>No pending requests</h3>
+                      <p className={styles.emptyStateDescription}>
+                        You don't have any friend requests right now.
+                      </p>
                     </div>
                   ) : (
                     receivedRequests.map((request) => (
-                      <div key={request.id} className={styles.requestCard}>
+                      <div key={request.id} className={styles.modernRequestCard}>
                         <Avatar
                           username={request.sender?.username || ""}
                           avatar={request.sender?.avatar}
                           avatarType={request.sender?.avatarType}
                           size="medium"
                         />
-                        <div className={styles.requestInfo}>
-                          <h4>{request.sender?.username}</h4>
-                          <p>
+                        <div className={styles.modernRequestInfo}>
+                          <h4 className={styles.requestName}>
+                            {request.sender?.username}
+                          </h4>
+                          <p className={styles.requestMeta}>
                             Sent{" "}
                             {new Date(request.createdAt).toLocaleDateString()}
                           </p>
                         </div>
-                        <div className={styles.requestActions}>
-                          <button
+                        <div className={styles.modernRequestActions}>
+                          <Button
                             onClick={() =>
                               respondToRequest(request.id, "accept")
                             }
-                            className={styles.addButton}
+                            variant="primary"
+                            size="small"
                           >
                             Accept
-                          </button>
-                          <button
+                          </Button>
+                          <Button
                             onClick={() =>
                               respondToRequest(request.id, "decline")
                             }
-                            className={styles.cancelButton}
+                            variant="outline"
+                            size="small"
                           >
                             Decline
-                          </button>
+                          </Button>
                         </div>
                       </div>
                     ))
@@ -381,34 +414,41 @@ export default function FriendsPage() {
 
               {/* Sent Requests Tab */}
               {activeTab === "sent" && (
-                <div className={styles.sentList}>
+                <div className={styles.modernSentList}>
                   {sentRequests.length === 0 ? (
-                    <div className={styles.emptyState}>
-                      <p>No pending sent requests.</p>
+                    <div className={styles.modernEmptyState}>
+                      <div className={styles.emptyStateIcon}>📤</div>
+                      <h3 className={styles.emptyStateTitle}>No sent requests</h3>
+                      <p className={styles.emptyStateDescription}>
+                        You haven't sent any friend requests yet.
+                      </p>
                     </div>
                   ) : (
                     sentRequests.map((request) => (
-                      <div key={request.id} className={styles.sentCard}>
+                      <div key={request.id} className={styles.modernSentCard}>
                         <Avatar
                           username={request.receiver?.username || ""}
                           avatar={request.receiver?.avatar}
                           avatarType={request.receiver?.avatarType}
                           size="medium"
                         />
-                        <div className={styles.sentInfo}>
-                          <h4>{request.receiver?.username}</h4>
-                          <p>
+                        <div className={styles.modernSentInfo}>
+                          <h4 className={styles.sentName}>
+                            {request.receiver?.username}
+                          </h4>
+                          <p className={styles.sentMeta}>
                             Sent{" "}
                             {new Date(request.createdAt).toLocaleDateString()}
                           </p>
                         </div>
-                        <div className={styles.sentActions}>
-                          <button
+                        <div className={styles.modernSentActions}>
+                          <Button
                             onClick={() => removeFriend(request.id)}
-                            className={styles.cancelButton}
+                            variant="outline"
+                            size="small"
                           >
                             Cancel Request
-                          </button>
+                          </Button>
                         </div>
                       </div>
                     ))

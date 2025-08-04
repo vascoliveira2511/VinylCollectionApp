@@ -310,7 +310,7 @@
 }
 
 .genreCard:focus {
-  outline: 2px solid var(--beeswax);
+  outline: 2px solid var(--primary);
   outline-offset: 2px;
 }
 
@@ -1287,8 +1287,8 @@ a.card:visited {
 
 .preferenceSelect:focus {
   outline: none;
-  border-color: var(--ctp-lavender);
-  box-shadow: 0 0 0 2px rgba(180, 190, 254, 0.2);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--focus-ring);
 }
 
 .checkboxLabel {
@@ -1610,7 +1610,8 @@ a.card:visited {
 .manualFieldsSection select:focus,
 .manualFieldsSection textarea:focus {
   outline: none;
-  border-color: var(--ctp-lavender);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--focus-ring);
 }
 
 .manualFieldsSection textarea {
@@ -1948,8 +1949,8 @@ Link.editButton:hover {
 .editFormGrid input:focus,
 .editFormGrid select:focus {
   outline: none;
-  border-color: var(--ctp-lavender);
-  box-shadow: 0 0 0 2px var(--ctp-lavender) 20;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--focus-ring);
 }
 
 .primaryButton {
@@ -3299,9 +3300,9 @@ Link.editButton:hover {
 
 .loginInput:focus {
   outline: none;
-  border-color: var(--beeswax);
-  background: var(--surface);
-  box-shadow: 0 0 0 2px var(--beeswax-glow);
+  border-color: var(--primary);
+  background: var(--surface-elevated);
+  box-shadow: 0 0 0 3px var(--focus-ring);
 }
 
 .loginInput:disabled {
@@ -3948,7 +3949,7 @@ Link.editButton:hover {
   padding: 24px;
   display: flex;
   flex-direction: column;
-  gap: 28px;
+  gap: 36px;
   overflow-y: auto;
   flex: 1;
   min-height: 0;
@@ -3957,14 +3958,18 @@ Link.editButton:hover {
 .inputGroup {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 16px;
+}
+
+.inputGroup:not(:first-child) {
+  margin-top: 24px;
 }
 
 .inputLabel {
   font-size: 0.875rem;
   font-weight: 500;
   color: #334155;
-  margin-bottom: 6px;
+  margin-bottom: 12px;
   letter-spacing: -0.01em;
 }
 
@@ -3983,9 +3988,9 @@ Link.editButton:hover {
 .modernFormInput:focus,
 .modernFormTextarea:focus {
   outline: none;
-  border-color: #6366f1;
-  background: white;
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.08);
+  border-color: var(--primary);
+  background: var(--surface-elevated);
+  box-shadow: 0 0 0 3px var(--focus-ring);
 }
 
 .modernFormTextarea {
@@ -4049,7 +4054,7 @@ Link.editButton:hover {
 .modernFormCheckbox input[type="checkbox"] {
   width: 18px;
   height: 18px;
-  accent-color: #6366f1;
+  accent-color: var(--primary);
   border-radius: 4px;
 }
 
@@ -4279,9 +4284,9 @@ Link.editButton:hover {
 
 .modernFilterInput:focus {
   outline: none;
-  border-color: #6366f1;
-  background: white;
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.08);
+  border-color: var(--primary);
+  background: var(--surface-elevated);
+  box-shadow: 0 0 0 3px var(--focus-ring);
 }
 
 .viewControls {
@@ -4305,9 +4310,9 @@ Link.editButton:hover {
 
 .modernSelect:focus {
   outline: none;
-  border-color: #6366f1;
-  background: white;
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.08);
+  border-color: var(--primary);
+  background: var(--surface-elevated);
+  box-shadow: 0 0 0 3px var(--focus-ring);
 }
 
 /* Records Section */
@@ -5279,6 +5284,856 @@ Link.editButton:hover {
   font-size: 0.9rem;
   width: 100%;
   z-index: 10;
+}
+
+/* Modern Friends Page Styles */
+.friendsHeroSection {
+  margin-bottom: 40px;
+}
+
+.friendsHeroContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 32px;
+}
+
+.friendsHeroLeft {
+  flex: 1;
+}
+
+.friendsPageTitle {
+  font-size: clamp(2.5rem, 5vw, 3.5rem);
+  font-family: "Playfair Display", Georgia, serif;
+  font-weight: 400;
+  color: var(--text);
+  margin: 0 0 16px 0;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.friendsPageDescription {
+  font-size: 1.125rem;
+  color: var(--text-secondary);
+  margin: 0;
+  max-width: 600px;
+  line-height: 1.6;
+}
+
+.searchSection {
+  margin-bottom: 40px;
+}
+
+.searchHeader {
+  margin-bottom: 24px;
+}
+
+.modernSearchContainer {
+  position: relative;
+  max-width: 500px;
+}
+
+.searchingIndicator {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: var(--surface-elevated);
+  padding: 8px 16px;
+  border: 1px solid var(--border);
+  border-radius: 0 0 8px 8px;
+  color: var(--text-tertiary);
+  font-size: 0.875rem;
+  width: 100%;
+  z-index: 10;
+  box-shadow: 0 4px 8px var(--shadow-subtle);
+}
+
+.searchResults {
+  margin-top: 24px;
+}
+
+.resultsTitle {
+  color: var(--text);
+  font-size: 1.25rem;
+  font-weight: 500;
+  margin-bottom: 16px;
+}
+
+.modernUsersList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.modernUserCard {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+  background: var(--surface-elevated);
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 8px var(--shadow-subtle);
+}
+
+.modernUserCard:hover {
+  border-color: var(--primary);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px var(--shadow-medium);
+}
+
+.modernUserInfo {
+  flex: 1;
+}
+
+.userName {
+  color: var(--text);
+  font-size: 1.125rem;
+  font-weight: 500;
+  margin: 0 0 4px 0;
+}
+
+.modernUserActions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.friendsManagementSection {
+  margin-bottom: 40px;
+}
+
+.friendsManagementHeader {
+  margin-bottom: 24px;
+}
+
+.modernErrorMessage {
+  background: var(--error-light);
+  color: var(--error);
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid var(--error);
+  margin-bottom: 24px;
+  font-weight: 500;
+}
+
+.modernTabNav {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 32px;
+  background: var(--surface-subtle);
+  padding: 4px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+}
+
+.modernTabInactive,
+.modernTabActive {
+  flex: 1;
+  padding: 12px 20px;
+  background: none;
+  border: none;
+  border-radius: 8px;
+  font-family: "Inter", sans-serif;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  color: var(--text-tertiary);
+}
+
+.modernTabActive {
+  background: var(--surface-elevated);
+  color: var(--text);
+  box-shadow: 0 2px 8px var(--shadow-subtle);
+  border: 1px solid var(--border);
+}
+
+.modernTabInactive:hover {
+  color: var(--text-secondary);
+  background: var(--surface-elevated);
+}
+
+.modernTabContent {
+  min-height: 300px;
+}
+
+.modernFriendsList,
+.modernRequestsList,
+.modernSentList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.modernFriendCard,
+.modernRequestCard,
+.modernSentCard {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 24px;
+  background: var(--surface-elevated);
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 8px var(--shadow-subtle);
+}
+
+.modernFriendCard:hover,
+.modernRequestCard:hover,
+.modernSentCard:hover {
+  border-color: var(--primary);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px var(--shadow-medium);
+}
+
+.modernFriendInfo,
+.modernRequestInfo,
+.modernSentInfo {
+  flex: 1;
+}
+
+.friendName,
+.requestName,
+.sentName {
+  color: var(--text);
+  font-size: 1.125rem;
+  font-weight: 500;
+  margin: 0 0 4px 0;
+}
+
+.friendMeta,
+.requestMeta,
+.sentMeta {
+  color: var(--text-tertiary);
+  font-size: 0.875rem;
+  margin: 0;
+}
+
+.modernFriendActions,
+.modernRequestActions,
+.modernSentActions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.modernEmptyState {
+  text-align: center;
+  padding: 60px 32px;
+  color: var(--text-tertiary);
+}
+
+.emptyStateIcon {
+  font-size: 3rem;
+  margin-bottom: 16px;
+}
+
+.emptyStateTitle {
+  color: var(--text);
+  font-size: 1.25rem;
+  font-weight: 500;
+  margin: 0 0 8px 0;
+}
+
+.emptyStateDescription {
+  color: var(--text-secondary);
+  font-size: 1rem;
+  margin: 0;
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.6;
+}
+
+/* Mobile responsive styles for friends page */
+@media (max-width: 768px) {
+  .friendsHeroContent {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 24px;
+  }
+
+  .modernTabNav {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .modernTabInactive,
+  .modernTabActive {
+    flex: none;
+    text-align: center;
+  }
+
+  .modernUserCard,
+  .modernFriendCard,
+  .modernRequestCard,
+  .modernSentCard {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .modernUserActions,
+  .modernFriendActions,
+  .modernRequestActions,
+  .modernSentActions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+}
+
+/* Modern Profile Page Styles */
+.profileHeroSection {
+  margin-bottom: 40px;
+}
+
+.profileHeroContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 32px;
+}
+
+.profileHeroLeft {
+  flex: 1;
+}
+
+.profilePageTitle {
+  font-size: clamp(2.5rem, 5vw, 3.5rem);
+  font-family: "Playfair Display", Georgia, serif;
+  font-weight: 400;
+  color: var(--text);
+  margin: 0 0 16px 0;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.profilePageDescription {
+  font-size: 1.125rem;
+  color: var(--text-secondary);
+  margin: 0;
+  max-width: 600px;
+  line-height: 1.6;
+}
+
+.profileContainer {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.profileSection {
+  margin-bottom: 48px;
+  padding-bottom: 32px;
+  border-bottom: 1px solid var(--border);
+  opacity: 0.6;
+}
+
+.profileSection:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.profileInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.genreStats {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.genreStat {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+  opacity: 0.4;
+}
+
+.genreStat:last-child {
+  border-bottom: none;
+}
+
+.genreName {
+  color: var(--text);
+  font-weight: 500;
+}
+
+.genreCount {
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.recentVinyls {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.recentVinyl {
+  display: flex;
+  flex-direction: column;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+  opacity: 0.4;
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+
+.recentVinyl:last-child {
+  border-bottom: none;
+}
+
+.recentVinyl:hover {
+  opacity: 1;
+  transform: translateX(4px);
+}
+
+.vinylTitle {
+  color: var(--text);
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.vinylArtist {
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+}
+
+.cardTitle {
+  color: var(--text);
+  font-size: 1.125rem;
+  font-weight: 500;
+  margin: 0 0 16px 0;
+}
+
+.modernProfileInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.avatarSection {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.modernGenreStats {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.modernGenreStat {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  background: var(--surface-subtle);
+  border-radius: 8px;
+}
+
+.modernGenreName {
+  color: var(--text);
+  font-weight: 500;
+}
+
+.modernGenreCount {
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.modernRecentVinyls {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.modernRecentVinyl {
+  display: flex;
+  flex-direction: column;
+  padding: 12px;
+  background: var(--surface-subtle);
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+
+.modernRecentVinyl:hover {
+  background: var(--surface);
+  transform: translateX(4px);
+}
+
+.modernVinylTitle {
+  color: var(--text);
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.modernVinylArtist {
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+}
+
+.modernActionButtons {
+  display: flex;
+  justify-content: center;
+  margin-top: 32px;
+}
+
+/* Preferences Styles */
+.preferencesContainer {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.preferenceSection {
+  margin-bottom: 40px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--border);
+  opacity: 0.6;
+}
+
+.preferenceSection:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.preferenceContent {
+  margin-top: 16px;
+}
+
+.preferenceLabel {
+  color: var(--text);
+  font-weight: 500;
+  font-size: 0.9375rem;
+  margin-bottom: 12px;
+  display: block;
+}
+
+.viewSelector {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.viewOption {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px;
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: transparent;
+}
+
+.viewOption:hover {
+  border-color: var(--primary);
+  background: var(--surface-elevated);
+}
+
+.selected {
+  border-color: var(--primary);
+  background: var(--primary-transparent);
+}
+
+.viewIcon {
+  font-size: 1.5rem;
+  margin-bottom: 8px;
+  color: var(--text-secondary);
+}
+
+.viewTitle {
+  font-weight: 500;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+.viewDescription {
+  font-size: 0.75rem;
+  color: var(--text-tertiary);
+  text-align: center;
+}
+
+.recordsPerPageSelector {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.recordsOption {
+  padding: 8px 16px;
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: transparent;
+  color: var(--text);
+  font-weight: 500;
+}
+
+.recordsOption:hover {
+  border-color: var(--primary);
+  background: var(--surface-elevated);
+}
+
+.checkboxLabel {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  color: var(--text);
+  font-size: 0.9375rem;
+  padding: 8px 0;
+}
+
+.checkboxLabel input[type="checkbox"] {
+  accent-color: var(--primary);
+  width: 18px;
+  height: 18px;
+}
+
+.modernPreferenceSection {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.modernPreferenceLabel {
+  color: var(--text);
+  font-weight: 500;
+  font-size: 0.9375rem;
+  margin-bottom: 12px;
+  display: block;
+}
+
+.modernViewSelector {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+}
+
+.modernViewOption {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px;
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: var(--surface);
+}
+
+.modernViewOption:hover {
+  border-color: var(--primary);
+  background: var(--surface-elevated);
+}
+
+.modernSelected {
+  border-color: var(--primary);
+  background: var(--primary-transparent);
+}
+
+.modernViewIcon {
+  font-size: 1.5rem;
+  margin-bottom: 8px;
+  color: var(--text-secondary);
+}
+
+.modernViewTitle {
+  font-weight: 500;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+.modernViewDescription {
+  font-size: 0.75rem;
+  color: var(--text-tertiary);
+  text-align: center;
+}
+
+.modernRecordsPerPageSelector {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.modernRecordsOption {
+  padding: 8px 16px;
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: var(--surface);
+  color: var(--text);
+  font-weight: 500;
+}
+
+.modernRecordsOption:hover {
+  border-color: var(--primary);
+  background: var(--surface-elevated);
+}
+
+.modernCheckboxLabel {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  color: var(--text);
+  font-size: 0.9375rem;
+}
+
+.modernCheckboxLabel input[type="checkbox"] {
+  accent-color: var(--primary);
+  width: 18px;
+  height: 18px;
+}
+
+/* Security Styles */
+.securitySection {
+  margin-bottom: 40px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.securitySection:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.modernPasswordForm {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Discogs Integration Styles */
+.discogsContainer {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.discogsSection {
+  margin-bottom: 40px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.discogsSection:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+/* Data & Privacy Styles */
+.dataContainer {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.dataSection {
+  margin-bottom: 40px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.dataSection:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.modernPrivacySection {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.exportButtons {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Danger Zone Styles */
+.modernDangerCard {
+  background: var(--error-light);
+  border-radius: 16px;
+  border: 2px solid var(--error);
+  padding: 24px;
+  box-shadow: 0 2px 8px var(--shadow-subtle);
+}
+
+.modernDeleteForm {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+/* Form Elements */
+.modernFormActions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-start;
+  margin-top: 24px;
+}
+
+.modernSuccessMessage {
+  background: var(--success-light);
+  color: var(--success);
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid var(--success);
+  margin-bottom: 24px;
+  font-weight: 500;
+}
+
+/* Mobile responsive styles for profile page */
+@media (max-width: 768px) {
+  .profileHeroContent {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 24px;
+  }
+
+  .profileContainer,
+  .preferencesContainer,
+  .discogsContainer,
+  .dataContainer {
+    padding: 0 16px;
+  }
+
+  .modernViewSelector {
+    grid-template-columns: 1fr;
+  }
+
+  .modernRecordsPerPageSelector {
+    justify-content: center;
+  }
+
+  .modernFormActions {
+    flex-direction: column;
+    align-items: stretch;
+  }
 }
 
 /* User Profile Styles */
@@ -6798,8 +7653,8 @@ Link.editButton:hover {
 .filterGroup input:focus,
 .filterGroup select:focus {
   outline: none;
-  border-color: var(--beeswax);
-  box-shadow: 0 0 0 3px var(--beeswax-transparent);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--focus-ring);
 }
 
 .clearButton {
@@ -7420,13 +8275,13 @@ Link.editButton:hover {
 }
 
 .unifiedSearchBar:focus-within {
-  border-color: var(--beeswax);
-  box-shadow: 0 0 0 3px var(--beeswax-transparent);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--focus-ring);
 }
 
 .inputContainer:focus-within {
-  border-color: var(--beeswax);
-  box-shadow: 0 0 0 3px var(--beeswax-transparent);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--focus-ring);
 }
 
 .searchInput:focus {

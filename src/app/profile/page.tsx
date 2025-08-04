@@ -688,7 +688,14 @@ export default function Profile() {
                   >
                     {preferencesLoading ? (
                       <>
-                        <div className="vinyl-loader" style={{width: '16px', height: '16px', marginRight: '8px'}}>
+                        <div
+                          className="vinyl-loader"
+                          style={{
+                            width: "16px",
+                            height: "16px",
+                            marginRight: "8px",
+                          }}
+                        >
                           <div className="vinyl-record"></div>
                         </div>
                         Saving...
@@ -859,9 +866,9 @@ export default function Profile() {
                       </div>
                       <p className={styles.syncNote}>
                         <small>
-                          Note: Large collections may take several minutes to sync
-                          due to API rate limits. Use "Remove Duplicates" to
-                          merge existing records with Discogs data.
+                          Note: Large collections may take several minutes to
+                          sync due to API rate limits. Use "Remove Duplicates"
+                          to merge existing records with Discogs data.
                         </small>
                       </p>
                     </div>

@@ -26,10 +26,10 @@
 
 .searchInput:focus {
   outline: none;
-  border-color: var(--yellow-border);
+  border-color: var(--primary);
   background-color: var(--surface-elevated);
   box-shadow: 
-    0 0 0 2px var(--yellow-glow),
+    0 0 0 3px var(--focus-ring),
     inset 0 2px 4px var(--shadow-subtle);
 }
 
@@ -86,10 +86,10 @@
 .filterRow input:focus,
 .filterRow select:focus {
   outline: none;
-  border-color: var(--yellow-border);
+  border-color: var(--primary);
   background-color: var(--surface-elevated);
   box-shadow: 
-    0 0 0 2px var(--yellow-glow),
+    0 0 0 3px var(--focus-ring),
     inset 0 2px 4px var(--shadow-subtle);
 }
 

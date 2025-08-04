@@ -69,18 +69,6 @@ export default function CollectionView({ params }: { params: { id: string } }) {
     }
   };
 
-  const deleteVinyl = async (vinylId: number) => {
-    try {
-      await apiClient.deleteVinyl(vinylId.toString());
-      // Refresh the collection with cache invalidation
-      const data = await apiClient.getCollection(id, {
-        cache: "force-refresh",
-      });
-      setCollection(data as Collection);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to delete vinyl");
-    }
-  };
 
   useEffect(() => {
     if (id) {
@@ -238,8 +226,6 @@ export default function CollectionView({ params }: { params: { id: string } }) {
                     key={vinyl.id}
                     vinyl={vinyl}
                     showDetails={true}
-                    onEdit={() => {}}
-                    onDelete={() => deleteVinyl(vinyl.id)}
                   />
                 ))}
               </div>
