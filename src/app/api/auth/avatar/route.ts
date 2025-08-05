@@ -31,7 +31,7 @@ export async function PUT(request: NextRequest) {
     }
 
     // Validate avatarType
-    if (!["generated", "emoji", "url"].includes(avatarType)) {
+    if (!["generated", "emoji", "url", "uploaded", "letter"].includes(avatarType)) {
       return NextResponse.json(
         { error: "Invalid avatarType" },
         { status: 400 }

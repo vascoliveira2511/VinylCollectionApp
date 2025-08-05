@@ -67,6 +67,7 @@ export async function POST(request: Request) {
           },
         });
 
+        let createdVinyl = existingVinyl;
         if (!existingVinyl) {
           // Fetch release details from Discogs to create vinyl record
           try {
@@ -74,7 +75,7 @@ export async function POST(request: Request) {
             if (discogsResponse.ok) {
               const releaseData = await discogsResponse.json();
               
-              await prisma.vinyl.create({
+              createdVinyl = await prisma.vinyl.create({
                 data: {
                   discogsId: discogsId,
                   artist: releaseData.artists?.[0]?.name || "Unknown Artist",
@@ -89,12 +90,27 @@ export async function POST(request: Request) {
                   userId: parseInt(userId),
                   collectionId: wantlistCollection.id,
                 },
+                include: {
+                  collection: {
+                    select: {
+                      id: true,
+                      title: true,
+                      isDefault: true,
+                      type: true,
+                    },
+                  },
+                },
               });
             }
           } catch (error) {
             console.error("Failed to fetch release details for wantlist:", error);
           }
         }
+        
+        return NextResponse.json({ 
+          success: true, 
+          vinyl: createdVinyl
+        });
       }
     }
 

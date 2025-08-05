@@ -206,26 +206,29 @@ export default function Collections() {
       <div className="container">
         <div className={styles.contentSection}>
           {/* Hero Section */}
-          <div className={styles.collectionsHeroSection}>
-            <div className={styles.collectionsHeroContent}>
-              <div className={styles.collectionsTitle}>
-                <h1>Collections</h1>
-                <p>Organize your vinyl records into curated collections</p>
+          <div className={styles.friendsHeroSection}>
+            <div className={styles.friendsHeroContent}>
+              <div className={styles.friendsHeroLeft}>
+                <h1 className={styles.friendsPageTitle}>Collections</h1>
+                <p className={styles.friendsPageDescription}>
+                  Organize your vinyl records into curated collections
+                </p>
               </div>
-
-              {!showCreateForm && !editingCollection && (
-                <Button
-                  onClick={() => setShowCreateForm(true)}
-                  variant="primary"
-                  size="medium"
-                >
-                  New Collection
-                </Button>
-              )}
+              <div className={styles.friendsHeroRight}>
+                {!showCreateForm && !editingCollection && (
+                  <Button
+                    onClick={() => setShowCreateForm(true)}
+                    variant="primary"
+                    size="medium"
+                  >
+                    New Collection
+                  </Button>
+                )}
+              </div>
             </div>
           </div>
 
-          {error && <div className={styles.errorMessage}>{error}</div>}
+          {error && <div className={styles.modernErrorMessage}>{error}</div>}
 
           {/* Create/Edit Form Modal */}
           {(showCreateForm || editingCollection) && (
@@ -351,20 +354,19 @@ export default function Collections() {
               )}
             </div>
           ) : (
-            <div className={styles.collectionsList}>
+            <div className={styles.profileCardSpacing}>
+              <div className={styles.modernFriendsList}>
               {collections.map((collection) => (
-                <div key={collection.id} className={styles.collectionItem}>
-                  {/* Left: Collection Name & Badges */}
-                  <div className={styles.collectionLeft}>
+                <Link
+                  key={collection.id}
+                  href={`/collections/${collection.id}`}
+                  className={styles.modernFriendCard}
+                >
+                  <div className={styles.modernFriendInfo}>
                     <div className={styles.titleRow}>
-                      <Link
-                        href={`/collections/${collection.id}`}
-                        className={styles.collectionLink}
-                      >
-                        <h3 className={styles.collectionTitle}>
-                          {collection.title}
-                        </h3>
-                      </Link>
+                      <h4 className={`${styles.friendName} ${styles.sectionTitle}`}>
+                        {collection.title}
+                      </h4>
                       <div className={styles.inlineBadges}>
                         {collection.isDefault && (
                           <span className={styles.defaultBadge}>Default</span>
@@ -375,53 +377,65 @@ export default function Collections() {
                       </div>
                     </div>
                     {collection.description && (
-                      <p className={styles.collectionDescription}>
+                      <p className={styles.friendMeta}>
                         {collection.description}
                       </p>
                     )}
+                    <div className={styles.collectionMetaSection}>
+                      <p className={styles.friendMeta}>
+                        <strong>{collection._count.vinyls}</strong>{" "}
+                        {collection._count.vinyls === 1 ? "record" : "records"}
+                      </p>
+                      <p className={styles.friendMeta}>
+                        Created {new Date(collection.createdAt).toLocaleDateString()}
+                      </p>
+                    </div>
                   </div>
-
-                  {/* Middle: Stats */}
-                  <div className={styles.collectionMiddle}>
-                    <span className={styles.recordCount}>
-                      {collection._count.vinyls}{" "}
-                      {collection._count.vinyls === 1 ? "record" : "records"}
-                    </span>
-                    <span className={styles.createdDate}>
-                      {new Date(collection.createdAt).toLocaleDateString()}
-                    </span>
-                  </div>
-
-                  {/* Right: Actions */}
-                  <div className={styles.collectionRight}>
+                  <div 
+                    className={styles.modernFriendActions}
+                    onClick={(e) => e.preventDefault()}
+                  >
                     <Button
-                      onClick={() => startEditing(collection)}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        startEditing(collection);
+                      }}
                       variant="outline"
-                      size="small"
+                      size="medium"
                     >
                       Edit
                     </Button>
                     {!collection.isDefault && (
                       <>
                         <Button
-                          onClick={() => handleSetDefault(collection)}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            handleSetDefault(collection);
+                          }}
                           variant="outline"
-                          size="small"
+                          size="medium"
                         >
                           Set Default
                         </Button>
                         <Button
-                          onClick={() => handleDeleteCollection(collection)}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            handleDeleteCollection(collection);
+                          }}
                           variant="danger"
-                          size="small"
+                          size="medium"
                         >
                           Delete
                         </Button>
                       </>
                     )}
                   </div>
-                </div>
+                </Link>
               ))}
+              </div>
             </div>
           )}
         </div>

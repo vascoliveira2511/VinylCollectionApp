@@ -439,11 +439,13 @@ export default function Profile() {
                         <p className={styles.friendMeta}>{user.email}</p>
                       )}
                       <p className={styles.friendMeta}>
-                        Member since {new Date(user.createdAt).toLocaleDateString()}
+                        Member since{" "}
+                        {new Date(user.createdAt).toLocaleDateString()}
                       </p>
                       {user.lastLoginAt && (
                         <p className={styles.friendMeta}>
-                          Last login: {new Date(user.lastLoginAt).toLocaleDateString()}
+                          Last login:{" "}
+                          {new Date(user.lastLoginAt).toLocaleDateString()}
                         </p>
                       )}
                     </div>
@@ -459,38 +461,58 @@ export default function Profile() {
                 <div className={styles.modernFriendsList}>
                   <div className={styles.modernFriendCard}>
                     <div className={styles.modernFriendInfo}>
-                      <h4 className={styles.friendName}>Collection Overview</h4>
+                      <h4 className={`${styles.friendName} ${styles.sectionTitle}`}>Collection Overview</h4>
                       <p className={styles.friendMeta}>
                         {user.totalRecords} total records
                       </p>
-                      {user.genreStats && Object.keys(user.genreStats).length > 0 && (
-                        <>
-                          <p className={styles.friendMeta}>
-                            Top genre: {Object.entries(user.genreStats)
-                              .sort(([,a], [,b]) => b - a)[0]?.[0]} 
-                            ({Object.entries(user.genreStats)
-                              .sort(([,a], [,b]) => b - a)[0]?.[1]} records)
-                          </p>
-                          <p className={styles.friendMeta}>
-                            {Object.keys(user.genreStats).length} different genres
-                          </p>
-                        </>
-                      )}
+                      {user.genreStats &&
+                        Object.keys(user.genreStats).length > 0 && (
+                          <>
+                            <p className={styles.friendMeta}>
+                              Top genre:{" "}
+                              {
+                                Object.entries(user.genreStats).sort(
+                                  ([, a], [, b]) => b - a
+                                )[0]?.[0]
+                              }
+                              (
+                              {
+                                Object.entries(user.genreStats).sort(
+                                  ([, a], [, b]) => b - a
+                                )[0]?.[1]
+                              }{" "}
+                              records)
+                            </p>
+                            <p className={styles.friendMeta}>
+                              {Object.keys(user.genreStats).length} different
+                              genres
+                            </p>
+                          </>
+                        )}
                       {user.discogsUsername && (
                         <p className={styles.friendMeta}>
                           Discogs connected as {user.discogsUsername}
                         </p>
                       )}
-                      
+
                       {user.recentVinyls && user.recentVinyls.length > 0 && (
                         <div className={styles.profileSection}>
-                          <h5 className={styles.sectionTitle}>Recent Additions</h5>
+                          <h5 className={styles.sectionTitle}>
+                            Recent Additions
+                          </h5>
                           <div className={styles.recentRecordsList}>
-                            {user.recentVinyls.slice(0, 3).map((vinyl, index) => (
-                              <p key={vinyl.id} className={styles.recentRecord}>
-                                {vinyl.artist} - {vinyl.title} {vinyl.year && `(${vinyl.year})`}
-                              </p>
-                            ))}
+                            {user.recentVinyls
+                              .slice(0, 3)
+                              .map((vinyl, index) => (
+                                <Link
+                                  key={vinyl.id}
+                                  href={`/vinyl/${vinyl.id}`}
+                                  className={styles.recentRecord}
+                                >
+                                  {vinyl.artist} - {vinyl.title}{" "}
+                                  {vinyl.year && `(${vinyl.year})`}
+                                </Link>
+                              ))}
                             {user.recentVinyls.length > 3 && (
                               <p className={styles.moreRecords}>
                                 ... and {user.recentVinyls.length - 3} more
@@ -501,7 +523,11 @@ export default function Profile() {
                       )}
                     </div>
                     <div className={styles.modernFriendActions}>
-                      <Button href="/collections" variant="primary" size="medium">
+                      <Button
+                        href="/collections"
+                        variant="primary"
+                        size="medium"
+                      >
                         View Collections
                       </Button>
                     </div>
@@ -512,7 +538,7 @@ export default function Profile() {
                 <div className={styles.modernFriendsList}>
                   <div className={styles.modernFriendCard}>
                     <div className={styles.modernFriendInfo}>
-                      <h4 className={styles.friendName}>Quick Actions</h4>
+                      <h4 className={`${styles.friendName} ${styles.sectionTitle}`}>Quick Actions</h4>
                       <p className={styles.friendMeta}>
                         Commonly used features and shortcuts
                       </p>
@@ -524,9 +550,9 @@ export default function Profile() {
                       <Button href="/friends" variant="outline" size="medium">
                         Manage Friends
                       </Button>
-                      <Button 
-                        onClick={() => setActiveTab("discogs")} 
-                        variant="outline" 
+                      <Button
+                        onClick={() => setActiveTab("discogs")}
+                        variant="outline"
                         size="medium"
                       >
                         Sync Collection
@@ -548,7 +574,7 @@ export default function Profile() {
                 <div className={styles.modernFriendsList}>
                   <div className={styles.modernFriendCard}>
                     <div className={styles.modernFriendInfo}>
-                      <h4 className={styles.friendName}>Change Password</h4>
+                      <h4 className={`${styles.friendName} ${styles.sectionTitle}`}>Change Password</h4>
 
                       <form
                         id="password-form"
@@ -629,7 +655,7 @@ export default function Profile() {
                 <div className={styles.modernFriendsList}>
                   <div className={styles.modernFriendCard}>
                     <div className={styles.modernFriendInfo}>
-                      <h4 className={styles.friendName}>Connection Status</h4>
+                      <h4 className={`${styles.friendName} ${styles.sectionTitle}`}>Connection Status</h4>
                       {user?.discogsUsername ? (
                         <>
                           <p className={styles.friendMeta}>
@@ -643,19 +669,23 @@ export default function Profile() {
                         <>
                           <p className={styles.friendMeta}>Not Connected</p>
                           <p className={styles.friendMeta}>
-                            Connect your Discogs account to sync your collection.
+                            Connect your Discogs account to sync your
+                            collection.
                           </p>
                         </>
                       )}
-                      
+
                       {user?.discogsUsername && (
                         <div className={styles.profileSection}>
-                          <h5 className={styles.sectionTitle}>Collection Sync</h5>
+                          <h5 className={styles.sectionTitle}>
+                            Collection Sync
+                          </h5>
                           <p className={styles.friendMeta}>
                             Current Records: {user.totalRecords}
                           </p>
                           <p className={styles.friendMeta}>
-                            Sync your Discogs collection to import records automatically.
+                            Sync your Discogs collection to import records
+                            automatically.
                           </p>
                         </div>
                       )}
@@ -677,7 +707,9 @@ export default function Profile() {
                             variant="outline"
                             size="medium"
                           >
-                            {cleanupLoading ? "Cleaning..." : "Remove Duplicates"}
+                            {cleanupLoading
+                              ? "Cleaning..."
+                              : "Remove Duplicates"}
                           </Button>
                           <Button
                             onClick={disconnectDiscogs}
@@ -685,7 +717,9 @@ export default function Profile() {
                             variant="outline"
                             size="medium"
                           >
-                            {disconnectLoading ? "Disconnecting..." : "Disconnect"}
+                            {disconnectLoading
+                              ? "Disconnecting..."
+                              : "Disconnect"}
                           </Button>
                         </>
                       ) : (
@@ -714,7 +748,7 @@ export default function Profile() {
                 <div className={styles.modernFriendsList}>
                   <div className={styles.modernFriendCard}>
                     <div className={styles.modernFriendInfo}>
-                      <h4 className={styles.friendName}>Delete Account</h4>
+                      <h4 className={`${styles.friendName} ${styles.sectionTitle}`}>Delete Account</h4>
                       <p
                         className={styles.friendMeta}
                         style={{ color: "var(--text-danger)" }}

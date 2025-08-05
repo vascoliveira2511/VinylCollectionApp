@@ -9,7 +9,8 @@ import VinylVideos from "../../components/VinylVideos";
 import VinylComments from "../../components/VinylComments";
 import PageLoader from "../../components/PageLoader";
 import Button from "../../components/Button";
-import { SiSpotify, SiYoutube, SiApplemusic } from "react-icons/si";
+import SpotifyPreview from "../../components/SpotifyPreview";
+import { SiYoutube, SiApplemusic } from "react-icons/si";
 import styles from "../../page.module.css";
 
 interface Vinyl {
@@ -435,25 +436,19 @@ export default function VinylDetailPage({
                 </Button>
               </div>
 
+              {/* Spotify Preview */}
+              <SpotifyPreview
+                artist={vinyl.artist}
+                album={vinyl.title}
+                year={vinyl.year}
+              />
+
               {/* Streaming Links */}
               <div className={styles.streamingLinks}>
                 <span className={styles.streamingLabel}>
                   Find on streaming:
                 </span>
                 <div className={styles.streamingButtons}>
-                  <a
-                    href={`https://open.spotify.com/search/${encodeURIComponent(
-                      `${vinyl.artist} ${vinyl.title}`
-                    )}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={styles.streamingButton}
-                    style={{ backgroundColor: '#1DB954', color: 'white' }}
-                    title="Search on Spotify"
-                  >
-                    <SiSpotify size={16} style={{ marginRight: '6px' }} />
-                    Spotify
-                  </a>
                   <a
                     href={`https://music.youtube.com/search?q=${encodeURIComponent(
                       `${vinyl.artist} ${vinyl.title}`

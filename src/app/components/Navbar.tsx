@@ -138,7 +138,7 @@ export default function Navbar() {
               <li className={styles.navItem}>
                 <Link
                   href="/login"
-                  className={styles.authLink}
+                  className={pathname === "/login" ? styles.activeLink : ""}
                   onClick={closeMenu}
                 >
                   Login
@@ -147,7 +147,7 @@ export default function Navbar() {
               <li className={styles.navItem}>
                 <Link
                   href="/signup"
-                  className={styles.authLink}
+                  className={pathname === "/signup" ? styles.activeLink : ""}
                   onClick={closeMenu}
                 >
                   Sign Up

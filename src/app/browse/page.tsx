@@ -330,36 +330,6 @@ function BrowsePageContent() {
       }
     });
 
-  const addToCollection = async (item: BrowseItem, collectionId?: number) => {
-    try {
-      const vinylData = {
-        artist: item.artist,
-        title: item.title,
-        year: item.year || null,
-        imageUrl: item.thumb || null,
-        genre: item.genre || [],
-        discogsId: parseInt(item.id),
-        label: item.label?.[0] || null,
-        format: item.format?.[0] || null,
-        country: item.country || null,
-        catalogNumber: item.catno || null,
-        ...(collectionId && { collectionId }),
-      };
-
-      await apiClient.addVinyl(vinylData);
-
-      const collectionName = collectionId
-        ? collections.find((c) => c.id === collectionId)?.title || "collection"
-        : "your collection";
-
-      alert(`"${item.title}" by ${item.artist} added to ${collectionName}!`);
-    } catch (err) {
-      alert(
-        "Failed to add to collection: " +
-          (err instanceof Error ? err.message : "Unknown error")
-      );
-    }
-  };
 
   return (
     <main className={styles.main}>
@@ -641,7 +611,7 @@ function BrowsePageContent() {
               {!loading && filteredAndSortedResults.length > 0 && (
                 <div className={styles.section}>
                   <div className="content-wrapper">
-                    <div className={styles.collectionPreview}>
+                    <div className={styles.discoverGrid}>
                       {filteredAndSortedResults.map((item) => {
                         // Create a working imageUrl - convert HTTP to HTTPS and ensure it's valid
                         let workingImageUrl = item.thumb;
@@ -663,7 +633,7 @@ function BrowsePageContent() {
                               imageUrl: workingImageUrl,
                               thumb: workingImageUrl,
                             }}
-                            showDetails={false}
+                            showDetails={true}
                             linkPrefix="/browse"
                             hideCommunityStats={true}
                             showActions={false}

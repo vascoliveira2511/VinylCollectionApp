@@ -2,9 +2,6 @@ import { NextResponse } from "next/server";
 import { NextRequest } from "next/server";
 import * as jose from "jose";
 import { prisma } from "@/lib/db";
-import { writeFile, mkdir } from "fs/promises";
-import { join } from "path";
-import { existsSync } from "fs";
 
 const secret = new TextEncoder().encode(process.env.JWT_SECRET);
 
@@ -53,44 +50,32 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Create unique filename
-    const timestamp = Date.now();
-    const fileExtension = file.name.split('.').pop() || 'jpg';
-    const filename = `profile-${userId}-${timestamp}.${fileExtension}`;
-
-    // Ensure upload directory exists
-    const uploadDir = join(process.cwd(), 'public', 'uploads', 'profiles');
-    if (!existsSync(uploadDir)) {
-      await mkdir(uploadDir, { recursive: true });
-    }
-
-    // Save file to disk
-    const filepath = join(uploadDir, filename);
+    // Convert image to base64
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
-    await writeFile(filepath, buffer);
-
-    // Generate URL for the uploaded image
-    const imageUrl = `/uploads/profiles/${filename}`;
+    const base64Data = buffer.toString('base64');
+    const dataUri = `data:${file.type};base64,${base64Data}`;
 
     // Update user avatar in database
     const updatedUser = await prisma.user.update({
       where: { id: parseInt(userId) },
       data: {
-        avatar: imageUrl,
+        avatar: dataUri,
         avatarType: 'uploaded',
+        avatarMimeType: file.type,
       },
       select: {
         id: true,
         username: true,
         avatar: true,
         avatarType: true,
+        avatarMimeType: true,
         createdAt: true,
       },
     });
 
     return NextResponse.json({
-      imageUrl,
+      imageUrl: dataUri,
       user: updatedUser,
       success: true
     });

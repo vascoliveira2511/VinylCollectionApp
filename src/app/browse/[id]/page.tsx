@@ -10,6 +10,8 @@ import VinylVideos from "../../components/VinylVideos";
 import VinylComments from "../../components/VinylComments";
 import StatusButtons from "../../components/StatusButtons";
 import Button from "../../components/Button";
+import AddToCollectionButton from "../../components/AddToCollectionButton";
+import SpotifyPreview from "../../components/SpotifyPreview";
 import { SiSpotify, SiYoutube, SiApplemusic } from "react-icons/si";
 import styles from "../../page.module.css";
 
@@ -110,7 +112,8 @@ export default function BrowseDetailPage({
   const [showReleaseInfo, setShowReleaseInfo] = useState(true);
   const [showVideos, setShowVideos] = useState(false);
   const [showCommunityReviews, setShowCommunityReviews] = useState(false);
-  const [defaultCollection, setDefaultCollection] = useState<any>(null);
+  const [collections, setCollections] = useState<any[]>([]);
+  const [existingVinyls, setExistingVinyls] = useState<any[]>([]);
 
   const router = useRouter();
 
@@ -124,11 +127,18 @@ export default function BrowseDetailPage({
         ]);
 
         setRelease(releaseData as DiscogsRelease);
+        setCollections(collectionsData as any[]);
         
-        // Find default collection
-        const collections = collectionsData as any[];
-        const defaultColl = collections.find((c: any) => c.isDefault) || collections[0];
-        setDefaultCollection(defaultColl);
+        // Check if this vinyl already exists in any collection
+        try {
+          const existingResponse = await fetch(`/api/vinyl/check-exists?discogsId=${id}`);
+          if (existingResponse.ok) {
+            const existingData = await existingResponse.json();
+            setExistingVinyls(existingData);
+          }
+        } catch (existingErr) {
+          console.log("Could not check existing vinyls:", existingErr);
+        }
       } catch (err) {
         setError(
           err instanceof Error ? err.message : "Failed to load release details"
@@ -143,12 +153,32 @@ export default function BrowseDetailPage({
     }
   }, [id]);
 
-  const addToCollection = async () => {
+  const addToCollection = async (collectionId?: number) => {
     if (!release) return;
+
+    // Check if vinyl already exists in this collection
+    const existingInCollection = existingVinyls.find(v => 
+      collectionId ? v.collectionId === collectionId : v.collection?.isDefault
+    );
+    
+    if (existingInCollection) {
+      const collectionName = collectionId
+        ? collections.find((c) => c.id === collectionId)?.title || "collection"
+        : "your collection";
+      
+      if (confirm(`This vinyl already exists in ${collectionName}. Would you like to view it instead?`)) {
+        if (collectionId) {
+          router.push(`/collections/${collectionId}?highlight=${existingInCollection.id}`);
+        } else {
+          router.push(`/?highlight=${existingInCollection.id}`);
+        }
+      }
+      return;
+    }
 
     setAddingToCollection(true);
     try {
-      await apiClient.addVinyl({
+      const response = await apiClient.addVinyl({
         artist: release.artists?.[0]?.name || "Unknown Artist",
         title: release.title,
         year: release.year || null,
@@ -160,11 +190,16 @@ export default function BrowseDetailPage({
         format: release.formats?.[0]?.name || null,
         country: release.country || null,
         catalogNumber: release.labels?.[0]?.catno || null,
+        ...(collectionId && { collectionId }),
       });
 
-      alert(
-        `"${release.title}" by ${release.artists?.[0]?.name} added to ${defaultCollection?.title || 'your collection'}!`
-      );
+      // Redirect to the collection page
+      if (collectionId) {
+        router.push(`/collections/${collectionId}?highlight=${response.id}`);
+      } else {
+        // Redirect to main collection page
+        router.push(`/?highlight=${response.id}`);
+      }
     } catch (err) {
       alert(
         "Failed to add to collection: " +
@@ -172,6 +207,43 @@ export default function BrowseDetailPage({
       );
     } finally {
       setAddingToCollection(false);
+    }
+  };
+
+  const addToWantlist = async () => {
+    if (!release) return;
+
+    try {
+      const response = await fetch("/api/vinyl-status", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          discogsId: release.id,
+          status: "want",
+        }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        // Find wantlist collection and redirect to it with highlight
+        const wantlistCollection = collections.find(c => c.type === "wantlist");
+        if (wantlistCollection && data.vinyl?.id) {
+          router.push(`/collections/${wantlistCollection.id}?highlight=${data.vinyl.id}`);
+        } else if (wantlistCollection) {
+          router.push(`/collections/${wantlistCollection.id}`);
+        } else {
+          // Fallback to collections page
+          router.push("/collections");
+        }
+      } else {
+        const data = await response.json();
+        alert("Error: " + (data.error || "Failed to add to wantlist"));
+      }
+    } catch (err) {
+      alert(
+        "Network error: " +
+          (err instanceof Error ? err.message : "Unknown error")
+      );
     }
   };
 
@@ -314,17 +386,15 @@ export default function BrowseDetailPage({
 
               {/* Action Buttons */}
               <div className={styles.actionButtons}>
-                <Button
-                  onClick={addToCollection}
-                  disabled={addingToCollection}
-                  variant="primary"
-                  size="medium"
-                >
-                  {addingToCollection 
-                    ? "Adding..." 
-                    : `Add to ${defaultCollection?.title || 'Collection'}`
-                  }
-                </Button>
+                <div className={styles.collectionButtonWrapper}>
+                  <AddToCollectionButton
+                    collections={collections}
+                    onAdd={addToCollection}
+                    onAddToWantlist={addToWantlist}
+                    disabled={addingToCollection}
+                    existingVinyls={existingVinyls}
+                  />
+                </div>
                 <Button
                   href="/browse"
                   variant="outline"
@@ -334,25 +404,19 @@ export default function BrowseDetailPage({
                 </Button>
               </div>
 
+              {/* Spotify Preview */}
+              <SpotifyPreview
+                artist={release.artists?.map((a) => a.name).join(", ") || "Unknown Artist"}
+                album={release.title}
+                year={release.year}
+              />
+
               {/* Streaming Links */}
               <div className={styles.streamingLinks}>
                 <span className={styles.streamingLabel}>
                   Find on streaming:
                 </span>
                 <div className={styles.streamingButtons}>
-                  <a
-                    href={`https://open.spotify.com/search/${encodeURIComponent(
-                      `${release.artists?.map((a) => a.name).join(", ") || ""} ${release.title}`
-                    )}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={styles.streamingButton}
-                    style={{ backgroundColor: '#1DB954', color: 'white' }}
-                    title="Search on Spotify"
-                  >
-                    <SiSpotify size={16} style={{ marginRight: '6px' }} />
-                    Spotify
-                  </a>
                   <a
                     href={`https://music.youtube.com/search?q=${encodeURIComponent(
                       `${release.artists?.map((a) => a.name).join(", ") || ""} ${release.title}`

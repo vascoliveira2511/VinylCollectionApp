@@ -274,11 +274,25 @@
   margin: 0 auto;
 }
 
+/* Discover Grid - Bigger cards with more info */
+.discoverGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 32px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
 /* Collection Preview Responsive */
 @media (max-width: 768px) {
   .collectionPreview {
     grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
     gap: 16px;
+  }
+  
+  .discoverGrid {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 24px;
   }
 }
 
@@ -286,6 +300,11 @@
   .collectionPreview {
     grid-template-columns: repeat(2, 1fr);
     gap: 12px;
+  }
+  
+  .discoverGrid {
+    grid-template-columns: 1fr;
+    gap: 20px;
   }
 }
 
@@ -4254,7 +4273,7 @@ Link.editButton:hover {
 .sectionTitle {
   font-size: 1.5rem;
   font-weight: 700;
-  color: var(--text-primary);
+  color: var(--text);
   margin: 0;
   letter-spacing: -0.02em;
 }
@@ -5579,7 +5598,7 @@ Link.editButton:hover {
 .friendMeta,
 .requestMeta,
 .sentMeta {
-  color: var(--text-tertiary);
+  color: var(--text);
   font-size: 0.875rem;
   margin: 0;
 }
@@ -5734,7 +5753,7 @@ Link.editButton:hover {
   margin-bottom: 48px;
   padding-bottom: 32px;
   border-bottom: 1px solid var(--border);
-  opacity: 0.6;
+  opacity: 1;
 }
 
 .profileSection:last-child {
@@ -7990,6 +8009,391 @@ Link.editButton:hover {
   color: var(--text-secondary);
 }
 
+.dropdownSeparator {
+  height: 1px;
+  background: var(--border);
+  margin: 8px 0;
+}
+
+.defaultOption {
+  background: var(--surface-elevated);
+  border: 1px solid var(--primary);
+  border-radius: 8px;
+  margin: 4px;
+}
+
+.defaultOption:hover {
+  background: var(--primary);
+  color: var(--surface);
+}
+
+.wantlistOption {
+  background: var(--surface-elevated);
+  border: 1px solid var(--accent);
+  border-radius: 8px;
+  margin: 4px;
+}
+
+.wantlistOption:hover {
+  background: var(--accent);
+  color: var(--surface);
+}
+
+/* New Collection Button Group Styles */
+.collectionButtonGroup {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  max-width: 400px;
+  min-height: fit-content;
+}
+
+.primaryActions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  min-height: 48px;
+  width: 332px;
+  max-width: 332px;
+}
+
+.secondaryActions {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 48px;
+}
+
+.addToDefaultButton {
+  flex: 1;
+  transform: none !important;
+  border-width: 1px !important;
+  box-sizing: border-box !important;
+  min-width: 180px;
+  max-width: 180px;
+  width: 180px;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.addToDefaultButton:hover {
+  transform: none !important;
+  border-width: 1px !important;
+  box-sizing: border-box !important;
+}
+
+.addToWantlistButton {
+  flex: 1;
+  transform: none !important;
+  border-width: 1px !important;
+  box-sizing: border-box !important;
+  min-width: 140px;
+  max-width: 140px;
+  width: 140px;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.addToWantlistButton:hover {
+  transform: none !important;
+  border-width: 1px !important;
+  box-sizing: border-box !important;
+}
+
+.showMoreButton {
+  width: 100%;
+  justify-content: center;
+  transform: none !important;
+  border-width: 1px !important;
+  box-sizing: border-box !important;
+  min-width: 330px;
+  max-width: 330px;
+  min-height: 48px;
+  max-height: 48px;
+  height: 48px;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: flex !important;
+  align-items: center;
+}
+
+.showMoreButton:hover {
+  transform: none !important;
+  border-width: 1px !important;
+  box-sizing: border-box !important;
+}
+
+.collectionButtonWrapper {
+  display: contents;
+  isolation: isolate;
+}
+
+/* Subtle style for Already in Collection button */
+.addToDefaultButton.alreadyInCollection {
+  background-color: #10b981 !important;
+  border-color: #10b981 !important;
+  color: white !important;
+}
+
+.addToDefaultButton.alreadyInCollection:hover {
+  background-color: #059669 !important;
+  border-color: #059669 !important;
+  color: white !important;
+}
+
+/* Spotify Preview Styles */
+.spotifyPreview {
+  background: linear-gradient(135deg, #1db954 0%, #1ed760 100%);
+  border-radius: 16px;
+  padding: 20px;
+  margin: 24px 0;
+  color: white;
+  box-shadow: 0 8px 32px rgba(29, 185, 84, 0.3);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.spotifyHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.spotifyLogo {
+  font-size: 24px;
+  color: white;
+  opacity: 0.9;
+}
+
+.spotifyTitle h4 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: white;
+}
+
+.spotifyTitle p {
+  margin: 2px 0 0 0;
+  font-size: 0.85rem;
+  opacity: 0.8;
+  color: white;
+}
+
+.spotifyLoading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 20px;
+  color: white;
+  opacity: 0.8;
+}
+
+.spotifyError {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 20px;
+  color: white;
+  opacity: 0.7;
+  font-size: 0.9rem;
+}
+
+.spotifyTracks {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.spotifyTrackList {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.spotifyTrackNoPreview {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 6px;
+  opacity: 0.8;
+}
+
+.spotifyTrack {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.spotifyTrack:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
+}
+
+.spotifyTrackActive {
+  background: rgba(255, 255, 255, 0.25) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.spotifyTrackPlay {
+  font-size: 14px;
+  min-width: 20px;
+  text-align: center;
+  opacity: 0.9;
+}
+
+.spotifyTrackInfo {
+  flex: 1;
+}
+
+.spotifyTrackName {
+  font-weight: 500;
+  font-size: 0.9rem;
+  color: white;
+  margin-bottom: 2px;
+}
+
+.spotifyTrackNumber {
+  font-size: 0.75rem;
+  opacity: 0.7;
+  color: white;
+}
+
+.spotifyTrackDuration {
+  font-size: 0.8rem;
+  opacity: 0.7;
+  color: white;
+  min-width: 40px;
+  text-align: right;
+}
+
+.spotifyFooter {
+  text-align: center;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.spotifyLink {
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.9rem;
+  opacity: 0.9;
+  transition: opacity 0.2s ease;
+}
+
+.spotifyLink:hover {
+  opacity: 1;
+  text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+  .spotifyPreview {
+    margin: 16px 0;
+    padding: 16px;
+  }
+  
+  .spotifyTrack {
+    padding: 10px;
+  }
+  
+  .spotifyTrackName {
+    font-size: 0.85rem;
+  }
+}
+
+.collectionsGrid {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 8px;
+  margin-top: 8px;
+  padding: 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.25);
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.collectionGridButton {
+  padding: 12px 8px !important;
+  height: auto !important;
+  min-height: 60px;
+}
+
+.collectionButtonContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.collectionButtonName {
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-align: center;
+  line-height: 1.2;
+}
+
+.collectionButtonCount {
+  font-size: 0.75rem;
+  opacity: 0.7;
+  font-weight: 400;
+}
+
+@media (max-width: 768px) {
+  .primaryActions {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .addToDefaultButton,
+  .addToWantlistButton {
+    width: 100%;
+  }
+  
+  .collectionsGrid {
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 6px;
+    padding: 12px;
+  }
+}
+
 /* Original Vinyl Detail Page Styles - Restored */
 
 /* Enhanced Metadata Display Styles */
@@ -8609,11 +9013,25 @@ Link.editButton:hover {
 }
 
 .sectionTitle {
-  font-size: 1rem;
-  font-weight: 600;
+  font-size: 1.1rem;
+  font-weight: 700;
   color: var(--text);
-  margin-bottom: 12px;
+  margin-bottom: 16px;
   margin-top: 0;
+  position: relative;
+  padding-left: 16px;
+}
+
+.sectionTitle::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 20px;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  border-radius: 2px;
 }
 
 /* Vinyl-themed profile enhancements */
@@ -8778,28 +9196,87 @@ Link.editButton:hover {
   margin-top: 16px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 12px;
 }
 
 .recentRecord {
-  padding: 8px 12px;
-  background: var(--surface-subtle);
-  border-radius: 8px;
-  border-left: 3px solid var(--primary);
+  display: block;
+  padding: 12px 16px;
+  background: linear-gradient(135deg, var(--surface-elevated), var(--surface-subtle));
+  border-radius: 12px;
+  border-left: 4px solid var(--primary);
   font-size: 0.9375rem;
-  transition: all 0.2s ease;
+  color: var(--text) !important;
+  text-decoration: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.recentRecord::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  transition: left 0.6s ease;
 }
 
 .recentRecord:hover {
-  background: var(--surface-elevated);
-  transform: translateX(4px);
+  background: linear-gradient(135deg, var(--surface-elevated), var(--surface));
+  transform: translateX(6px) translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  border-left-color: var(--accent);
+}
+
+.recentRecord:hover::after {
+  left: 100%;
 }
 
 .moreRecords {
-  color: var(--text-tertiary);
+  color: var(--text-secondary);
   font-style: italic;
   font-size: 0.875rem;
-  padding: 4px 12px;
+  padding: 12px 16px;
+  text-align: center;
+  background: linear-gradient(135deg, var(--surface), var(--surface-subtle));
+  border-radius: 12px;
+  border: 2px dashed var(--border);
+  transition: all 0.2s ease;
+  cursor: default;
+}
+
+.moreRecords:hover {
+  background: linear-gradient(135deg, var(--surface-elevated), var(--surface));
+  border-color: var(--primary);
+  color: var(--text);
+}
+
+/* Collection stats styling */
+.collectionStats {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.collectionStats p {
+  margin: 0;
+}
+
+/* Collection meta section with full-width separator */
+.collectionMetaSection {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+  position: relative;
+  margin-left: -24px;
+  margin-right: -24px;
+  padding-left: 24px;
+  padding-right: 24px;
 }
 
 /* Enhanced error and success states */
@@ -8854,7 +9331,7 @@ Link.editButton:hover {
 
 .friendMeta {
   font-size: 0.9375rem;
-  color: var(--text-secondary);
+  color: var(--text);
   margin-bottom: 4px;
   line-height: 1.4;
 }
@@ -8873,8 +9350,6 @@ Link.editButton:hover {
   line-height: 1.5;
   opacity: 0.9;
   margin-bottom: 4px;
-  color: var(--text-secondary);
-  font-size: 0.9rem;
 }
 
 .recentRecord::before {
@@ -8885,7 +9360,7 @@ Link.editButton:hover {
 
 .moreRecords {
   font-style: italic;
-  color: var(--text-tertiary);
+  color: var(--text-tertiary) !important;
   font-size: 0.85rem;
   margin-top: 8px;
 }
