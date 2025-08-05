@@ -1,6 +1,8 @@
 .avatarContainer {
   position: relative;
   display: inline-block;
+  z-index: 1;
+  overflow: visible !important;
 }
 
 .avatar {
@@ -83,7 +85,7 @@
 }
 
 .pickerHeader {
-  color: var(--ctp-text);
+  color: #ffffff !important;
   font-weight: 500;
   margin-bottom: 12px;
   text-align: center;
@@ -122,9 +124,9 @@
 }
 
 .cancelButton {
-  background: var(--ctp-surface2);
-  color: var(--ctp-text);
-  border: 1px solid var(--ctp-overlay0);
+  background: #666666 !important;
+  color: #ffffff !important;
+  border: 1px solid #ffffff !important;
   padding: 6px 12px;
   border-radius: 4px;
   cursor: pointer;
@@ -135,4 +137,99 @@
 .cancelButton:hover {
   background: var(--ctp-overlay0);
   color: var(--ctp-base);
+}
+
+/* Letter picker and upload styles */
+.letterPicker {
+  position: fixed !important;
+  top: 10% !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  z-index: 99999 !important;
+  background: #000000 !important;
+  border: 2px solid #ffffff !important;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.9);
+  min-width: 250px;
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+}
+
+.uploadSection {
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--ctp-surface2);
+}
+
+.fileInput {
+  display: none;
+}
+
+.uploadButton {
+  width: 100%;
+  background: #ffffff !important;
+  color: #000000 !important;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9em;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.uploadButton:hover:not(:disabled) {
+  background: var(--ctp-lavender);
+  transform: translateY(-1px);
+}
+
+.uploadButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.letterSection {
+  margin-bottom: 12px;
+}
+
+.sectionTitle {
+  color: #ffffff !important;
+  font-size: 0.8em;
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+.letterGrid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.letterOption {
+  background: #333333 !important;
+  border: 1px solid #ffffff !important;
+  border-radius: 6px;
+  padding: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 14px;
+  font-weight: 600;
+  color: #ffffff !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.letterOption:hover {
+  background: var(--ctp-surface2);
+  border-color: var(--ctp-mauve);
+  transform: scale(1.05);
+}
+
+.avatarLetter {
+  font-weight: 600;
+  user-select: none;
 }

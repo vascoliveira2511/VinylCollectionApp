@@ -6,6 +6,7 @@ import Link from "next/link";
 import PageLoader from "../../../../components/PageLoader";
 import Avatar from "../../../../components/Avatar";
 import VinylCard from "../../../../components/VinylCard";
+import Button from "../../../../components/Button";
 import styles from "../../../../page.module.css";
 
 interface User {
@@ -44,6 +45,9 @@ interface Collection {
   createdAt: string;
   vinyls: Vinyl[];
   user: User;
+  _count: {
+    vinyls: number;
+  };
 }
 
 export default function FriendCollectionPage({
@@ -54,6 +58,14 @@ export default function FriendCollectionPage({
   const [collection, setCollection] = useState<Collection | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  
+  // Filter states - same as your collections page
+  const [filterArtist, setFilterArtist] = useState("");
+  const [filterTitle, setFilterTitle] = useState("");
+  const [filterGenre, setFilterGenre] = useState("");
+  const [filterYear, setFilterYear] = useState("");
+  const [displayLimit, setDisplayLimit] = useState(12);
+  
   const router = useRouter();
 
   useEffect(() => {
@@ -93,6 +105,28 @@ export default function FriendCollectionPage({
     }
   };
 
+  // Filter logic - same as your collections page
+  const filteredVinyls = collection
+    ? collection.vinyls
+        .filter((vinyl) => {
+          const matchesArtist =
+            filterArtist === "" ||
+            vinyl.artist.toLowerCase().includes(filterArtist.toLowerCase());
+          const matchesTitle =
+            filterTitle === "" ||
+            vinyl.title.toLowerCase().includes(filterTitle.toLowerCase());
+          const matchesGenre =
+            filterGenre === "" ||
+            vinyl.genre.some((g) =>
+              g.toLowerCase().includes(filterGenre.toLowerCase())
+            );
+          const matchesYear =
+            filterYear === "" || (vinyl.year && vinyl.year.toString().includes(filterYear));
+          return matchesArtist && matchesTitle && matchesGenre && matchesYear;
+        })
+        .slice(0, displayLimit)
+    : [];
+
   if (loading) {
     return <PageLoader text="Loading collection..." />;
   }
@@ -101,20 +135,14 @@ export default function FriendCollectionPage({
     return (
       <main className={styles.main}>
         <div className="container">
-          <div className="window">
-            <div className="title-bar">Error</div>
-            <div className={styles.contentSection}>
-              <div className={styles.errorMessage}>
+          <div className={styles.contentSection}>
+            <div className={styles.errorState}>
+              <p className={styles.errorMessage}>
                 {error || "Collection not found"}
-              </div>
-              <div className={styles.formActions}>
-                <Link
-                  href={`/users/${params.id}`}
-                  className={styles.backButton}
-                >
-                  ← Back to User Profile
-                </Link>
-              </div>
+              </p>
+              <Button href={`/users/${params.id}`} variant="outline" size="medium">
+                ← Back to Profile
+              </Button>
             </div>
           </div>
         </div>
@@ -125,68 +153,140 @@ export default function FriendCollectionPage({
   return (
     <main className={styles.main}>
       <div className="container">
-        {/* Collection Header */}
-        <div className="window">
-          <div className="title-bar">{collection.title}</div>
-          <div className={styles.contentSection}>
-            <div className={styles.collectionHeader}>
-              <div className={styles.collectionInfo}>
-                <h1>{collection.title}</h1>
-                {collection.description && (
-                  <p className={styles.collectionDescription}>
-                    {collection.description}
-                  </p>
-                )}
-                <div className={styles.collectionMeta}>
-                  <div className={styles.ownerInfo}>
+        <div className={styles.contentSection}>
+          {/* Collection Hero Section */}
+          <div className={styles.collectionHeroSection}>
+            <div className={styles.collectionHeroContent}>
+              <div className={styles.collectionHeroLeft}>
+                <div className={styles.collectionTitleSection}>
+                  <h1 className={styles.collectionPageTitle}>
+                    {collection.title}
+                  </h1>
+                  {collection.description && (
+                    <p className={styles.collectionPageDescription}>
+                      {collection.description}
+                    </p>
+                  )}
+                  {/* Friend's Collection Owner Info */}
+                  <div className={styles.ownerSection}>
                     <Avatar
                       username={collection.user.username}
                       avatar={collection.user.avatar}
                       avatarType={collection.user.avatarType}
                       size="small"
                     />
-                    <span>by {collection.user.username}</span>
+                    <span className={styles.ownerText}>
+                      by {collection.user.username}
+                    </span>
                   </div>
-                  <div className={styles.collectionStats}>
-                    {collection.vinyls.length} records • Created{" "}
-                    {new Date(collection.createdAt).toLocaleDateString()}
-                    {collection.isPublic && (
-                      <span className={styles.publicBadge}>Public</span>
-                    )}
-                  </div>
+                </div>
+                <div className={styles.collectionStats}>
+                  <span className={styles.recordCount}>
+                    {collection.vinyls.length} record{collection.vinyls.length !== 1 ? "s" : ""}
+                  </span>
+                </div>
+              </div>
+              <div className={styles.collectionHeroActions}>
+                <Button href={`/users/${params.id}`} variant="outline" size="medium">
+                  ← Back to {collection.user.username}'s Profile
+                </Button>
+              </div>
+            </div>
+          </div>
+
+          {/* Modern Filters Section */}
+          {collection.vinyls.length > 0 && (
+            <div className={styles.filtersSection}>
+              <div className={styles.filtersHeader}>
+                <h2 className={styles.sectionTitle}>Filter & View</h2>
+              </div>
+              <div className={styles.modernFilters}>
+                <div className={styles.filterInputs}>
+                  <input
+                    type="text"
+                    placeholder="Search by artist..."
+                    value={filterArtist}
+                    onChange={(e) => setFilterArtist(e.target.value)}
+                    className={styles.modernFilterInput}
+                  />
+                  <input
+                    type="text"
+                    placeholder="Search by title..."
+                    value={filterTitle}
+                    onChange={(e) => setFilterTitle(e.target.value)}
+                    className={styles.modernFilterInput}
+                  />
+                  <input
+                    type="text"
+                    placeholder="Filter by genre..."
+                    value={filterGenre}
+                    onChange={(e) => setFilterGenre(e.target.value)}
+                    className={styles.modernFilterInput}
+                  />
+                  <input
+                    type="number"
+                    placeholder="Year..."
+                    value={filterYear}
+                    onChange={(e) => setFilterYear(e.target.value)}
+                    className={styles.modernFilterInput}
+                  />
+                </div>
+                <div className={styles.viewControls}>
+                  <select
+                    value={displayLimit}
+                    onChange={(e) => setDisplayLimit(parseInt(e.target.value))}
+                    className={styles.modernSelect}
+                  >
+                    <option value={12}>Show 12</option>
+                    <option value={24}>Show 24</option>
+                    <option value={48}>Show 48</option>
+                    <option value={collection.vinyls.length}>Show All</option>
+                  </select>
                 </div>
               </div>
             </div>
+          )}
 
-            <div className={styles.formActions}>
-              <Link href={`/users/${params.id}`} className={styles.backButton}>
-                ← Back to {collection.user.username}'s Profile
-              </Link>
+          {/* Records Section */}
+          <div className={styles.recordsSection}>
+            <div className={styles.recordsHeader}>
+              <h2 className={styles.sectionTitle}>
+                Records <span className={styles.recordCountBadge}>({filteredVinyls.length})</span>
+              </h2>
+              <p className={styles.friendCollectionNote}>
+                Viewing {collection.user.username}'s collection
+              </p>
             </div>
-          </div>
-        </div>
-
-        {/* Vinyl Records */}
-        <div className="window">
-          <div className="title-bar">
-            Records ({collection.vinyls.length})
-          </div>
-          <div className={styles.contentSection}>
-            {collection.vinyls.length === 0 ? (
-              <div className={styles.emptyState}>
-                <p>This collection is empty.</p>
-              </div>
-            ) : (
-              <div className={styles.collectionGrid}>
-                {collection.vinyls.map((vinyl) => (
+            {filteredVinyls.length > 0 ? (
+              <div className={styles.modernCollectionGrid}>
+                {filteredVinyls.map((vinyl) => (
                   <VinylCard
                     key={vinyl.id}
                     vinyl={vinyl}
                     showDetails={true}
                     showActions={false}
-                    linkPrefix={vinyl.discogsId ? `/browse/${vinyl.discogsId}` : "#"}
+                    linkPrefix="/browse"
                   />
                 ))}
+              </div>
+            ) : (
+              <div className={styles.modernEmptyState}>
+                <div className={styles.emptyStateIcon}>🎵</div>
+                {collection.vinyls.length === 0 ? (
+                  <>
+                    <h3 className={styles.emptyStateTitle}>No records yet</h3>
+                    <p className={styles.emptyStateDescription}>
+                      This collection is empty.
+                    </p>
+                  </>
+                ) : (
+                  <>
+                    <h3 className={styles.emptyStateTitle}>No matches found</h3>
+                    <p className={styles.emptyStateDescription}>
+                      No records match your current filters. Try adjusting your search.
+                    </p>
+                  </>
+                )}
               </div>
             )}
           </div>
