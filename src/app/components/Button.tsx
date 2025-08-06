@@ -6,12 +6,13 @@ interface ButtonProps {
   variant?: "primary" | "secondary" | "outline" | "danger";
   size?: "small" | "medium" | "large";
   href?: string;
-  onClick?: () => void;
+  onClick?: (
+    e: React.MouseEvent<HTMLButtonElement> | React.MouseEvent<HTMLAnchorElement>
+  ) => void;
   disabled?: boolean;
   type?: "button" | "submit" | "reset";
   className?: string;
 }
-
 export default function Button({
   children,
   variant = "primary",
