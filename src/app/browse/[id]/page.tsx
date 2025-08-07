@@ -311,7 +311,7 @@ export default function BrowseDetailPage({
             {/* Album Art */}
             <div className={styles.vinylAlbumArt}>
               {displayImages && displayImages.length > 0 && (
-                <>
+                <div className={styles.imageNavContainer}>
                   <div className={styles.mainAlbumCover}>
                     <img
                       src={`/api/image-proxy?url=${encodeURIComponent(
@@ -320,25 +320,29 @@ export default function BrowseDetailPage({
                       alt={`${release.title} cover`}
                       className={styles.coverImage}
                     />
+                    {displayImages.length > 1 && (
+                      <>
+                        <button
+                          className={`${styles.imageNavButton} ${styles.imageNavPrev}`}
+                          onClick={() => setSelectedImage((prev) => (prev - 1 + displayImages.length) % displayImages.length)}
+                          aria-label="Previous image"
+                        >
+                          ‹
+                        </button>
+                        <button
+                          className={`${styles.imageNavButton} ${styles.imageNavNext}`}
+                          onClick={() => setSelectedImage((prev) => (prev + 1) % displayImages.length)}
+                          aria-label="Next image"
+                        >
+                          ›
+                        </button>
+                        <div className={styles.imageCounter}>
+                          {selectedImage + 1} / {displayImages.length}
+                        </div>
+                      </>
+                    )}
                   </div>
-                  {displayImages.length > 1 && (
-                    <div className={styles.imageThumbnails}>
-                      {displayImages.map((img, idx) => (
-                        <img
-                          key={idx}
-                          src={`/api/image-proxy?url=${encodeURIComponent(
-                            img.uri150 || img.uri
-                          )}`}
-                          alt={`${release.title} ${img.type}`}
-                          className={`${styles.thumbnail} ${
-                            idx === selectedImage ? styles.thumbnailActive : ""
-                          }`}
-                          onClick={() => setSelectedImage(idx)}
-                        />
-                      ))}
-                    </div>
-                  )}
-                </>
+                </div>
               )}
             </div>
 

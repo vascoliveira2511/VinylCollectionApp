@@ -1,0 +1,337 @@
+.imageGallery {
+  width: 100%;
+}
+
+.mainImageContainer {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+  border-radius: 12px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.mainImage {
+  width: 100%;
+  height: auto;
+  display: block;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  will-change: transform;
+}
+
+.mainImage:hover {
+  transform: scale(1.01);
+}
+
+/* RADICAL FIX: Always visible navigation buttons */
+.navButton {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.9) !important;
+  color: #333 !important;
+  border: 2px solid rgba(0, 0, 0, 0.1) !important;
+  border-radius: 50%;
+  width: 44px !important;
+  height: 44px !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 1 !important; /* Always fully visible */
+  transition: all 0.2s ease !important;
+  z-index: 10;
+  pointer-events: auto;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
+}
+
+.navButton:hover {
+  background: rgba(255, 255, 255, 1) !important;
+  color: #000 !important;
+  border-color: rgba(0, 0, 0, 0.3) !important;
+  transform: translateY(-50%) scale(1.1) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25) !important;
+}
+
+.navButtonLeft {
+  left: 12px;
+}
+
+.navButtonRight {
+  right: 12px;
+}
+
+/* Always visible fullscreen button */
+.fullscreenButton {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: rgba(255, 255, 255, 0.9) !important;
+  color: #333 !important;
+  border: 2px solid rgba(0, 0, 0, 0.1) !important;
+  border-radius: 8px;
+  width: 36px !important;
+  height: 36px !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 1 !important; /* Always fully visible */
+  transition: all 0.2s ease !important;
+  z-index: 10;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
+}
+
+.fullscreenButton:hover {
+  background: rgba(255, 255, 255, 1) !important;
+  color: #000 !important;
+  border-color: rgba(0, 0, 0, 0.3) !important;
+  transform: scale(1.1) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25) !important;
+}
+
+/* Always visible image counter */
+.imageCounter {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  background: rgba(255, 255, 255, 0.9) !important;
+  color: #333 !important;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  opacity: 1 !important; /* Always fully visible */
+  transition: all 0.2s ease !important;
+  border: 2px solid rgba(0, 0, 0, 0.1) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
+}
+
+.imageCounter:hover {
+  background: rgba(255, 255, 255, 1) !important;
+  color: #000 !important;
+  border-color: rgba(0, 0, 0, 0.3) !important;
+  transform: scale(1.05) !important;
+}
+
+/* Remove all hover-based visibility changes */
+.mainImageContainer:hover .navButton,
+.mainImageContainer:hover .fullscreenButton,
+.mainImageContainer:hover .imageCounter {
+  /* No changes needed - they're always visible */
+}
+
+.thumbnailSection {
+  margin-top: 12px;
+}
+
+.thumbnailGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.thumbnail {
+  position: relative;
+  background: none;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+  aspect-ratio: 1;
+  will-change: transform, border-color;
+}
+
+.thumbnail:hover {
+  transform: scale(1.03);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.thumbnailActive {
+  border-color: #1db584;
+  box-shadow: 0 0 0 1px #1db584;
+}
+
+.thumbnail img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.imageType {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  font-size: 10px;
+  padding: 2px 4px;
+  text-align: center;
+  text-transform: capitalize;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.thumbnail:hover .imageType {
+  opacity: 1;
+}
+
+.showMoreButton {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+  width: fit-content;
+  margin: 0 auto;
+}
+
+.showMoreButton:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Fullscreen Modal */
+.fullscreenModal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.95);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  cursor: pointer;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.fullscreenContainer {
+  position: relative;
+  max-width: 90vw;
+  max-height: 90vh;
+  cursor: default;
+}
+
+.closeButton {
+  position: absolute;
+  top: -40px;
+  right: 0;
+  background: none;
+  color: white;
+  border: none;
+  font-size: 32px;
+  cursor: pointer;
+  z-index: 1001;
+  padding: 4px;
+  line-height: 1;
+}
+
+.closeButton:hover {
+  opacity: 0.7;
+}
+
+.fullscreenImage {
+  max-width: 90vw;
+  max-height: 90vh;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+.fullscreenNav {
+  position: absolute;
+  top: 50%;
+  margin-top: -30px; /* Half of height (60px / 2) for centering */
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  backdrop-filter: blur(10px);
+}
+
+.fullscreenNav:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.fullscreenNavLeft {
+  left: -80px;
+}
+
+.fullscreenNavRight {
+  right: -80px;
+}
+
+.fullscreenInfo {
+  position: absolute;
+  bottom: -40px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  color: white;
+  font-size: 14px;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .thumbnailGrid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+  }
+
+  .fullscreenNavLeft {
+    left: 10px;
+  }
+
+  .fullscreenNavRight {
+    right: 10px;
+  }
+
+  .fullscreenNav {
+    width: 50px;
+    height: 50px;
+    margin-top: -25px; /* Half of height (50px / 2) for centering */
+  }
+
+  .closeButton {
+    top: 10px;
+    right: 10px;
+  }
+
+  .fullscreenInfo {
+    bottom: 10px;
+    left: 10px;
+    right: 10px;
+  }
+}
