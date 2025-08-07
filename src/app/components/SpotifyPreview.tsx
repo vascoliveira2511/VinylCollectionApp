@@ -3,7 +3,10 @@
 import { useState, useEffect } from "react";
 
 // Global cache for Spotify searches (client-side)
-const spotifyCache = new Map<string, { id: string | null; timestamp: number }>();
+const spotifyCache = new Map<
+  string,
+  { id: string | null; timestamp: number }
+>();
 const CACHE_DURATION = 10 * 60 * 1000; // 10 minutes client-side cache
 
 // Active request tracking to prevent duplicate API calls
@@ -26,11 +29,13 @@ export default function SpotifyPreview({ artist, album }: SpotifyEmbedProps) {
         return;
       }
 
-      const cacheKey = `${artist.toLowerCase().trim()}:${album.toLowerCase().trim()}`;
-      
+      const cacheKey = `${artist.toLowerCase().trim()}:${album
+        .toLowerCase()
+        .trim()}`;
+
       // Check cache first
       const cached = spotifyCache.get(cacheKey);
-      if (cached && (Date.now() - cached.timestamp) < CACHE_DURATION) {
+      if (cached && Date.now() - cached.timestamp < CACHE_DURATION) {
         console.log(`Client cache hit for: ${artist} - ${album}`);
         setSpotifyId(cached.id);
         setLoading(false);
@@ -55,8 +60,12 @@ export default function SpotifyPreview({ artist, album }: SpotifyEmbedProps) {
       // Create new request
       const requestPromise = (async (): Promise<string | null> => {
         try {
-          const response = await fetch(`/api/spotify/search?artist=${encodeURIComponent(artist)}&album=${encodeURIComponent(album)}`);
-          
+          const response = await fetch(
+            `/api/spotify/search?artist=${encodeURIComponent(
+              artist
+            )}&album=${encodeURIComponent(album)}`
+          );
+
           if (response.ok) {
             const data = await response.json();
             console.log("Spotify album found:", data.id);
@@ -77,13 +86,13 @@ export default function SpotifyPreview({ artist, album }: SpotifyEmbedProps) {
       try {
         setLoading(true);
         const result = await requestPromise;
-        
+
         // Cache the result
         spotifyCache.set(cacheKey, {
           id: result,
-          timestamp: Date.now()
+          timestamp: Date.now(),
         });
-        
+
         setSpotifyId(result);
       } catch (err) {
         console.error("Spotify request failed:", err);
@@ -102,29 +111,31 @@ export default function SpotifyPreview({ artist, album }: SpotifyEmbedProps) {
   useEffect(() => {
     const cleanup = () => {
       const now = Date.now();
-      for (const [key, value] of spotifyCache.entries()) {
-        if ((now - value.timestamp) > CACHE_DURATION) {
+      spotifyCache.forEach((value, key) => {
+        if (now - value.timestamp > CACHE_DURATION) {
           spotifyCache.delete(key);
         }
-      }
+      });
     };
-    
+
     const interval = setInterval(cleanup, 60000); // Cleanup every minute
     return () => clearInterval(interval);
   }, []);
 
   if (loading) {
     return (
-      <div style={{ 
-        width: '100%', 
-        height: '200px', 
-        backgroundColor: '#f0f0f0', 
-        borderRadius: '12px',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        margin: '24px 0'
-      }}>
+      <div
+        style={{
+          width: "100%",
+          height: "200px",
+          backgroundColor: "#f0f0f0",
+          borderRadius: "12px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          margin: "24px 0",
+        }}
+      >
         Loading Spotify player...
       </div>
     );
@@ -135,7 +146,7 @@ export default function SpotifyPreview({ artist, album }: SpotifyEmbedProps) {
   }
 
   return (
-    <div style={{ margin: '24px 0' }}>
+    <div style={{ margin: "24px 0" }}>
       <iframe
         src={`https://open.spotify.com/embed/album/${spotifyId}?utm_source=generator&theme=0`}
         width="100%"
@@ -145,7 +156,7 @@ export default function SpotifyPreview({ artist, album }: SpotifyEmbedProps) {
         allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
         loading="lazy"
         style={{
-          borderRadius: '12px'
+          borderRadius: "12px",
         }}
       />
     </div>
