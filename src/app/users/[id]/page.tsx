@@ -119,7 +119,7 @@ export default function UserProfilePage({
       <div className="container">
         <div className={styles.contentSection}>
           {/* Back Button */}
-          <div className={styles.heroActions} style={{ marginBottom: '48px' }}>
+          <div className={styles.heroActions} style={{ marginBottom: "48px" }}>
             <Button href="/friends" variant="outline" size="medium">
               ← Back to Friends
             </Button>
@@ -137,12 +137,16 @@ export default function UserProfilePage({
                     size="large"
                   />
                   <div className={styles.modernUserInfo}>
-                    <h1 className={styles.friendsPageTitle}>{userData.user.username}</h1>
+                    <h1 className={styles.friendsPageTitle}>
+                      {userData.user.username}
+                    </h1>
                     <p className={styles.friendsPageDescription}>
-                      {userData.collections.length} collections • {userData.collections.reduce(
+                      {userData.collections.length} collections •{" "}
+                      {userData.collections.reduce(
                         (total, col) => total + col._count.vinyls,
                         0
-                      )} total records
+                      )}{" "}
+                      total records
                     </p>
                   </div>
                 </div>
@@ -160,7 +164,9 @@ export default function UserProfilePage({
             {userData.collections.length === 0 ? (
               <div className={styles.modernEmptyState}>
                 <div className={styles.emptyStateIcon}>📚</div>
-                <h3 className={styles.emptyStateTitle}>No public collections</h3>
+                <h3 className={styles.emptyStateTitle}>
+                  No public collections
+                </h3>
                 <p className={styles.emptyStateDescription}>
                   This user hasn't made any collections public yet.
                 </p>
@@ -169,9 +175,12 @@ export default function UserProfilePage({
               <div className={styles.collectionGrid}>
                 {userData.collections.map((collection) => (
                   <div key={collection.id} className={styles.card}>
-                    <Link href={`/users/${userData.user.id}/collections/${collection.id}`}>
+                    <Link
+                      href={`/users/${userData.user.id}/collections/${collection.id}`}
+                    >
                       <div className={styles.imageContainer}>
-                        {collection.vinyls.length > 0 && collection.vinyls[0].imageUrl ? (
+                        {collection.vinyls.length > 0 &&
+                        collection.vinyls[0].imageUrl ? (
                           <img
                             src={collection.vinyls[0].imageUrl}
                             alt={collection.title}
@@ -179,16 +188,20 @@ export default function UserProfilePage({
                           />
                         ) : (
                           <div className={styles.imagePlaceholder}>
-                            <span style={{ fontSize: '2rem' }}>📚</span>
+                            <span style={{ fontSize: "2rem" }}>📚</span>
                           </div>
                         )}
                       </div>
-                      
+
                       <div className={styles.cardInfo}>
                         <div className={styles.cardHeader}>
-                          <h3 className={styles.cardTitle}>{collection.title}</h3>
+                          <h3 className={styles.cardTitle}>
+                            {collection.title}
+                          </h3>
                           {collection.description && (
-                            <p className={styles.cardArtist}>{collection.description}</p>
+                            <p className={styles.cardArtist}>
+                              {collection.description}
+                            </p>
                           )}
                         </div>
                         <p className={styles.addedDate}>

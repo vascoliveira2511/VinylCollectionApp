@@ -58,14 +58,14 @@ export default function FriendCollectionPage({
   const [collection, setCollection] = useState<Collection | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  
+
   // Filter states - same as your collections page
   const [filterArtist, setFilterArtist] = useState("");
   const [filterTitle, setFilterTitle] = useState("");
   const [filterGenre, setFilterGenre] = useState("");
   const [filterYear, setFilterYear] = useState("");
   const [displayLimit, setDisplayLimit] = useState(12);
-  
+
   const router = useRouter();
 
   useEffect(() => {
@@ -121,7 +121,8 @@ export default function FriendCollectionPage({
               g.toLowerCase().includes(filterGenre.toLowerCase())
             );
           const matchesYear =
-            filterYear === "" || (vinyl.year && vinyl.year.toString().includes(filterYear));
+            filterYear === "" ||
+            (vinyl.year && vinyl.year.toString().includes(filterYear));
           return matchesArtist && matchesTitle && matchesGenre && matchesYear;
         })
         .slice(0, displayLimit)
@@ -140,7 +141,11 @@ export default function FriendCollectionPage({
               <p className={styles.errorMessage}>
                 {error || "Collection not found"}
               </p>
-              <Button href={`/users/${params.id}`} variant="outline" size="medium">
+              <Button
+                href={`/users/${params.id}`}
+                variant="outline"
+                size="medium"
+              >
                 ← Back to Profile
               </Button>
             </div>
@@ -182,12 +187,17 @@ export default function FriendCollectionPage({
                 </div>
                 <div className={styles.collectionStats}>
                   <span className={styles.recordCount}>
-                    {collection.vinyls.length} record{collection.vinyls.length !== 1 ? "s" : ""}
+                    {collection.vinyls.length} record
+                    {collection.vinyls.length !== 1 ? "s" : ""}
                   </span>
                 </div>
               </div>
               <div className={styles.collectionHeroActions}>
-                <Button href={`/users/${params.id}`} variant="outline" size="medium">
+                <Button
+                  href={`/users/${params.id}`}
+                  variant="outline"
+                  size="medium"
+                >
                   ← Back to {collection.user.username}'s Profile
                 </Button>
               </div>
@@ -251,7 +261,10 @@ export default function FriendCollectionPage({
           <div className={styles.recordsSection}>
             <div className={styles.recordsHeader}>
               <h2 className={styles.sectionTitle}>
-                Records <span className={styles.recordCountBadge}>({filteredVinyls.length})</span>
+                Records{" "}
+                <span className={styles.recordCountBadge}>
+                  ({filteredVinyls.length})
+                </span>
               </h2>
               <p className={styles.friendCollectionNote}>
                 Viewing {collection.user.username}'s collection
@@ -283,7 +296,8 @@ export default function FriendCollectionPage({
                   <>
                     <h3 className={styles.emptyStateTitle}>No matches found</h3>
                     <p className={styles.emptyStateDescription}>
-                      No records match your current filters. Try adjusting your search.
+                      No records match your current filters. Try adjusting your
+                      search.
                     </p>
                   </>
                 )}

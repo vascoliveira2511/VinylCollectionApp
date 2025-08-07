@@ -21,11 +21,8 @@
   border-radius: 50%;
   position: relative;
   animation: spin 2s linear infinite;
-  box-shadow: 
-    0 0 0 2px var(--beeswax),
-    0 0 0 4px var(--vinyl),
-    0 0 0 6px var(--beeswax-transparent),
-    0 4px 20px var(--shadow-medium);
+  box-shadow: 0 0 0 2px var(--beeswax), 0 0 0 4px var(--vinyl),
+    0 0 0 6px var(--beeswax-transparent), 0 4px 20px var(--shadow-medium);
   border: 1px solid var(--beeswax);
 }
 
@@ -37,8 +34,7 @@
   background: var(--beeswax);
   border-radius: 50%;
   transform: translate(-50%, -50%);
-  box-shadow: 
-    inset 0 0 8px var(--beeswax-glow),
+  box-shadow: inset 0 0 8px var(--beeswax-glow),
     0 0 12px var(--beeswax-transparent);
 }
 

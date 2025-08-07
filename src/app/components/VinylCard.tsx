@@ -62,10 +62,12 @@ const VinylCard = memo(function VinylCard({
 }: VinylCardProps) {
   const [imageError, setImageError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  
+
   // Use the best available image URL (APIs now provide improved URLs)
   const imageUrl =
-    vinyl.imageUrl || vinyl.thumb || "https://via.placeholder.com/150x150/f0ece7/1a1a1a?text=No+Image";
+    vinyl.imageUrl ||
+    vinyl.thumb ||
+    "https://via.placeholder.com/150x150/f0ece7/1a1a1a?text=No+Image";
 
   const linkUrl =
     linkPrefix === "/browse"
@@ -93,7 +95,11 @@ const VinylCard = memo(function VinylCard({
             </div>
           )}
           <Image
-            src={imageError ? "https://via.placeholder.com/150x150/f0ece7/1a1a1a?text=No+Image" : `/api/image-proxy?url=${encodeURIComponent(imageUrl)}`}
+            src={
+              imageError
+                ? "https://via.placeholder.com/150x150/f0ece7/1a1a1a?text=No+Image"
+                : `/api/image-proxy?url=${encodeURIComponent(imageUrl)}`
+            }
             alt={`${vinyl.title} by ${vinyl.artist}`}
             className={styles.albumArt}
             width={150}
@@ -107,12 +113,11 @@ const VinylCard = memo(function VinylCard({
             sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
             style={{
               opacity: isLoading ? 0 : 1,
-              transition: 'opacity 0.3s ease-in-out'
+              transition: "opacity 0.3s ease-in-out",
             }}
           />
         </div>
-        
-        
+
         <div className={styles.cardInfo}>
           <div className={styles.cardHeader}>
             <h3 className={styles.cardTitle}>{vinyl.title}</h3>
@@ -124,9 +129,17 @@ const VinylCard = memo(function VinylCard({
               <div className={styles.metaLine}>
                 {(vinyl.year || vinyl.country) && (
                   <div className={styles.releaseInfo}>
-                    {vinyl.year && <span className={styles.releaseYear}>{vinyl.year}</span>}
-                    {vinyl.year && vinyl.country && <span className={styles.metaSeparator}>•</span>}
-                    {vinyl.country && <span className={styles.releaseCountry}>{vinyl.country}</span>}
+                    {vinyl.year && (
+                      <span className={styles.releaseYear}>{vinyl.year}</span>
+                    )}
+                    {vinyl.year && vinyl.country && (
+                      <span className={styles.metaSeparator}>•</span>
+                    )}
+                    {vinyl.country && (
+                      <span className={styles.releaseCountry}>
+                        {vinyl.country}
+                      </span>
+                    )}
                   </div>
                 )}
                 {vinyl.type === "master" && (
@@ -156,7 +169,8 @@ const VinylCard = memo(function VinylCard({
                 <div className={styles.personalDetails}>
                   <div className={styles.personalRating}>
                     <span className={styles.ratingStars}>
-                      {"★".repeat(vinyl.rating)}{"☆".repeat(5 - vinyl.rating)}
+                      {"★".repeat(vinyl.rating)}
+                      {"☆".repeat(5 - vinyl.rating)}
                     </span>
                     <span className={styles.ratingText}>{vinyl.rating}/5</span>
                   </div>
@@ -176,8 +190,6 @@ const VinylCard = memo(function VinylCard({
           )}
 
           {!showDetails && vinyl.year && <p>{vinyl.year}</p>}
-
-
 
           {vinyl.createdAt && (
             <p className={styles.addedDate}>

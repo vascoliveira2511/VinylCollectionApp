@@ -461,7 +461,11 @@ export default function Profile() {
                 <div className={styles.modernFriendsList}>
                   <div className={styles.modernFriendCard}>
                     <div className={styles.modernFriendInfo}>
-                      <h4 className={`${styles.friendName} ${styles.sectionTitle}`}>Collection Overview</h4>
+                      <h4
+                        className={`${styles.friendName} ${styles.sectionTitle}`}
+                      >
+                        Collection Overview
+                      </h4>
                       <p className={styles.friendMeta}>
                         {user.totalRecords} total records
                       </p>
@@ -538,7 +542,11 @@ export default function Profile() {
                 <div className={styles.modernFriendsList}>
                   <div className={styles.modernFriendCard}>
                     <div className={styles.modernFriendInfo}>
-                      <h4 className={`${styles.friendName} ${styles.sectionTitle}`}>Quick Actions</h4>
+                      <h4
+                        className={`${styles.friendName} ${styles.sectionTitle}`}
+                      >
+                        Quick Actions
+                      </h4>
                       <p className={styles.friendMeta}>
                         Commonly used features and shortcuts
                       </p>
@@ -574,7 +582,11 @@ export default function Profile() {
                 <div className={styles.modernFriendsList}>
                   <div className={styles.modernFriendCard}>
                     <div className={styles.modernFriendInfo}>
-                      <h4 className={`${styles.friendName} ${styles.sectionTitle}`}>Change Password</h4>
+                      <h4
+                        className={`${styles.friendName} ${styles.sectionTitle}`}
+                      >
+                        Change Password
+                      </h4>
 
                       <form
                         id="password-form"
@@ -655,7 +667,11 @@ export default function Profile() {
                 <div className={styles.modernFriendsList}>
                   <div className={styles.modernFriendCard}>
                     <div className={styles.modernFriendInfo}>
-                      <h4 className={`${styles.friendName} ${styles.sectionTitle}`}>Connection Status</h4>
+                      <h4
+                        className={`${styles.friendName} ${styles.sectionTitle}`}
+                      >
+                        Connection Status
+                      </h4>
                       {user?.discogsUsername ? (
                         <>
                           <p className={styles.friendMeta}>
@@ -748,7 +764,11 @@ export default function Profile() {
                 <div className={styles.modernFriendsList}>
                   <div className={styles.modernFriendCard}>
                     <div className={styles.modernFriendInfo}>
-                      <h4 className={`${styles.friendName} ${styles.sectionTitle}`}>Delete Account</h4>
+                      <h4
+                        className={`${styles.friendName} ${styles.sectionTitle}`}
+                      >
+                        Delete Account
+                      </h4>
                       <p
                         className={styles.friendMeta}
                         style={{ color: "var(--text-danger)" }}

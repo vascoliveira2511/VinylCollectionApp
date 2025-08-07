@@ -119,11 +119,6 @@
 }
 
 /* Remove all hover-based visibility changes */
-.mainImageContainer:hover .navButton,
-.mainImageContainer:hover .fullscreenButton,
-.mainImageContainer:hover .imageCounter {
-  /* No changes needed - they're always visible */
-}
 
 .thumbnailSection {
   margin-top: 12px;

@@ -50,20 +50,20 @@
 }
 
 .vinylIcon::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   width: 12px;
   height: 12px;
-  background: #E76037;
+  background: #e76037;
   border-radius: 50%;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 .vinylIcon::after {
-  content: '';
+  content: "";
   position: absolute;
   top: 50%;
   left: 50%;
@@ -154,13 +154,22 @@
 }
 
 @keyframes pulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.1); }
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
 }
 
 @keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* Responsive design */
@@ -168,19 +177,19 @@
   .footer {
     padding: 2rem 0 1rem 0;
   }
-  
+
   .footerContent {
     grid-template-columns: 1fr;
     gap: 1.5rem;
     padding: 0 1rem;
   }
-  
+
   .footerBottomContent {
     flex-direction: column;
     text-align: center;
     padding: 0 1rem;
   }
-  
+
   .footerBrand {
     flex-direction: column;
     text-align: center;

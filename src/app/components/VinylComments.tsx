@@ -156,7 +156,9 @@ export default function VinylComments({ discogsId }: VinylCommentsProps) {
             <div key={comment.id} className={styles.cleanCommentItem}>
               <div className={styles.cleanCommentHeader}>
                 <div className={styles.commentAuthor}>
-                  <span className={styles.username}>{comment.user.username}</span>
+                  <span className={styles.username}>
+                    {comment.user.username}
+                  </span>
                   {comment.isReview && (
                     <span className={styles.cleanReviewBadge}>Review</span>
                   )}
@@ -170,7 +172,9 @@ export default function VinylComments({ discogsId }: VinylCommentsProps) {
                   {new Date(comment.createdAt).toLocaleDateString()}
                 </span>
               </div>
-              <div className={styles.cleanCommentContent}>{comment.content}</div>
+              <div className={styles.cleanCommentContent}>
+                {comment.content}
+              </div>
             </div>
           ))
         )}

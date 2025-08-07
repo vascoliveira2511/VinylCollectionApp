@@ -89,6 +89,6 @@
 }
 
 .danger:hover:not(:disabled) {
-  background: #CC0000 !important;
-  border-color: #CC0000 !important;
+  background: #cc0000 !important;
+  border-color: #cc0000 !important;
 }

@@ -230,7 +230,6 @@ export default function VinylDetailPage({
     }
   };
 
-
   const handleCommentSubmit = async () => {
     if (!newComment.trim() || !vinyl?.discogsId) return;
 
@@ -345,14 +344,24 @@ export default function VinylDetailPage({
                       <>
                         <button
                           className={`${styles.imageNavButton} ${styles.imageNavPrev}`}
-                          onClick={() => setSelectedImage((prev) => (prev - 1 + displayImages.length) % displayImages.length)}
+                          onClick={() =>
+                            setSelectedImage(
+                              (prev) =>
+                                (prev - 1 + displayImages.length) %
+                                displayImages.length
+                            )
+                          }
                           aria-label="Previous image"
                         >
                           ‹
                         </button>
                         <button
                           className={`${styles.imageNavButton} ${styles.imageNavNext}`}
-                          onClick={() => setSelectedImage((prev) => (prev + 1) % displayImages.length)}
+                          onClick={() =>
+                            setSelectedImage(
+                              (prev) => (prev + 1) % displayImages.length
+                            )
+                          }
                           aria-label="Next image"
                         >
                           ›
@@ -461,10 +470,10 @@ export default function VinylDetailPage({
                     target="_blank"
                     rel="noopener noreferrer"
                     className={styles.streamingButton}
-                    style={{ backgroundColor: '#FF0000', color: 'white' }}
+                    style={{ backgroundColor: "#FF0000", color: "white" }}
                     title="Search on YouTube Music"
                   >
-                    <SiYoutube size={16} style={{ marginRight: '6px' }} />
+                    <SiYoutube size={16} style={{ marginRight: "6px" }} />
                     YouTube
                   </a>
                   <a
@@ -474,15 +483,14 @@ export default function VinylDetailPage({
                     target="_blank"
                     rel="noopener noreferrer"
                     className={styles.streamingButton}
-                    style={{ backgroundColor: '#FA243C', color: 'white' }}
+                    style={{ backgroundColor: "#FA243C", color: "white" }}
                     title="Search on Apple Music"
                   >
-                    <SiApplemusic size={16} style={{ marginRight: '6px' }} />
+                    <SiApplemusic size={16} style={{ marginRight: "6px" }} />
                     Apple Music
                   </a>
                 </div>
               </div>
-
             </div>
           </div>
         </div>
@@ -619,7 +627,7 @@ export default function VinylDetailPage({
           )}
 
           {/* Recommendations */}
-          <RecommendationsSection 
+          <RecommendationsSection
             discogsId={vinyl.discogsId?.toString()}
             masterId={discogsDetails?.master_id?.toString()}
           />

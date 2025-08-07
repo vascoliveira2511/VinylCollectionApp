@@ -188,7 +188,8 @@ export default function FriendsPage() {
               <div className={styles.friendsHeroLeft}>
                 <h1 className={styles.friendsPageTitle}>Friends</h1>
                 <p className={styles.friendsPageDescription}>
-                  Connect with other vinyl collectors and discover their collections
+                  Connect with other vinyl collectors and discover their
+                  collections
                 </p>
               </div>
             </div>
@@ -267,9 +268,7 @@ export default function FriendsPage() {
             <div className={styles.friendsManagementHeader}>
               <h2 className={styles.sectionTitle}>Your Friends</h2>
             </div>
-            {error && (
-              <div className={styles.modernErrorMessage}>{error}</div>
-            )}
+            {error && <div className={styles.modernErrorMessage}>{error}</div>}
 
             {/* Modern Tabs */}
             <div className={styles.modernTabNav}>
@@ -319,8 +318,11 @@ export default function FriendsPage() {
                     </div>
                   ) : (
                     friends.map((friendship) => (
-                      <div key={friendship.id} className={styles.modernFriendCard}>
-                        <Link 
+                      <div
+                        key={friendship.id}
+                        className={styles.modernFriendCard}
+                      >
+                        <Link
                           href={`/users/${friendship.friend?.id}`}
                           className={styles.friendCardLink}
                         >
@@ -366,14 +368,19 @@ export default function FriendsPage() {
                   {receivedRequests.length === 0 ? (
                     <div className={styles.modernEmptyState}>
                       <div className={styles.emptyStateIcon}>📨</div>
-                      <h3 className={styles.emptyStateTitle}>No pending requests</h3>
+                      <h3 className={styles.emptyStateTitle}>
+                        No pending requests
+                      </h3>
                       <p className={styles.emptyStateDescription}>
                         You don't have any friend requests right now.
                       </p>
                     </div>
                   ) : (
                     receivedRequests.map((request) => (
-                      <div key={request.id} className={styles.modernRequestCard}>
+                      <div
+                        key={request.id}
+                        className={styles.modernRequestCard}
+                      >
                         <Avatar
                           username={request.sender?.username || ""}
                           avatar={request.sender?.avatar}
@@ -421,7 +428,9 @@ export default function FriendsPage() {
                   {sentRequests.length === 0 ? (
                     <div className={styles.modernEmptyState}>
                       <div className={styles.emptyStateIcon}>📤</div>
-                      <h3 className={styles.emptyStateTitle}>No sent requests</h3>
+                      <h3 className={styles.emptyStateTitle}>
+                        No sent requests
+                      </h3>
                       <p className={styles.emptyStateDescription}>
                         You haven't sent any friend requests yet.
                       </p>

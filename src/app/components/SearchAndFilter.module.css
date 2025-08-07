@@ -28,9 +28,7 @@
   outline: none;
   border-color: var(--primary);
   background-color: var(--surface-elevated);
-  box-shadow: 
-    0 0 0 3px var(--focus-ring),
-    inset 0 2px 4px var(--shadow-subtle);
+  box-shadow: 0 0 0 3px var(--focus-ring), inset 0 2px 4px var(--shadow-subtle);
 }
 
 .advancedToggle {
@@ -88,9 +86,7 @@
   outline: none;
   border-color: var(--primary);
   background-color: var(--surface-elevated);
-  box-shadow: 
-    0 0 0 3px var(--focus-ring),
-    inset 0 2px 4px var(--shadow-subtle);
+  box-shadow: 0 0 0 3px var(--focus-ring), inset 0 2px 4px var(--shadow-subtle);
 }
 
 .clearButton {
@@ -106,8 +102,8 @@
 }
 
 .clearButton:hover {
-  background: #DC2626;
-  border-color: #DC2626;
+  background: #dc2626;
+  border-color: #dc2626;
   box-shadow: 0 4px 16px rgba(239, 68, 68, 0.3);
   transform: translateY(-1px);
 }

@@ -193,8 +193,17 @@ export default function Signup() {
                   className={styles.loginButton}
                 >
                   {loading ? (
-                    <div style={{display: 'flex', alignItems: 'center', gap: '8px'}}>
-                      <div className="vinyl-loader" style={{width: '20px', height: '20px'}}>
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "8px",
+                      }}
+                    >
+                      <div
+                        className="vinyl-loader"
+                        style={{ width: "20px", height: "20px" }}
+                      >
                         <div className="vinyl-record"></div>
                       </div>
                       Creating account...
@@ -216,8 +225,17 @@ export default function Signup() {
                 className={styles.googleButton}
               >
                 {googleLoading ? (
-                  <div style={{display: 'flex', alignItems: 'center', gap: '8px'}}>
-                    <div className="vinyl-loader" style={{width: '20px', height: '20px'}}>
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "8px",
+                    }}
+                  >
+                    <div
+                      className="vinyl-loader"
+                      style={{ width: "20px", height: "20px" }}
+                    >
                       <div className="vinyl-record"></div>
                     </div>
                     Signing up...

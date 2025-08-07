@@ -27,9 +27,7 @@ export default function VinylVideos({ videos }: VinylVideosProps) {
           <div className={styles.videoContent}>
             <h4 className={styles.videoTitle}>{video.title}</h4>
             {video.description && (
-              <p className={styles.videoDescription}>
-                {video.description}
-              </p>
+              <p className={styles.videoDescription}>{video.description}</p>
             )}
             {video.duration && (
               <span className={styles.videoDuration}>
@@ -39,11 +37,7 @@ export default function VinylVideos({ videos }: VinylVideosProps) {
             )}
           </div>
           <div className={styles.videoActions}>
-            <Button
-              href={video.uri}
-              variant="outline"
-              size="small"
-            >
+            <Button href={video.uri} variant="outline" size="small">
               Watch →
             </Button>
           </div>

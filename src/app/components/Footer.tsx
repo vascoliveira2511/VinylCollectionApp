@@ -20,16 +20,30 @@ export default function Footer() {
         <div className={styles.footerSection}>
           <h4>Legal</h4>
           <ul className={styles.footerLinks}>
-            <li><Link href="/privacy">Privacy Policy</Link></li>
-            <li><Link href="/terms">Terms of Service</Link></li>
+            <li>
+              <Link href="/privacy">Privacy Policy</Link>
+            </li>
+            <li>
+              <Link href="/terms">Terms of Service</Link>
+            </li>
           </ul>
         </div>
 
         <div className={styles.footerSection}>
           <h4>Support</h4>
           <ul className={styles.footerLinks}>
-            <li><a href="mailto:vascoliveira2511@gmail.com">Contact Us</a></li>
-            <li><a href="https://github.com/vascoliveira2511/VinylCollectionApp" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+            <li>
+              <a href="mailto:vascoliveira2511@gmail.com">Contact Us</a>
+            </li>
+            <li>
+              <a
+                href="https://github.com/vascoliveira2511/VinylCollectionApp"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                GitHub
+              </a>
+            </li>
           </ul>
         </div>
 
@@ -43,7 +57,10 @@ export default function Footer() {
 
       <div className={styles.footerBottom}>
         <div className={styles.footerBottomContent}>
-          <p>&copy; {new Date().getFullYear()} Vinyl Collection. All rights reserved.</p>
+          <p>
+            &copy; {new Date().getFullYear()} Vinyl Collection. All rights
+            reserved.
+          </p>
           <p className={styles.footerCredit}>
             Made with <span className={styles.heart}>♥</span> by Vasco Oliveira
           </p>

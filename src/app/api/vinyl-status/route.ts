@@ -10,7 +10,10 @@ export async function POST(request: Request) {
   const { discogsId, status } = await request.json();
 
   if (!discogsId) {
-    return NextResponse.json({ error: "Discogs ID is required" }, { status: 400 });
+    return NextResponse.json(
+      { error: "Discogs ID is required" },
+      { status: 400 }
+    );
   }
 
   try {
@@ -71,17 +74,22 @@ export async function POST(request: Request) {
         if (!existingVinyl) {
           // Fetch release details from Discogs to create vinyl record
           try {
-            const discogsResponse = await fetch(`/api/discogs/release/${discogsId}`);
+            const discogsResponse = await fetch(
+              `/api/discogs/release/${discogsId}`
+            );
             if (discogsResponse.ok) {
               const releaseData = await discogsResponse.json();
-              
+
               createdVinyl = await prisma.vinyl.create({
                 data: {
                   discogsId: discogsId,
                   artist: releaseData.artists?.[0]?.name || "Unknown Artist",
                   title: releaseData.title || "Unknown Title",
                   year: releaseData.year || null,
-                  imageUrl: releaseData.images?.[0]?.uri500 || releaseData.images?.[0]?.uri || null,
+                  imageUrl:
+                    releaseData.images?.[0]?.uri500 ||
+                    releaseData.images?.[0]?.uri ||
+                    null,
                   genres: JSON.stringify(releaseData.genres || []),
                   label: releaseData.labels?.[0]?.name || null,
                   format: releaseData.formats?.[0]?.name || null,
@@ -103,13 +111,16 @@ export async function POST(request: Request) {
               });
             }
           } catch (error) {
-            console.error("Failed to fetch release details for wantlist:", error);
+            console.error(
+              "Failed to fetch release details for wantlist:",
+              error
+            );
           }
         }
-        
-        return NextResponse.json({ 
-          success: true, 
-          vinyl: createdVinyl
+
+        return NextResponse.json({
+          success: true,
+          vinyl: createdVinyl,
         });
       }
     }
@@ -134,7 +145,10 @@ export async function GET(request: Request) {
   const discogsId = searchParams.get("discogsId");
 
   if (!discogsId) {
-    return NextResponse.json({ error: "Discogs ID is required" }, { status: 400 });
+    return NextResponse.json(
+      { error: "Discogs ID is required" },
+      { status: 400 }
+    );
   }
 
   try {

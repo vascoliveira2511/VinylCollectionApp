@@ -147,7 +147,6 @@ export default function SimpleReleaseInfo(props: SimpleReleaseInfoProps) {
             </div>
           </div>
         )}
-
       </div>
 
       {/* Track List - Always visible */}
@@ -272,7 +271,9 @@ export default function SimpleReleaseInfo(props: SimpleReleaseInfoProps) {
               <strong style={{ color: "var(--text)" }}>
                 {identifier.type}
               </strong>
-              <span style={{ color: "var(--text-secondary)", marginLeft: "8px" }}>
+              <span
+                style={{ color: "var(--text-secondary)", marginLeft: "8px" }}
+              >
                 {identifier.value}
                 {identifier.description && ` (${identifier.description})`}
               </span>

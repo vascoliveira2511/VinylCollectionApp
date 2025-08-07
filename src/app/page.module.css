@@ -289,7 +289,7 @@
     grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
     gap: 16px;
   }
-  
+
   .discoverGrid {
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 24px;
@@ -301,7 +301,7 @@
     grid-template-columns: repeat(2, 1fr);
     gap: 12px;
   }
-  
+
   .discoverGrid {
     grid-template-columns: 1fr;
     gap: 20px;
@@ -3204,14 +3204,6 @@ Link.editButton:hover {
   justify-content: center;
   padding: 32px;
   background: var(--background);
-}
-
-.loginBackground {
-  /* No longer needed - background handled by loginMain */
-}
-
-.loginBackground::before {
-  /* No longer needed - background handled by loginMain */
 }
 
 .loginContainer {
@@ -8499,11 +8491,11 @@ Link.editButton:hover {
     margin: 16px 0;
     padding: 16px;
   }
-  
+
   .spotifyTrack {
     padding: 10px;
   }
-  
+
   .spotifyTrackName {
     font-size: 0.85rem;
   }
@@ -8569,12 +8561,12 @@ Link.editButton:hover {
     flex-direction: column;
     gap: 8px;
   }
-  
+
   .addToDefaultButton,
   .addToWantlistButton {
     width: 100%;
   }
-  
+
   .collectionsGrid {
     grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
     gap: 6px;
@@ -8880,6 +8872,8 @@ Link.editButton:hover {
   display: -webkit-box;
   -webkit-line-clamp: 2;
   line-clamp: 2;
+  line-clamp: 2;
+  /* Standard property for compatibility */
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -9403,7 +9397,11 @@ Link.editButton:hover {
 .recentRecord {
   display: block;
   padding: 12px 16px;
-  background: linear-gradient(135deg, var(--surface-elevated), var(--surface-subtle));
+  background: linear-gradient(
+    135deg,
+    var(--surface-elevated),
+    var(--surface-subtle)
+  );
   border-radius: 12px;
   border-left: 4px solid var(--primary);
   font-size: 0.9375rem;
@@ -9423,7 +9421,12 @@ Link.editButton:hover {
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
   transition: left 0.6s ease;
 }
 
@@ -9689,7 +9692,11 @@ Link.editButton:hover {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, var(--surface-subtle) 0%, var(--surface) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--surface-subtle) 0%,
+    var(--surface) 100%
+  );
 }
 
 .recommendationPlaceholder .vinylIcon {
@@ -9701,7 +9708,7 @@ Link.editButton:hover {
 }
 
 .recommendationPlaceholder .vinylIcon::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 50%;
   left: 50%;
@@ -9717,7 +9724,12 @@ Link.editButton:hover {
   bottom: 0;
   left: 0;
   right: 0;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.7) 60%, transparent 100%);
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.9) 0%,
+    rgba(0, 0, 0, 0.7) 60%,
+    transparent 100%
+  );
   color: white;
   padding: 16px 12px 12px;
   transform: translateY(0);
@@ -9771,14 +9783,24 @@ Link.editButton:hover {
 
 .skeletonImage {
   aspect-ratio: 1;
-  background: linear-gradient(90deg, var(--surface-subtle) 0%, var(--surface) 50%, var(--surface-subtle) 100%);
+  background: linear-gradient(
+    90deg,
+    var(--surface-subtle) 0%,
+    var(--surface) 50%,
+    var(--surface-subtle) 100%
+  );
   background-size: 200% 100%;
   animation: shimmer 1.5s ease-in-out infinite;
 }
 
 .skeletonText {
   height: 12px;
-  background: linear-gradient(90deg, var(--surface-subtle) 0%, var(--surface) 50%, var(--surface-subtle) 100%);
+  background: linear-gradient(
+    90deg,
+    var(--surface-subtle) 0%,
+    var(--surface) 50%,
+    var(--surface-subtle) 100%
+  );
   background-size: 200% 100%;
   animation: shimmer 1.5s ease-in-out infinite;
   margin: 8px 12px;
@@ -9800,7 +9822,8 @@ Link.editButton:hover {
 }
 
 @keyframes pulse {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
   }
   50% {
@@ -9814,15 +9837,15 @@ Link.editButton:hover {
     grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
     gap: 16px;
   }
-  
+
   .recommendationOverlay {
     padding: 12px 10px 10px;
   }
-  
+
   .recommendationTitle {
     font-size: 0.85rem;
   }
-  
+
   .recommendationArtist {
     font-size: 0.75rem;
   }
@@ -9833,7 +9856,7 @@ Link.editButton:hover {
     grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
     gap: 12px;
   }
-  
+
   .recommendationsSection {
     margin-top: 32px;
     padding-top: 24px;

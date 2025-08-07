@@ -18,7 +18,7 @@ interface Recommendation {
   style: string[];
   imageUrl?: string;
   thumb: string;
-  type: 'master' | 'release';
+  type: "master" | "release";
   country?: string;
   format?: string;
   label?: string;
@@ -29,7 +29,10 @@ interface RecommendationsSectionProps {
   masterId?: string;
 }
 
-export default function RecommendationsSection({ discogsId, masterId }: RecommendationsSectionProps) {
+export default function RecommendationsSection({
+  discogsId,
+  masterId,
+}: RecommendationsSectionProps) {
   const [recommendations, setRecommendations] = useState<Recommendation[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -48,9 +51,9 @@ export default function RecommendationsSection({ discogsId, masterId }: Recommen
       }
 
       const params = new URLSearchParams();
-      if (discogsId) params.append('discogsId', discogsId);
-      if (masterId) params.append('masterId', masterId);
-      
+      if (discogsId) params.append("discogsId", discogsId);
+      if (masterId) params.append("masterId", masterId);
+
       const cacheKey = params.toString();
 
       // Check client-side cache first
@@ -75,12 +78,12 @@ export default function RecommendationsSection({ discogsId, masterId }: Recommen
 
       try {
         abortControllerRef.current = new AbortController();
-        
+
         const fetchPromise = fetch(`/api/recommendations?${cacheKey}`, {
-          signal: abortControllerRef.current.signal
+          signal: abortControllerRef.current.signal,
         }).then(async (response) => {
           if (!response.ok) {
-            throw new Error('Failed to fetch recommendations');
+            throw new Error("Failed to fetch recommendations");
           }
           return response.json();
         });
@@ -89,18 +92,20 @@ export default function RecommendationsSection({ discogsId, masterId }: Recommen
         requestCache.set(cacheKey, fetchPromise);
 
         const data = await fetchPromise;
-        
+
         // Cache the result
         dataCache.set(cacheKey, { data, timestamp: Date.now() });
-        
+
         setRecommendations(data.recommendations || []);
       } catch (err) {
-        if (err instanceof Error && err.name === 'AbortError') {
+        if (err instanceof Error && err.name === "AbortError") {
           // Request was cancelled, don't show error
           return;
         }
-        console.error('Error fetching recommendations:', err);
-        setError(err instanceof Error ? err.message : 'Failed to load recommendations');
+        console.error("Error fetching recommendations:", err);
+        setError(
+          err instanceof Error ? err.message : "Failed to load recommendations"
+        );
       } finally {
         requestCache.delete(cacheKey);
         setLoading(false);
@@ -145,13 +150,20 @@ export default function RecommendationsSection({ discogsId, masterId }: Recommen
         {recommendations.slice(0, 12).map((rec) => (
           <Link
             key={rec.id}
-            href={rec.type === 'master' ? `/browse/master/${rec.id}` : `/browse/${rec.id}`}
+            href={
+              rec.type === "master"
+                ? `/browse/master/${rec.id}`
+                : `/browse/${rec.id}`
+            }
             className={styles.recommendationCard}
           >
             <div className={styles.recommendationImage}>
-              {(rec.imageUrl || rec.thumb) && (rec.imageUrl !== "" || rec.thumb !== "") ? (
+              {(rec.imageUrl || rec.thumb) &&
+              (rec.imageUrl !== "" || rec.thumb !== "") ? (
                 <img
-                  src={`/api/image-proxy?url=${encodeURIComponent(rec.imageUrl || rec.thumb)}`}
+                  src={`/api/image-proxy?url=${encodeURIComponent(
+                    rec.imageUrl || rec.thumb
+                  )}`}
                   alt={`${rec.title} cover`}
                   className={styles.recommendationCover}
                 />

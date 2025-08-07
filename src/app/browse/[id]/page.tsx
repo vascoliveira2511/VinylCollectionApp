@@ -129,10 +129,12 @@ export default function BrowseDetailPage({
 
         setRelease(releaseData as DiscogsRelease);
         setCollections(collectionsData as any[]);
-        
+
         // Check if this vinyl already exists in any collection
         try {
-          const existingResponse = await fetch(`/api/vinyl/check-exists?discogsId=${id}`);
+          const existingResponse = await fetch(
+            `/api/vinyl/check-exists?discogsId=${id}`
+          );
           if (existingResponse.ok) {
             const existingData = await existingResponse.json();
             setExistingVinyls(existingData);
@@ -158,18 +160,24 @@ export default function BrowseDetailPage({
     if (!release) return;
 
     // Check if vinyl already exists in this collection
-    const existingInCollection = existingVinyls.find(v => 
+    const existingInCollection = existingVinyls.find((v) =>
       collectionId ? v.collectionId === collectionId : v.collection?.isDefault
     );
-    
+
     if (existingInCollection) {
       const collectionName = collectionId
         ? collections.find((c) => c.id === collectionId)?.title || "collection"
         : "your collection";
-      
-      if (confirm(`This vinyl already exists in ${collectionName}. Would you like to view it instead?`)) {
+
+      if (
+        confirm(
+          `This vinyl already exists in ${collectionName}. Would you like to view it instead?`
+        )
+      ) {
         if (collectionId) {
-          router.push(`/collections/${collectionId}?highlight=${existingInCollection.id}`);
+          router.push(
+            `/collections/${collectionId}?highlight=${existingInCollection.id}`
+          );
         } else {
           router.push(`/?highlight=${existingInCollection.id}`);
         }
@@ -227,9 +235,13 @@ export default function BrowseDetailPage({
       if (response.ok) {
         const data = await response.json();
         // Find wantlist collection and redirect to it with highlight
-        const wantlistCollection = collections.find(c => c.type === "wantlist");
+        const wantlistCollection = collections.find(
+          (c) => c.type === "wantlist"
+        );
         if (wantlistCollection && data.vinyl?.id) {
-          router.push(`/collections/${wantlistCollection.id}?highlight=${data.vinyl.id}`);
+          router.push(
+            `/collections/${wantlistCollection.id}?highlight=${data.vinyl.id}`
+          );
         } else if (wantlistCollection) {
           router.push(`/collections/${wantlistCollection.id}`);
         } else {
@@ -248,7 +260,6 @@ export default function BrowseDetailPage({
     }
   };
 
-
   if (loading) {
     return <PageLoader text="Loading release details..." />;
   }
@@ -261,11 +272,7 @@ export default function BrowseDetailPage({
             <div className={styles.contentSection}>
               <div className={styles.errorState}>
                 <p>Error: {error || "Release not found"}</p>
-                <Button
-                  href="/browse"
-                  variant="outline"
-                  size="medium"
-                >
+                <Button href="/browse" variant="outline" size="medium">
                   ← Back to Browse
                 </Button>
               </div>
@@ -278,9 +285,7 @@ export default function BrowseDetailPage({
 
   // Get the best available image - priority: Discogs high-res
   const displayImages =
-    release?.images && release.images.length > 0
-      ? release.images
-      : [];
+    release?.images && release.images.length > 0 ? release.images : [];
 
   const currentImage = displayImages[selectedImage] || displayImages[0];
   const backgroundImage = displayImages[0]; // Always use first image for background
@@ -324,14 +329,24 @@ export default function BrowseDetailPage({
                       <>
                         <button
                           className={`${styles.imageNavButton} ${styles.imageNavPrev}`}
-                          onClick={() => setSelectedImage((prev) => (prev - 1 + displayImages.length) % displayImages.length)}
+                          onClick={() =>
+                            setSelectedImage(
+                              (prev) =>
+                                (prev - 1 + displayImages.length) %
+                                displayImages.length
+                            )
+                          }
                           aria-label="Previous image"
                         >
                           ‹
                         </button>
                         <button
                           className={`${styles.imageNavButton} ${styles.imageNavNext}`}
-                          onClick={() => setSelectedImage((prev) => (prev + 1) % displayImages.length)}
+                          onClick={() =>
+                            setSelectedImage(
+                              (prev) => (prev + 1) % displayImages.length
+                            )
+                          }
                           aria-label="Next image"
                         >
                           ›
@@ -351,7 +366,8 @@ export default function BrowseDetailPage({
               <div className={styles.vinylTitleSection}>
                 <h1 className={styles.modernVinylTitle}>{release.title}</h1>
                 <h2 className={styles.modernVinylArtist}>
-                  {release.artists?.map((a) => a.name).join(", ") || "Unknown Artist"}
+                  {release.artists?.map((a) => a.name).join(", ") ||
+                    "Unknown Artist"}
                 </h2>
                 <div className={styles.vinylMetaInfo}>
                   <span className={styles.vinylYear}>{release.year}</span>
@@ -367,8 +383,7 @@ export default function BrowseDetailPage({
               </div>
 
               {/* Genre Pills */}
-              {(release.genres?.length > 0 ||
-                release.styles?.length > 0) && (
+              {(release.genres?.length > 0 || release.styles?.length > 0) && (
                 <div className={styles.modernGenrePills}>
                   {release.genres?.map((g, idx) => (
                     <span
@@ -400,18 +415,17 @@ export default function BrowseDetailPage({
                     existingVinyls={existingVinyls}
                   />
                 </div>
-                <Button
-                  href="/browse"
-                  variant="outline"
-                  size="medium"
-                >
+                <Button href="/browse" variant="outline" size="medium">
                   ← Back to Browse
                 </Button>
               </div>
 
               {/* Spotify Preview */}
               <SpotifyPreview
-                artist={release.artists?.map((a) => a.name).join(", ") || "Unknown Artist"}
+                artist={
+                  release.artists?.map((a) => a.name).join(", ") ||
+                  "Unknown Artist"
+                }
                 album={release.title}
                 year={release.year}
               />
@@ -424,33 +438,36 @@ export default function BrowseDetailPage({
                 <div className={styles.streamingButtons}>
                   <a
                     href={`https://music.youtube.com/search?q=${encodeURIComponent(
-                      `${release.artists?.map((a) => a.name).join(", ") || ""} ${release.title}`
+                      `${
+                        release.artists?.map((a) => a.name).join(", ") || ""
+                      } ${release.title}`
                     )}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className={styles.streamingButton}
-                    style={{ backgroundColor: '#FF0000', color: 'white' }}
+                    style={{ backgroundColor: "#FF0000", color: "white" }}
                     title="Search on YouTube Music"
                   >
-                    <SiYoutube size={16} style={{ marginRight: '6px' }} />
+                    <SiYoutube size={16} style={{ marginRight: "6px" }} />
                     YouTube
                   </a>
                   <a
                     href={`https://music.apple.com/search?term=${encodeURIComponent(
-                      `${release.artists?.map((a) => a.name).join(", ") || ""} ${release.title}`
+                      `${
+                        release.artists?.map((a) => a.name).join(", ") || ""
+                      } ${release.title}`
                     )}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className={styles.streamingButton}
-                    style={{ backgroundColor: '#FA243C', color: 'white' }}
+                    style={{ backgroundColor: "#FA243C", color: "white" }}
                     title="Search on Apple Music"
                   >
-                    <SiApplemusic size={16} style={{ marginRight: '6px' }} />
+                    <SiApplemusic size={16} style={{ marginRight: "6px" }} />
                     Apple Music
                   </a>
                 </div>
               </div>
-
             </div>
           </div>
         </div>
@@ -511,9 +528,7 @@ export default function BrowseDetailPage({
                 {showCommunityReviews ? "−" : "+"}
               </span>
             </h3>
-            {showCommunityReviews && (
-              <VinylComments discogsId={release.id} />
-            )}
+            {showCommunityReviews && <VinylComments discogsId={release.id} />}
           </div>
 
           {/* External Link */}
@@ -531,7 +546,7 @@ export default function BrowseDetailPage({
           )}
 
           {/* Recommendations */}
-          <RecommendationsSection 
+          <RecommendationsSection
             discogsId={release.id.toString()}
             masterId={release.master_id?.toString()}
           />

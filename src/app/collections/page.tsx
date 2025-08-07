@@ -356,85 +356,90 @@ export default function Collections() {
           ) : (
             <div className={styles.profileCardSpacing}>
               <div className={styles.modernFriendsList}>
-              {collections.map((collection) => (
-                <Link
-                  key={collection.id}
-                  href={`/collections/${collection.id}`}
-                  className={styles.modernFriendCard}
-                >
-                  <div className={styles.modernFriendInfo}>
-                    <div className={styles.titleRow}>
-                      <h4 className={`${styles.friendName} ${styles.sectionTitle}`}>
-                        {collection.title}
-                      </h4>
-                      <div className={styles.inlineBadges}>
-                        {collection.isDefault && (
-                          <span className={styles.defaultBadge}>Default</span>
-                        )}
-                        {collection.isPublic && (
-                          <span className={styles.publicBadge}>Public</span>
-                        )}
+                {collections.map((collection) => (
+                  <Link
+                    key={collection.id}
+                    href={`/collections/${collection.id}`}
+                    className={styles.modernFriendCard}
+                  >
+                    <div className={styles.modernFriendInfo}>
+                      <div className={styles.titleRow}>
+                        <h4
+                          className={`${styles.friendName} ${styles.sectionTitle}`}
+                        >
+                          {collection.title}
+                        </h4>
+                        <div className={styles.inlineBadges}>
+                          {collection.isDefault && (
+                            <span className={styles.defaultBadge}>Default</span>
+                          )}
+                          {collection.isPublic && (
+                            <span className={styles.publicBadge}>Public</span>
+                          )}
+                        </div>
+                      </div>
+                      {collection.description && (
+                        <p className={styles.friendMeta}>
+                          {collection.description}
+                        </p>
+                      )}
+                      <div className={styles.collectionMetaSection}>
+                        <p className={styles.friendMeta}>
+                          <strong>{collection._count.vinyls}</strong>{" "}
+                          {collection._count.vinyls === 1
+                            ? "record"
+                            : "records"}
+                        </p>
+                        <p className={styles.friendMeta}>
+                          Created{" "}
+                          {new Date(collection.createdAt).toLocaleDateString()}
+                        </p>
                       </div>
                     </div>
-                    {collection.description && (
-                      <p className={styles.friendMeta}>
-                        {collection.description}
-                      </p>
-                    )}
-                    <div className={styles.collectionMetaSection}>
-                      <p className={styles.friendMeta}>
-                        <strong>{collection._count.vinyls}</strong>{" "}
-                        {collection._count.vinyls === 1 ? "record" : "records"}
-                      </p>
-                      <p className={styles.friendMeta}>
-                        Created {new Date(collection.createdAt).toLocaleDateString()}
-                      </p>
-                    </div>
-                  </div>
-                  <div 
-                    className={styles.modernFriendActions}
-                    onClick={(e) => e.preventDefault()}
-                  >
-                    <Button
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        startEditing(collection);
-                      }}
-                      variant="outline"
-                      size="medium"
+                    <div
+                      className={styles.modernFriendActions}
+                      onClick={(e) => e.preventDefault()}
                     >
-                      Edit
-                    </Button>
-                    {!collection.isDefault && (
-                      <>
-                        <Button
-                          onClick={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            handleSetDefault(collection);
-                          }}
-                          variant="outline"
-                          size="medium"
-                        >
-                          Set Default
-                        </Button>
-                        <Button
-                          onClick={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            handleDeleteCollection(collection);
-                          }}
-                          variant="danger"
-                          size="medium"
-                        >
-                          Delete
-                        </Button>
-                      </>
-                    )}
-                  </div>
-                </Link>
-              ))}
+                      <Button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          startEditing(collection);
+                        }}
+                        variant="outline"
+                        size="medium"
+                      >
+                        Edit
+                      </Button>
+                      {!collection.isDefault && (
+                        <>
+                          <Button
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              handleSetDefault(collection);
+                            }}
+                            variant="outline"
+                            size="medium"
+                          >
+                            Set Default
+                          </Button>
+                          <Button
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              handleDeleteCollection(collection);
+                            }}
+                            variant="danger"
+                            size="medium"
+                          >
+                            Delete
+                          </Button>
+                        </>
+                      )}
+                    </div>
+                  </Link>
+                ))}
               </div>
             </div>
           )}

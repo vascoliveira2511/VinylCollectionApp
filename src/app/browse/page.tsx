@@ -330,7 +330,6 @@ function BrowsePageContent() {
       }
     });
 
-
   return (
     <main className={styles.main}>
       <div className={styles.modernContainer}>
@@ -360,7 +359,9 @@ function BrowsePageContent() {
             {error && <div className={styles.errorMessage}>{error}</div>}
 
             <div className={`${styles.searchSection} ${styles.centered}`}>
-              <h2 className={styles.plainSectionTitle}>Search Music Database</h2>
+              <h2 className={styles.plainSectionTitle}>
+                Search Music Database
+              </h2>
               <p className={styles.searchHint}>
                 Try: "Pink Floyd", "Kind of Blue", "Blue Note Records" • Press
                 Enter to search

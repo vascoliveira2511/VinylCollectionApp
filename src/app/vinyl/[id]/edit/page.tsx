@@ -249,105 +249,95 @@ export default function EditVinylPage({ params }: { params: { id: string } }) {
           <form onSubmit={handleSubmit} className={styles.modernForm}>
             {/* Personal Details Section */}
             <div className={styles.infoSection}>
-              <h3 className={styles.sectionTitle}>Personal Collection Details</h3>
+              <h3 className={styles.sectionTitle}>
+                Personal Collection Details
+              </h3>
               <div className={styles.modernFormGrid}>
                 {/* Media Condition */}
                 <div className={styles.formField}>
-                  <label className={styles.modernLabel}>
-                    Media Condition
-                  </label>
+                  <label className={styles.modernLabel}>Media Condition</label>
                   <select
                     value={condition}
                     onChange={(e) => setCondition(e.target.value)}
                     className={styles.modernSelect}
                   >
-                        <option value="">Not specified</option>
-                        <option value="Mint (M)">Mint (M)</option>
-                        <option value="Near Mint (NM)">Near Mint (NM)</option>
-                        <option value="Very Good Plus (VG+)">
-                          Very Good Plus (VG+)
-                        </option>
-                        <option value="Very Good (VG)">Very Good (VG)</option>
-                        <option value="Good Plus (G+)">Good Plus (G+)</option>
-                        <option value="Good (G)">Good (G)</option>
-                        <option value="Fair (F)">Fair (F)</option>
-                        <option value="Poor (P)">Poor (P)</option>
+                    <option value="">Not specified</option>
+                    <option value="Mint (M)">Mint (M)</option>
+                    <option value="Near Mint (NM)">Near Mint (NM)</option>
+                    <option value="Very Good Plus (VG+)">
+                      Very Good Plus (VG+)
+                    </option>
+                    <option value="Very Good (VG)">Very Good (VG)</option>
+                    <option value="Good Plus (G+)">Good Plus (G+)</option>
+                    <option value="Good (G)">Good (G)</option>
+                    <option value="Fair (F)">Fair (F)</option>
+                    <option value="Poor (P)">Poor (P)</option>
                   </select>
                 </div>
 
                 {/* Sleeve Condition */}
                 <div className={styles.formField}>
-                  <label className={styles.modernLabel}>
-                    Sleeve Condition
-                  </label>
+                  <label className={styles.modernLabel}>Sleeve Condition</label>
                   <select
                     value={sleeveCondition}
                     onChange={(e) => setSleeveCondition(e.target.value)}
                     className={styles.modernSelect}
                   >
-                        <option value="">Not specified</option>
-                        <option value="Mint (M)">Mint (M)</option>
-                        <option value="Near Mint (NM)">Near Mint (NM)</option>
-                        <option value="Very Good Plus (VG+)">
-                          Very Good Plus (VG+)
-                        </option>
-                        <option value="Very Good (VG)">Very Good (VG)</option>
-                        <option value="Good Plus (G+)">Good Plus (G+)</option>
-                        <option value="Good (G)">Good (G)</option>
-                        <option value="Fair (F)">Fair (F)</option>
-                        <option value="Poor (P)">Poor (P)</option>
+                    <option value="">Not specified</option>
+                    <option value="Mint (M)">Mint (M)</option>
+                    <option value="Near Mint (NM)">Near Mint (NM)</option>
+                    <option value="Very Good Plus (VG+)">
+                      Very Good Plus (VG+)
+                    </option>
+                    <option value="Very Good (VG)">Very Good (VG)</option>
+                    <option value="Good Plus (G+)">Good Plus (G+)</option>
+                    <option value="Good (G)">Good (G)</option>
+                    <option value="Fair (F)">Fair (F)</option>
+                    <option value="Poor (P)">Poor (P)</option>
                   </select>
                 </div>
 
                 {/* Personal Rating */}
                 <div className={styles.formField}>
-                  <label className={styles.modernLabel}>
-                    Personal Rating
-                  </label>
+                  <label className={styles.modernLabel}>Personal Rating</label>
                   <select
                     value={rating || ""}
                     onChange={(e) =>
                       setRating(
-                        e.target.value
-                          ? parseInt(e.target.value)
-                          : undefined
+                        e.target.value ? parseInt(e.target.value) : undefined
                       )
                     }
                     className={styles.modernSelect}
                   >
-                        <option value="">No rating</option>
-                        <option value="1">★ 1 star</option>
-                        <option value="2">★★ 2 stars</option>
-                        <option value="3">★★★ 3 stars</option>
-                        <option value="4">★★★★ 4 stars</option>
-                        <option value="5">★★★★★ 5 stars</option>
+                    <option value="">No rating</option>
+                    <option value="1">★ 1 star</option>
+                    <option value="2">★★ 2 stars</option>
+                    <option value="3">★★★ 3 stars</option>
+                    <option value="4">★★★★ 4 stars</option>
+                    <option value="5">★★★★★ 5 stars</option>
                   </select>
                 </div>
 
                 {/* Collection Assignment */}
                 <div className={styles.formField}>
-                  <label className={styles.modernLabel}>
-                    Collection
-                  </label>
+                  <label className={styles.modernLabel}>Collection</label>
                   <select
                     value={selectedCollectionId || ""}
                     onChange={(e) =>
                       setSelectedCollectionId(
-                        e.target.value
-                          ? parseInt(e.target.value)
-                          : undefined
+                        e.target.value ? parseInt(e.target.value) : undefined
                       )
                     }
                     className={styles.modernSelect}
                     required
                   >
-                        <option value="">Choose a collection...</option>
-                        {collections.map((collection) => (
-                          <option key={collection.id} value={collection.id}>
-                            {collection.title}{" "}
-                            {collection.isDefault ? "(Default)" : ""} •{" "}
-                            {collection._count.vinyls} records
-                          </option>
+                    <option value="">Choose a collection...</option>
+                    {collections.map((collection) => (
+                      <option key={collection.id} value={collection.id}>
+                        {collection.title}{" "}
+                        {collection.isDefault ? "(Default)" : ""} •{" "}
+                        {collection._count.vinyls} records
+                      </option>
                     ))}
                   </select>
                 </div>

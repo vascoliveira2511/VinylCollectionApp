@@ -131,9 +131,7 @@ export default function Avatar({
       >
         {renderAvatar()}
         {editable && (
-          <div className={styles.editOverlay}>
-            {uploading ? "⏳" : "✏️"}
-          </div>
+          <div className={styles.editOverlay}>{uploading ? "⏳" : "✏️"}</div>
         )}
       </div>
 

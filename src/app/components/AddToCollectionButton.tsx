@@ -31,22 +31,22 @@ export default function AddToCollectionButton({
   existingVinyls = [],
 }: AddToCollectionButtonProps) {
   const [showAllCollections, setShowAllCollections] = useState(false);
-  
+
   // Find the default collection
-  const defaultCollection = collections.find(c => c.isDefault);
-  
+  const defaultCollection = collections.find((c) => c.isDefault);
+
   // Check if vinyl already exists in collections
   const getExistingVinyl = (collectionId?: number) => {
-    return existingVinyls.find(v => 
+    return existingVinyls.find((v) =>
       collectionId ? v.collectionId === collectionId : v.collection?.isDefault
     );
   };
-  
+
   // Check if vinyl already exists in wantlist
   const getExistingInWantlist = () => {
-    return existingVinyls.find(v => v.collection?.type === "wantlist");
+    return existingVinyls.find((v) => v.collection?.type === "wantlist");
   };
-  
+
   if (collections.length === 0) {
     return (
       <Button variant="secondary" size="medium" disabled>
@@ -54,7 +54,7 @@ export default function AddToCollectionButton({
       </Button>
     );
   }
-  
+
   return (
     <div className={styles.collectionButtonGroup}>
       {/* Primary Actions Row */}
@@ -63,27 +63,39 @@ export default function AddToCollectionButton({
           <Button
             onClick={() => onAdd(defaultCollection.id)}
             disabled={disabled}
-            variant={getExistingVinyl(defaultCollection.id) ? "outline" : "primary"}
+            variant={
+              getExistingVinyl(defaultCollection.id) ? "outline" : "primary"
+            }
             size="medium"
-            className={`${styles.addToDefaultButton} ${getExistingVinyl(defaultCollection.id) ? styles.alreadyInCollection : ''}`}
+            className={`${styles.addToDefaultButton} ${
+              getExistingVinyl(defaultCollection.id)
+                ? styles.alreadyInCollection
+                : ""
+            }`}
           >
-            {getExistingVinyl(defaultCollection.id) ? "Already in Collection" : "Add to Collection"}
+            {getExistingVinyl(defaultCollection.id)
+              ? "Already in Collection"
+              : "Add to Collection"}
           </Button>
         )}
-        
+
         {onAddToWantlist && (
           <Button
             onClick={onAddToWantlist}
             disabled={disabled}
             variant={getExistingInWantlist() ? "outline" : "secondary"}
             size="medium"
-            className={`${styles.addToWantlistButton} ${getExistingInWantlist() ? styles.alreadyInCollection : ''}`}
+            className={`${styles.addToWantlistButton} ${
+              getExistingInWantlist() ? styles.alreadyInCollection : ""
+            }`}
           >
-            {getExistingInWantlist() ? "Already in Wantlist" : "Add to Wantlist"}
+            {getExistingInWantlist()
+              ? "Already in Wantlist"
+              : "Add to Wantlist"}
           </Button>
         )}
       </div>
-      
+
       {/* Show More Collections */}
       {collections.length > 1 && (
         <div className={styles.secondaryActions}>
@@ -94,11 +106,13 @@ export default function AddToCollectionButton({
             size="medium"
             className={styles.showMoreButton}
           >
-            {showAllCollections ? 'Show Less' : `Choose from ${collections.length} Collections`}
+            {showAllCollections
+              ? "Show Less"
+              : `Choose from ${collections.length} Collections`}
           </Button>
         </div>
       )}
-      
+
       {/* All Collections Grid */}
       {showAllCollections && (
         <div className={styles.collectionsGrid}>

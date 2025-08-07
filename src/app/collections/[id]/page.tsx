@@ -69,7 +69,6 @@ export default function CollectionView({ params }: { params: { id: string } }) {
     }
   };
 
-
   useEffect(() => {
     if (id) {
       fetchCollection();
@@ -145,7 +144,8 @@ export default function CollectionView({ params }: { params: { id: string } }) {
                 </div>
                 <div className={styles.collectionStats}>
                   <span className={styles.recordCount}>
-                    {collection._count.vinyls} record{collection._count.vinyls !== 1 ? "s" : ""}
+                    {collection._count.vinyls} record
+                    {collection._count.vinyls !== 1 ? "s" : ""}
                   </span>
                 </div>
               </div>
@@ -216,17 +216,16 @@ export default function CollectionView({ params }: { params: { id: string } }) {
           <div className={styles.recordsSection}>
             <div className={styles.recordsHeader}>
               <h2 className={styles.sectionTitle}>
-                Records <span className={styles.recordCountBadge}>({filteredVinyls.length})</span>
+                Records{" "}
+                <span className={styles.recordCountBadge}>
+                  ({filteredVinyls.length})
+                </span>
               </h2>
             </div>
             {filteredVinyls.length > 0 ? (
               <div className={styles.modernCollectionGrid}>
                 {filteredVinyls.map((vinyl) => (
-                  <VinylCard
-                    key={vinyl.id}
-                    vinyl={vinyl}
-                    showDetails={true}
-                  />
+                  <VinylCard key={vinyl.id} vinyl={vinyl} showDetails={true} />
                 ))}
               </div>
             ) : (
@@ -243,7 +242,8 @@ export default function CollectionView({ params }: { params: { id: string } }) {
                   <>
                     <h3 className={styles.emptyStateTitle}>No matches found</h3>
                     <p className={styles.emptyStateDescription}>
-                      No records match your current filters. Try adjusting your search.
+                      No records match your current filters. Try adjusting your
+                      search.
                     </p>
                   </>
                 )}
