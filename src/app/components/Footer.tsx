@@ -29,7 +29,7 @@ export default function Footer() {
           <h4>Support</h4>
           <ul className={styles.footerLinks}>
             <li><a href="mailto:vascoliveira2511@gmail.com">Contact Us</a></li>
-            <li><Link href="https://github.com/vascoliveira2511/vinyl-collection-app" target="_blank">GitHub</Link></li>
+            <li><a href="https://github.com/vascoliveira2511/VinylCollectionApp" target="_blank" rel="noopener noreferrer">GitHub</a></li>
           </ul>
         </div>
 

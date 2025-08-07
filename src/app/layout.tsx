@@ -3,7 +3,7 @@ import { Inter, Roboto_Mono } from "next/font/google";
 import "./reset.css"; // Import reset.css first
 import "./globals.css";
 import ConditionalNavbar from "./components/ConditionalNavbar";
-import CacheDebug from "./components/CacheDebug";
+import Footer from "./components/Footer";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -38,7 +38,7 @@ export default function RootLayout({
       <body className={`${inter.variable} ${robotoMono.variable}`}>
         <ConditionalNavbar />
         {children}
-        <CacheDebug />
+        <Footer />
       </body>
     </html>
   );
