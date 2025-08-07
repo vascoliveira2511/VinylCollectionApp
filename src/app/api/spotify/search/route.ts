@@ -3,9 +3,21 @@ import { NextResponse } from "next/server";
 const SPOTIFY_CLIENT_ID = process.env.SPOTIFY_CLIENT_ID;
 const SPOTIFY_CLIENT_SECRET = process.env.SPOTIFY_CLIENT_SECRET;
 
+// Token caching
+let cachedToken: { token: string; expires: number } | null = null;
+
+// Search results caching (5 minute cache)
+const searchCache = new Map<string, { data: any; expires: number }>();
+const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+
 async function getSpotifyAccessToken() {
   if (!SPOTIFY_CLIENT_ID || !SPOTIFY_CLIENT_SECRET) {
     throw new Error("Spotify credentials not configured");
+  }
+
+  // Return cached token if still valid
+  if (cachedToken && cachedToken.expires > Date.now()) {
+    return cachedToken.token;
   }
 
   const response = await fetch("https://accounts.spotify.com/api/token", {
@@ -24,6 +36,13 @@ async function getSpotifyAccessToken() {
   }
 
   const data = await response.json();
+  
+  // Cache token (expires in 1 hour, we cache for 50 minutes to be safe)
+  cachedToken = {
+    token: data.access_token,
+    expires: Date.now() + (50 * 60 * 1000)
+  };
+  
   return data.access_token;
 }
 
@@ -39,15 +58,32 @@ export async function GET(request: Request) {
     );
   }
 
+  // Create cache key
+  const cacheKey = `${artist.toLowerCase().trim()}:${album.toLowerCase().trim()}`;
+  
+  // Check cache first
+  const cached = searchCache.get(cacheKey);
+  if (cached && cached.expires > Date.now()) {
+    console.log(`Cache hit for: ${artist} - ${album}`);
+    return NextResponse.json(cached.data);
+  }
+
   try {
     const accessToken = await getSpotifyAccessToken();
     
-    // Try multiple search strategies
+    // Enhanced search strategies with better fallbacks
+    const cleanArtist = artist.replace(/[\(\)\[\]]/g, '').trim();
+    const cleanAlbum = album.replace(/[\(\)\[\]]/g, '').trim();
+    
     let searchQueries = [
-      `album:"${album}" artist:"${artist}"`, // Exact match
-      `"${album}" "${artist}"`, // Quoted terms
-      `${album} ${artist}`, // Simple search
-      `artist:${artist} ${album}`, // Artist-focused search
+      `album:"${cleanAlbum}" artist:"${cleanArtist}"`, // Exact match with clean strings
+      `"${cleanAlbum}" "${cleanArtist}"`, // Quoted terms
+      `album:"${album}" artist:"${artist}"`, // Original exact match
+      `"${album}" "${artist}"`, // Original quoted terms  
+      `${cleanAlbum} ${cleanArtist}`, // Simple search with clean strings
+      `${album} ${artist}`, // Original simple search
+      `artist:${cleanArtist} ${cleanAlbum}`, // Artist-focused with clean strings
+      `artist:${artist} ${album}`, // Original artist-focused
     ];
 
     let album_data = null;
@@ -121,14 +157,32 @@ export async function GET(request: Request) {
     const tracksWithPreviews = tracksData.items?.filter(track => track.preview_url) || [];
     console.log(`${tracksWithPreviews.length} tracks have preview URLs available`);
 
-    // Return album data with tracks
-    return NextResponse.json({
+    // Prepare response data
+    const responseData = {
       id: album_data.id,
       name: album_data.name,
       images: album_data.images,
       tracks: tracksData,
       external_urls: album_data.external_urls,
+    };
+    
+    // Cache the successful result
+    searchCache.set(cacheKey, {
+      data: responseData,
+      expires: Date.now() + CACHE_DURATION
     });
+    
+    // Clean up old cache entries (simple cleanup)
+    if (searchCache.size > 100) {
+      const now = Date.now();
+      for (const [key, value] of searchCache.entries()) {
+        if (value.expires < now) {
+          searchCache.delete(key);
+        }
+      }
+    }
+    
+    return NextResponse.json(responseData);
 
   } catch (error) {
     console.error("Spotify API error:", error);

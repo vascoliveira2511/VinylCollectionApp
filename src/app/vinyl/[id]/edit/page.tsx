@@ -160,90 +160,107 @@ export default function EditVinylPage({ params }: { params: { id: string } }) {
     );
   }
 
+  // Get background image for modern look
+  const backgroundImage = vinyl.imageUrl;
+
   return (
     <main className={styles.main}>
-      <div className="container">
-        <div className="window">
-          <div className="title-bar">Edit Personal Details</div>
-          <div className={styles.contentSection}>
-            {/* Album Info (Read-only) */}
-            <div className="window" style={{ marginBottom: "20px" }}>
-              <div className="title-bar">Album Information</div>
-              <div className={styles.contentSection}>
-                <div
-                  style={{ display: "flex", gap: "20px", alignItems: "center" }}
-                >
-                  <img
-                    src={`/api/image-proxy?url=${encodeURIComponent(
-                      vinyl.imageUrl
-                    )}`}
-                    alt={`${vinyl.title} cover`}
-                    style={{
-                      width: "100px",
-                      height: "100px",
-                      borderRadius: "8px",
-                      objectFit: "cover",
-                    }}
-                  />
-                  <div>
-                    <h3
-                      style={{ margin: "0 0 10px 0", color: "var(--ctp-text)" }}
-                    >
-                      {vinyl.title}
-                    </h3>
-                    <p
-                      style={{ margin: "0 0 5px 0", color: "var(--ctp-mauve)" }}
-                    >
-                      {vinyl.artist}
-                    </p>
-                    <p style={{ margin: "0", color: "var(--ctp-subtext1)" }}>
-                      {vinyl.year}
-                    </p>
-                    <div style={{ marginTop: "10px" }}>
-                      {vinyl.genre.map((g, idx) => (
-                        <span
-                          key={idx}
-                          className={styles.genrePill}
-                          style={{ marginRight: "5px" }}
-                        >
-                          {g}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                </div>
+      {/* Modern background with vinyl groove effect */}
+      {backgroundImage && (
+        <>
+          <div className={styles.vinylPageBackground}>
+            <div
+              className={styles.albumCoverBackground}
+              style={{
+                backgroundImage: `url(/api/image-proxy?url=${encodeURIComponent(
+                  backgroundImage
+                )})`,
+              }}
+            ></div>
+            <div className={styles.vinylGrooveOverlay}></div>
+          </div>
+        </>
+      )}
+
+      <div className={styles.vinylPageContainer}>
+        {/* Modern Header Section */}
+        <div className={styles.vinylHeroSection}>
+          <div className={styles.vinylHeroContent}>
+            {/* Album Art */}
+            <div className={styles.vinylAlbumArt}>
+              <div className={styles.mainAlbumCover}>
+                <img
+                  src={`/api/image-proxy?url=${encodeURIComponent(
+                    vinyl.imageUrl
+                  )}`}
+                  alt={`${vinyl.title} cover`}
+                  className={styles.coverImage}
+                />
               </div>
             </div>
 
-            {/* Error/Success Messages */}
-            {error && <div className={styles.errorMessage}>{error}</div>}
+            {/* Vinyl Info */}
+            <div className={styles.vinylHeroInfo}>
+              <div className={styles.vinylTitleSection}>
+                <h1 className={styles.modernVinylTitle}>{vinyl.title}</h1>
+                <h2 className={styles.modernVinylArtist}>{vinyl.artist}</h2>
+                <div className={styles.vinylMetaInfo}>
+                  <span className={styles.vinylYear}>{vinyl.year}</span>
+                </div>
+                <p className={styles.editPageSubtitle}>Edit Personal Details</p>
+              </div>
 
-            {successMessage && (
-              <div className={styles.successMessage}>{successMessage}</div>
-            )}
+              {/* Genre Pills */}
+              {vinyl.genre?.length > 0 && (
+                <div className={styles.modernGenrePills}>
+                  {vinyl.genre.map((g, idx) => (
+                    <span
+                      key={`genre-${idx}`}
+                      className={styles.modernGenrePill}
+                    >
+                      {g}
+                    </span>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
 
-            <form onSubmit={handleSubmit} className={styles.form}>
-              {/* Personal Details Section */}
-              <div className="window" style={{ marginBottom: "20px" }}>
-                <div className="title-bar">Personal Collection Details</div>
-                <div className={styles.contentSection}>
-                  <div className={styles.editFormGrid}>
-                    {/* Media Condition */}
-                    <div>
-                      <label
-                        style={{
-                          display: "block",
-                          marginBottom: "8px",
-                          fontWeight: "500",
-                        }}
-                      >
-                        Media Condition
-                      </label>
-                      <select
-                        value={condition}
-                        onChange={(e) => setCondition(e.target.value)}
-                        style={{ width: "100%" }}
-                      >
+        {/* Modern Form Content */}
+        <div className={styles.vinylSimpleContent}>
+          {/* Error/Success Messages */}
+          {error && (
+            <div className={styles.infoSection}>
+              <div className={styles.errorState}>
+                <p className={styles.errorMessage}>{error}</p>
+              </div>
+            </div>
+          )}
+
+          {successMessage && (
+            <div className={styles.infoSection}>
+              <div className={styles.successState}>
+                <p className={styles.successMessage}>{successMessage}</p>
+              </div>
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit} className={styles.modernForm}>
+            {/* Personal Details Section */}
+            <div className={styles.infoSection}>
+              <h3 className={styles.sectionTitle}>Personal Collection Details</h3>
+              <div className={styles.modernFormGrid}>
+                {/* Media Condition */}
+                <div className={styles.formField}>
+                  <label className={styles.modernLabel}>
+                    Media Condition
+                  </label>
+                  <select
+                    value={condition}
+                    onChange={(e) => setCondition(e.target.value)}
+                    className={styles.modernSelect}
+                  >
                         <option value="">Not specified</option>
                         <option value="Mint (M)">Mint (M)</option>
                         <option value="Near Mint (NM)">Near Mint (NM)</option>
@@ -255,25 +272,19 @@ export default function EditVinylPage({ params }: { params: { id: string } }) {
                         <option value="Good (G)">Good (G)</option>
                         <option value="Fair (F)">Fair (F)</option>
                         <option value="Poor (P)">Poor (P)</option>
-                      </select>
-                    </div>
+                  </select>
+                </div>
 
-                    {/* Sleeve Condition */}
-                    <div>
-                      <label
-                        style={{
-                          display: "block",
-                          marginBottom: "8px",
-                          fontWeight: "500",
-                        }}
-                      >
-                        Sleeve Condition
-                      </label>
-                      <select
-                        value={sleeveCondition}
-                        onChange={(e) => setSleeveCondition(e.target.value)}
-                        style={{ width: "100%" }}
-                      >
+                {/* Sleeve Condition */}
+                <div className={styles.formField}>
+                  <label className={styles.modernLabel}>
+                    Sleeve Condition
+                  </label>
+                  <select
+                    value={sleeveCondition}
+                    onChange={(e) => setSleeveCondition(e.target.value)}
+                    className={styles.modernSelect}
+                  >
                         <option value="">Not specified</option>
                         <option value="Mint (M)">Mint (M)</option>
                         <option value="Near Mint (NM)">Near Mint (NM)</option>
@@ -285,63 +296,51 @@ export default function EditVinylPage({ params }: { params: { id: string } }) {
                         <option value="Good (G)">Good (G)</option>
                         <option value="Fair (F)">Fair (F)</option>
                         <option value="Poor (P)">Poor (P)</option>
-                      </select>
-                    </div>
+                  </select>
+                </div>
 
-                    {/* Personal Rating */}
-                    <div>
-                      <label
-                        style={{
-                          display: "block",
-                          marginBottom: "8px",
-                          fontWeight: "500",
-                        }}
-                      >
-                        Personal Rating
-                      </label>
-                      <select
-                        value={rating || ""}
-                        onChange={(e) =>
-                          setRating(
-                            e.target.value
-                              ? parseInt(e.target.value)
-                              : undefined
-                          )
-                        }
-                        style={{ width: "100%" }}
-                      >
+                {/* Personal Rating */}
+                <div className={styles.formField}>
+                  <label className={styles.modernLabel}>
+                    Personal Rating
+                  </label>
+                  <select
+                    value={rating || ""}
+                    onChange={(e) =>
+                      setRating(
+                        e.target.value
+                          ? parseInt(e.target.value)
+                          : undefined
+                      )
+                    }
+                    className={styles.modernSelect}
+                  >
                         <option value="">No rating</option>
                         <option value="1">★ 1 star</option>
                         <option value="2">★★ 2 stars</option>
                         <option value="3">★★★ 3 stars</option>
                         <option value="4">★★★★ 4 stars</option>
                         <option value="5">★★★★★ 5 stars</option>
-                      </select>
-                    </div>
+                  </select>
+                </div>
 
-                    {/* Collection Assignment */}
-                    <div>
-                      <label
-                        style={{
-                          display: "block",
-                          marginBottom: "8px",
-                          fontWeight: "500",
-                        }}
-                      >
-                        Collection
-                      </label>
-                      <select
-                        value={selectedCollectionId || ""}
-                        onChange={(e) =>
-                          setSelectedCollectionId(
-                            e.target.value
-                              ? parseInt(e.target.value)
-                              : undefined
-                          )
-                        }
-                        style={{ width: "100%" }}
-                        required
-                      >
+                {/* Collection Assignment */}
+                <div className={styles.formField}>
+                  <label className={styles.modernLabel}>
+                    Collection
+                  </label>
+                  <select
+                    value={selectedCollectionId || ""}
+                    onChange={(e) =>
+                      setSelectedCollectionId(
+                        e.target.value
+                          ? parseInt(e.target.value)
+                          : undefined
+                      )
+                    }
+                    className={styles.modernSelect}
+                    required
+                  >
                         <option value="">Choose a collection...</option>
                         {collections.map((collection) => (
                           <option key={collection.id} value={collection.id}>
@@ -349,30 +348,29 @@ export default function EditVinylPage({ params }: { params: { id: string } }) {
                             {collection.isDefault ? "(Default)" : ""} •{" "}
                             {collection._count.vinyls} records
                           </option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
+                    ))}
+                  </select>
                 </div>
               </div>
+            </div>
 
-              {/* Personal Notes */}
-              <div className="window" style={{ marginBottom: "20px" }}>
-                <div className="title-bar">Personal Notes</div>
-                <div className={styles.contentSection}>
-                  <textarea
-                    placeholder="Add your personal notes about this record... (listening notes, memories, where you got it, etc.)"
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                    rows={6}
-                    className={styles.fullWidthInput}
-                    style={{ resize: "vertical" }}
-                  />
-                </div>
+            {/* Personal Notes */}
+            <div className={styles.infoSection}>
+              <h3 className={styles.sectionTitle}>Personal Notes</h3>
+              <div className={styles.formField}>
+                <textarea
+                  placeholder="Add your personal notes about this record... (listening notes, memories, where you got it, etc.)"
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  rows={6}
+                  className={styles.modernTextarea}
+                />
               </div>
+            </div>
 
-              {/* Form Actions */}
-              <div className={styles.formActions} style={{ marginTop: "30px" }}>
+            {/* Form Actions */}
+            <div className={styles.infoSection}>
+              <div className={styles.modernFormActions}>
                 <button
                   type="submit"
                   disabled={saving}
@@ -380,12 +378,9 @@ export default function EditVinylPage({ params }: { params: { id: string } }) {
                 >
                   {saving ? "Saving..." : "Save Changes"}
                 </button>
-                <Link href={`/vinyl/${id}`} className={styles.cancelButton}>
-                  Cancel
-                </Link>
               </div>
-            </form>
-          </div>
+            </div>
+          </form>
         </div>
       </div>
     </main>

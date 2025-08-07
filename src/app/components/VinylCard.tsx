@@ -30,6 +30,11 @@ interface VinylCardProps {
       have: number;
       want: number;
     };
+    // Personal collection fields (user editable)
+    condition?: string;
+    sleeveCondition?: string;
+    rating?: number;
+    description?: string;
   };
   showActions?: boolean;
   showDetails?: boolean;
@@ -64,7 +69,7 @@ const VinylCard = memo(function VinylCard({
 
   const linkUrl =
     linkPrefix === "/browse"
-      ? `/browse/${vinyl.id}`
+      ? `/browse/${vinyl.discogsId || vinyl.id}`
       : `${linkPrefix}/${vinyl.id}`;
 
   const handleImageLoad = useCallback(() => {
@@ -117,11 +122,12 @@ const VinylCard = memo(function VinylCard({
           {showDetails && (
             <div className={styles.cardMeta}>
               <div className={styles.metaLine}>
-                {vinyl.year && (
-                  <span className={styles.metaYear}>{vinyl.year}</span>
-                )}
-                {vinyl.country && (
-                  <span className={styles.metaCountry}>{vinyl.country}</span>
+                {(vinyl.year || vinyl.country) && (
+                  <div className={styles.releaseInfo}>
+                    {vinyl.year && <span className={styles.releaseYear}>{vinyl.year}</span>}
+                    {vinyl.year && vinyl.country && <span className={styles.metaSeparator}>•</span>}
+                    {vinyl.country && <span className={styles.releaseCountry}>{vinyl.country}</span>}
+                  </div>
                 )}
                 {vinyl.type === "master" && (
                   <span className={styles.metaMaster}>Master</span>
@@ -145,6 +151,17 @@ const VinylCard = memo(function VinylCard({
                   Barcode: {vinyl.barcode[0]}
                 </div>
               )}
+              {/* Personal Rating Only */}
+              {vinyl.rating && (
+                <div className={styles.personalDetails}>
+                  <div className={styles.personalRating}>
+                    <span className={styles.ratingStars}>
+                      {"★".repeat(vinyl.rating)}{"☆".repeat(5 - vinyl.rating)}
+                    </span>
+                    <span className={styles.ratingText}>{vinyl.rating}/5</span>
+                  </div>
+                </div>
+              )}
               {vinyl.community && !hideCommunityStats && (
                 <div className={styles.metaCommunity}>
                   <span className={styles.communityHave}>
@@ -160,14 +177,7 @@ const VinylCard = memo(function VinylCard({
 
           {!showDetails && vinyl.year && <p>{vinyl.year}</p>}
 
-          <div className={styles.cardTags}>
-            {vinyl.genre &&
-              vinyl.genre.slice(0, showDetails ? 2 : 3).map((g, idx) => (
-                <span key={idx} className={styles.genrePill}>
-                  {g}
-                </span>
-              ))}
-          </div>
+
 
           {vinyl.createdAt && (
             <p className={styles.addedDate}>

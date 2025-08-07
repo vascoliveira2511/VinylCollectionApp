@@ -2,6 +2,13 @@
 
 import { useState, useEffect } from "react";
 
+// Global cache for Spotify searches (client-side)
+const spotifyCache = new Map<string, { id: string | null; timestamp: number }>();
+const CACHE_DURATION = 10 * 60 * 1000; // 10 minutes client-side cache
+
+// Active request tracking to prevent duplicate API calls
+const activeRequests = new Map<string, Promise<string | null>>();
+
 interface SpotifyEmbedProps {
   artist: string;
   album: string;
@@ -14,32 +21,97 @@ export default function SpotifyPreview({ artist, album }: SpotifyEmbedProps) {
 
   useEffect(() => {
     const fetchSpotifyId = async () => {
-      try {
-        setLoading(true);
-        const response = await fetch(`/api/spotify/search?artist=${encodeURIComponent(artist)}&album=${encodeURIComponent(album)}`);
-        
-        if (response.ok) {
-          const data = await response.json();
-          console.log("Spotify album found:", data.id);
-          setSpotifyId(data.id);
-        } else {
-          console.log("Album not found on Spotify");
+      if (!artist || !album) {
+        setLoading(false);
+        return;
+      }
+
+      const cacheKey = `${artist.toLowerCase().trim()}:${album.toLowerCase().trim()}`;
+      
+      // Check cache first
+      const cached = spotifyCache.get(cacheKey);
+      if (cached && (Date.now() - cached.timestamp) < CACHE_DURATION) {
+        console.log(`Client cache hit for: ${artist} - ${album}`);
+        setSpotifyId(cached.id);
+        setLoading(false);
+        return;
+      }
+
+      // Check if there's already an active request for this search
+      const existingRequest = activeRequests.get(cacheKey);
+      if (existingRequest) {
+        console.log(`Deduplicating request for: ${artist} - ${album}`);
+        try {
+          const result = await existingRequest;
+          setSpotifyId(result);
+        } catch (err) {
+          console.error("Deduplicated request failed:", err);
           setSpotifyId(null);
         }
+        setLoading(false);
+        return;
+      }
+
+      // Create new request
+      const requestPromise = (async (): Promise<string | null> => {
+        try {
+          const response = await fetch(`/api/spotify/search?artist=${encodeURIComponent(artist)}&album=${encodeURIComponent(album)}`);
+          
+          if (response.ok) {
+            const data = await response.json();
+            console.log("Spotify album found:", data.id);
+            return data.id;
+          } else {
+            console.log("Album not found on Spotify");
+            return null;
+          }
+        } catch (err) {
+          console.error("Spotify fetch error:", err);
+          return null;
+        }
+      })();
+
+      // Store the active request
+      activeRequests.set(cacheKey, requestPromise);
+
+      try {
+        setLoading(true);
+        const result = await requestPromise;
+        
+        // Cache the result
+        spotifyCache.set(cacheKey, {
+          id: result,
+          timestamp: Date.now()
+        });
+        
+        setSpotifyId(result);
       } catch (err) {
-        console.error("Spotify fetch error:", err);
+        console.error("Spotify request failed:", err);
         setSpotifyId(null);
       } finally {
         setLoading(false);
+        // Remove from active requests
+        activeRequests.delete(cacheKey);
       }
     };
 
-    if (artist && album) {
-      fetchSpotifyId();
-    } else {
-      setLoading(false);
-    }
+    fetchSpotifyId();
   }, [artist, album]);
+
+  // Cleanup old cache entries periodically
+  useEffect(() => {
+    const cleanup = () => {
+      const now = Date.now();
+      for (const [key, value] of spotifyCache.entries()) {
+        if ((now - value.timestamp) > CACHE_DURATION) {
+          spotifyCache.delete(key);
+        }
+      }
+    };
+    
+    const interval = setInterval(cleanup, 60000); // Cleanup every minute
+    return () => clearInterval(interval);
+  }, []);
 
   if (loading) {
     return (

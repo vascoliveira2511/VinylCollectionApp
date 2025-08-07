@@ -115,7 +115,7 @@ export default function VinylDetailPage({
   );
   const [comments, setComments] = useState<any[]>([]);
   const [selectedImage, setSelectedImage] = useState(0);
-  const [showPersonalNotes, setShowPersonalNotes] = useState(false);
+  const [showPersonalNotes, setShowPersonalNotes] = useState(true);
   const [showCollectionDetails, setShowCollectionDetails] = useState(true);
   const [showReleaseInfo, setShowReleaseInfo] = useState(true);
   const [showVideos, setShowVideos] = useState(false);

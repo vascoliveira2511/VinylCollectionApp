@@ -197,7 +197,7 @@ export default function FriendsPage() {
           {/* Search Section */}
           <div className={styles.searchSection}>
             <div className={styles.searchHeader}>
-              <h2 className={styles.sectionTitle}>Find Friends</h2>
+              <h2 className={styles.plainSectionTitle}>Find Friends</h2>
             </div>
             <div className={styles.modernSearchContainer}>
               <input
@@ -320,35 +320,38 @@ export default function FriendsPage() {
                   ) : (
                     friends.map((friendship) => (
                       <div key={friendship.id} className={styles.modernFriendCard}>
-                        <Avatar
-                          username={friendship.friend?.username || ""}
-                          avatar={friendship.friend?.avatar}
-                          avatarType={friendship.friend?.avatarType}
-                          size="medium"
-                        />
-                        <div className={styles.modernFriendInfo}>
-                          <h4 className={styles.friendName}>
-                            {friendship.friend?.username}
-                          </h4>
-                          <p className={styles.friendMeta}>
-                            Friends since{" "}
-                            {new Date(
-                              friendship.createdAt
-                            ).toLocaleDateString()}
-                          </p>
-                        </div>
+                        <Link 
+                          href={`/users/${friendship.friend?.id}`}
+                          className={styles.friendCardLink}
+                        >
+                          <Avatar
+                            username={friendship.friend?.username || ""}
+                            avatar={friendship.friend?.avatar}
+                            avatarType={friendship.friend?.avatarType}
+                            size="medium"
+                          />
+                          <div className={styles.modernFriendInfo}>
+                            <h4 className={styles.friendName}>
+                              {friendship.friend?.username}
+                            </h4>
+                            <p className={styles.friendMeta}>
+                              Friends since{" "}
+                              {new Date(
+                                friendship.createdAt
+                              ).toLocaleDateString()}
+                            </p>
+                          </div>
+                        </Link>
                         <div className={styles.modernFriendActions}>
-                          <Link href={`/users/${friendship.friend?.id}`}>
-                            <Button variant="outline" size="small">
-                              View Collections
-                            </Button>
-                          </Link>
                           <Button
-                            onClick={() => removeFriend(friendship.id)}
-                            variant="outline"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              removeFriend(friendship.id);
+                            }}
+                            variant="danger"
                             size="small"
                           >
-                            Remove Friend
+                            Remove
                           </Button>
                         </div>
                       </div>
