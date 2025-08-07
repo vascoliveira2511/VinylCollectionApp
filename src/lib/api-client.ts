@@ -235,6 +235,15 @@ class CachedAPIClient {
     );
   }
 
+  async getDiscogsMaster(id: string, options: FetchOptions = {}) {
+    return this.cachedFetch(
+      `/api/discogs/master/${id}`,
+      cacheKeys.discogsMaster(id),
+      discogsCache,
+      { ttl: 60 * 60 * 1000, ...options } // 1 hour cache for Discogs data
+    );
+  }
+
   async searchDiscogs(query: string, options: FetchOptions = {}) {
     return this.cachedFetch(
       `/api/discogs-suggest?query=${encodeURIComponent(query)}`,

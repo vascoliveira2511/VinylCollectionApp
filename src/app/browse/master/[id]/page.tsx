@@ -4,17 +4,56 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { apiClient } from "@/lib/api-client";
-import PageLoader from "../../components/PageLoader";
-import SimpleReleaseInfo from "../../components/SimpleReleaseInfo";
-import VinylVideos from "../../components/VinylVideos";
-import VinylComments from "../../components/VinylComments";
-import StatusButtons from "../../components/StatusButtons";
-import Button from "../../components/Button";
-import AddToCollectionButton from "../../components/AddToCollectionButton";
-import SpotifyPreview from "../../components/SpotifyPreview";
-import RecommendationsSection from "../../components/RecommendationsSection";
+import PageLoader from "../../../components/PageLoader";
+import SimpleReleaseInfo from "../../../components/SimpleReleaseInfo";
+import VinylVideos from "../../../components/VinylVideos";
+import VinylComments from "../../../components/VinylComments";
+import StatusButtons from "../../../components/StatusButtons";
+import Button from "../../../components/Button";
+import AddToCollectionButton from "../../../components/AddToCollectionButton";
+import SpotifyPreview from "../../../components/SpotifyPreview";
+import RecommendationsSection from "../../../components/RecommendationsSection";
 import { SiSpotify, SiYoutube, SiApplemusic } from "react-icons/si";
-import styles from "../../page.module.css";
+import styles from "../../../page.module.css";
+
+interface DiscogsMaster {
+  id: number;
+  title: string;
+  artists: Array<{
+    name: string;
+    id: number;
+  }>;
+  genres: string[];
+  styles: string[];
+  year: number;
+  images: Array<{
+    type: string;
+    uri: string;
+    uri150: string;
+    uri500: string;
+  }>;
+  tracklist: Array<{
+    position: string;
+    type_: string;
+    title: string;
+    duration: string;
+  }>;
+  videos: Array<{
+    uri: string;
+    title: string;
+    description: string;
+    duration: number;
+  }>;
+  uri: string;
+  versions_url: string;
+  main_release: number;
+  main_release_url: string;
+  most_recent_release: number;
+  most_recent_release_url: string;
+  num_for_sale: number;
+  lowest_price: number;
+  data_quality: string;
+}
 
 interface DiscogsRelease {
   id: number;
@@ -67,7 +106,6 @@ interface DiscogsRelease {
   estimated_weight: number;
   lowest_price: number;
   num_for_sale: number;
-  // Additional detailed fields
   master_id: number;
   master_url: string;
   data_quality: string;
@@ -99,13 +137,14 @@ interface DiscogsRelease {
   date_changed: string;
 }
 
-export default function BrowseDetailPage({
+export default function BrowseMasterPage({
   params,
 }: {
   params: { id: string };
 }) {
   const { id } = params;
-  const [release, setRelease] = useState<DiscogsRelease | null>(null);
+  const [master, setMaster] = useState<DiscogsMaster | null>(null);
+  const [mainRelease, setMainRelease] = useState<DiscogsRelease | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [addingToCollection, setAddingToCollection] = useState(false);
@@ -122,17 +161,27 @@ export default function BrowseDetailPage({
     const fetchData = async () => {
       try {
         setLoading(true);
-        const [releaseData, collectionsData] = await Promise.all([
-          apiClient.getDiscogsRelease(id),
+        const [masterData, collectionsData] = await Promise.all([
+          apiClient.getDiscogsMaster(id),
           apiClient.getCollections(),
         ]);
 
-        setRelease(releaseData as DiscogsRelease);
+        setMaster(masterData as DiscogsMaster);
         setCollections(collectionsData as any[]);
+        
+        // Fetch the main release details for more complete information
+        if (masterData.main_release) {
+          try {
+            const mainReleaseData = await apiClient.getDiscogsRelease(masterData.main_release.toString());
+            setMainRelease(mainReleaseData as DiscogsRelease);
+          } catch (releaseErr) {
+            console.log("Could not fetch main release:", releaseErr);
+          }
+        }
         
         // Check if this vinyl already exists in any collection
         try {
-          const existingResponse = await fetch(`/api/vinyl/check-exists?discogsId=${id}`);
+          const existingResponse = await fetch(`/api/vinyl/check-exists?discogsId=${masterData.main_release || id}&masterId=${id}`);
           if (existingResponse.ok) {
             const existingData = await existingResponse.json();
             setExistingVinyls(existingData);
@@ -142,7 +191,7 @@ export default function BrowseDetailPage({
         }
       } catch (err) {
         setError(
-          err instanceof Error ? err.message : "Failed to load release details"
+          err instanceof Error ? err.message : "Failed to load master release details"
         );
       } finally {
         setLoading(false);
@@ -155,8 +204,11 @@ export default function BrowseDetailPage({
   }, [id]);
 
   const addToCollection = async (collectionId?: number) => {
-    if (!release) return;
+    if (!master) return;
 
+    // Use main release ID for adding to collection
+    const releaseId = master.main_release || master.id;
+    
     // Check if vinyl already exists in this collection
     const existingInCollection = existingVinyls.find(v => 
       collectionId ? v.collectionId === collectionId : v.collection?.isDefault
@@ -180,17 +232,17 @@ export default function BrowseDetailPage({
     setAddingToCollection(true);
     try {
       const response = await apiClient.addVinyl({
-        artist: release.artists?.[0]?.name || "Unknown Artist",
-        title: release.title,
-        year: release.year || null,
-        imageUrl:
-          release.images?.[0]?.uri500 || release.images?.[0]?.uri || null,
-        genre: release.genres || [],
-        discogsId: release.id,
-        label: release.labels?.[0]?.name || null,
-        format: release.formats?.[0]?.name || null,
-        country: release.country || null,
-        catalogNumber: release.labels?.[0]?.catno || null,
+        artist: master.artists?.[0]?.name || "Unknown Artist",
+        title: master.title,
+        year: master.year || null,
+        imageUrl: master.images?.[0]?.uri500 || master.images?.[0]?.uri || null,
+        genre: master.genres || [],
+        discogsId: releaseId,
+        masterId: master.id,
+        label: mainRelease?.labels?.[0]?.name || null,
+        format: mainRelease?.formats?.[0]?.name || "Vinyl",
+        country: mainRelease?.country || null,
+        catalogNumber: mainRelease?.labels?.[0]?.catno || null,
         ...(collectionId && { collectionId }),
       });
 
@@ -212,14 +264,17 @@ export default function BrowseDetailPage({
   };
 
   const addToWantlist = async () => {
-    if (!release) return;
+    if (!master) return;
+
+    const releaseId = master.main_release || master.id;
 
     try {
       const response = await fetch("/api/vinyl-status", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          discogsId: release.id,
+          discogsId: releaseId,
+          masterId: master.id,
           status: "want",
         }),
       });
@@ -250,17 +305,17 @@ export default function BrowseDetailPage({
 
 
   if (loading) {
-    return <PageLoader text="Loading release details..." />;
+    return <PageLoader text="Loading master release details..." />;
   }
 
-  if (error || !release) {
+  if (error || !master) {
     return (
       <main className={styles.main}>
         <div className="container">
           <div className="window">
             <div className={styles.contentSection}>
               <div className={styles.errorState}>
-                <p>Error: {error || "Release not found"}</p>
+                <p>Error: {error || "Master release not found"}</p>
                 <Button
                   href="/browse"
                   variant="outline"
@@ -278,12 +333,15 @@ export default function BrowseDetailPage({
 
   // Get the best available image - priority: Discogs high-res
   const displayImages =
-    release?.images && release.images.length > 0
-      ? release.images
+    master?.images && master.images.length > 0
+      ? master.images
       : [];
 
   const currentImage = displayImages[selectedImage] || displayImages[0];
   const backgroundImage = displayImages[0]; // Always use first image for background
+
+  // Use main release data if available, otherwise use master data
+  const releaseData = mainRelease || master;
 
   return (
     <main className={styles.main}>
@@ -317,7 +375,7 @@ export default function BrowseDetailPage({
                       src={`/api/image-proxy?url=${encodeURIComponent(
                         currentImage.uri500 || currentImage.uri
                       )}`}
-                      alt={`${release.title} cover`}
+                      alt={`${master.title} cover`}
                       className={styles.coverImage}
                     />
                   </div>
@@ -329,7 +387,7 @@ export default function BrowseDetailPage({
                           src={`/api/image-proxy?url=${encodeURIComponent(
                             img.uri150 || img.uri
                           )}`}
-                          alt={`${release.title} ${img.type}`}
+                          alt={`${master.title} ${img.type}`}
                           className={`${styles.thumbnail} ${
                             idx === selectedImage ? styles.thumbnailActive : ""
                           }`}
@@ -345,28 +403,30 @@ export default function BrowseDetailPage({
             {/* Vinyl Info */}
             <div className={styles.vinylHeroInfo}>
               <div className={styles.vinylTitleSection}>
-                <h1 className={styles.modernVinylTitle}>{release.title}</h1>
+                <h1 className={styles.modernVinylTitle}>{master.title}</h1>
                 <h2 className={styles.modernVinylArtist}>
-                  {release.artists?.map((a) => a.name).join(", ") || "Unknown Artist"}
+                  {master.artists?.map((a) => a.name).join(", ") || "Unknown Artist"}
                 </h2>
                 <div className={styles.vinylMetaInfo}>
-                  <span className={styles.vinylYear}>{release.year}</span>
-                  {release.country && (
+                  <span className={styles.vinylYear}>{master.year}</span>
+                  {mainRelease?.country && (
                     <>
                       <span className={styles.metaSeparator}>•</span>
                       <span className={styles.vinylCountry}>
-                        {release.country}
+                        {mainRelease.country}
                       </span>
                     </>
                   )}
+                  <span className={styles.metaSeparator}>•</span>
+                  <span className={styles.masterBadge}>Master Release</span>
                 </div>
               </div>
 
               {/* Genre Pills */}
-              {(release.genres?.length > 0 ||
-                release.styles?.length > 0) && (
+              {(master.genres?.length > 0 ||
+                master.styles?.length > 0) && (
                 <div className={styles.modernGenrePills}>
-                  {release.genres?.map((g, idx) => (
+                  {master.genres?.map((g, idx) => (
                     <span
                       key={`genre-${idx}`}
                       className={styles.modernGenrePill}
@@ -374,7 +434,7 @@ export default function BrowseDetailPage({
                       {g}
                     </span>
                   ))}
-                  {release.styles?.map((s, idx) => (
+                  {master.styles?.map((s, idx) => (
                     <span
                       key={`style-${idx}`}
                       className={styles.modernGenrePill}
@@ -403,13 +463,22 @@ export default function BrowseDetailPage({
                 >
                   ← Back to Browse
                 </Button>
+                {master.main_release && (
+                  <Button
+                    href={`/browse/${master.main_release}`}
+                    variant="outline"
+                    size="medium"
+                  >
+                    View Main Release
+                  </Button>
+                )}
               </div>
 
               {/* Spotify Preview */}
               <SpotifyPreview
-                artist={release.artists?.map((a) => a.name).join(", ") || "Unknown Artist"}
-                album={release.title}
-                year={release.year}
+                artist={master.artists?.map((a) => a.name).join(", ") || "Unknown Artist"}
+                album={master.title}
+                year={master.year}
               />
 
               {/* Streaming Links */}
@@ -420,7 +489,7 @@ export default function BrowseDetailPage({
                 <div className={styles.streamingButtons}>
                   <a
                     href={`https://music.youtube.com/search?q=${encodeURIComponent(
-                      `${release.artists?.map((a) => a.name).join(", ") || ""} ${release.title}`
+                      `${master.artists?.map((a) => a.name).join(", ") || ""} ${master.title}`
                     )}`}
                     target="_blank"
                     rel="noopener noreferrer"
@@ -433,7 +502,7 @@ export default function BrowseDetailPage({
                   </a>
                   <a
                     href={`https://music.apple.com/search?term=${encodeURIComponent(
-                      `${release.artists?.map((a) => a.name).join(", ") || ""} ${release.title}`
+                      `${master.artists?.map((a) => a.name).join(", ") || ""} ${master.title}`
                     )}`}
                     target="_blank"
                     rel="noopener noreferrer"
@@ -464,24 +533,24 @@ export default function BrowseDetailPage({
                 {showReleaseInfo ? "−" : "+"}
               </span>
             </h3>
-            {showReleaseInfo && (
+            {showReleaseInfo && mainRelease && (
               <SimpleReleaseInfo
-                labels={release.labels}
-                formats={release.formats}
-                released={release.released}
-                master_id={release.master_id}
-                country={release.country}
-                companies={release.companies}
-                extraartists={release.extraartists}
-                identifiers={release.identifiers}
-                tracklist={release.tracklist}
-                notes={release.notes}
+                labels={mainRelease.labels}
+                formats={mainRelease.formats}
+                released={mainRelease.released}
+                master_id={mainRelease.master_id}
+                country={mainRelease.country}
+                companies={mainRelease.companies}
+                extraartists={mainRelease.extraartists}
+                identifiers={mainRelease.identifiers}
+                tracklist={releaseData.tracklist}
+                notes={mainRelease.notes}
               />
             )}
           </div>
 
           {/* Videos */}
-          {release?.videos && release.videos.length > 0 && (
+          {master?.videos && master.videos.length > 0 && (
             <div className={styles.infoSection}>
               <h3
                 onClick={() => setShowVideos(!showVideos)}
@@ -492,7 +561,7 @@ export default function BrowseDetailPage({
                   {showVideos ? "−" : "+"}
                 </span>
               </h3>
-              {showVideos && <VinylVideos videos={release.videos} />}
+              {showVideos && <VinylVideos videos={master.videos} />}
             </div>
           )}
 
@@ -508,28 +577,28 @@ export default function BrowseDetailPage({
               </span>
             </h3>
             {showCommunityReviews && (
-              <VinylComments discogsId={release.id} />
+              <VinylComments discogsId={master.main_release || master.id} />
             )}
           </div>
 
           {/* External Link */}
-          {release?.uri && (
+          {master?.uri && (
             <div className={styles.infoSection}>
               <a
-                href={release.uri}
+                href={master.uri}
                 target="_blank"
                 rel="noopener noreferrer"
                 className={styles.discogsLink}
               >
-                View on Discogs →
+                View Master on Discogs →
               </a>
             </div>
           )}
 
           {/* Recommendations */}
           <RecommendationsSection 
-            discogsId={release.id.toString()}
-            masterId={release.master_id?.toString()}
+            discogsId={master.main_release?.toString()}
+            masterId={master.id.toString()}
           />
         </div>
       </div>

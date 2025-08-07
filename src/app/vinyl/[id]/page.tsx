@@ -10,6 +10,7 @@ import VinylComments from "../../components/VinylComments";
 import PageLoader from "../../components/PageLoader";
 import Button from "../../components/Button";
 import SpotifyPreview from "../../components/SpotifyPreview";
+import RecommendationsSection from "../../components/RecommendationsSection";
 import { SiYoutube, SiApplemusic } from "react-icons/si";
 import styles from "../../page.module.css";
 
@@ -612,6 +613,12 @@ export default function VinylDetailPage({
               </a>
             </div>
           )}
+
+          {/* Recommendations */}
+          <RecommendationsSection 
+            discogsId={vinyl.discogsId?.toString()}
+            masterId={discogsDetails?.master_id?.toString()}
+          />
         </div>
       </div>
     </main>

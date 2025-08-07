@@ -149,6 +149,7 @@ export const cacheKeys = {
   vinylCollection: (filters?: string) =>
     `vinyl-collection${filters ? `:${filters}` : ""}`,
   discogsRelease: (id: string) => `discogs:release:${id}`,
+  discogsMaster: (id: string) => `discogs:master:${id}`,
   discogsSearch: (query: string) =>
     `discogs:search:${encodeURIComponent(query)}`,
   friends: (type?: string) => `friends${type ? `:${type}` : ""}`,

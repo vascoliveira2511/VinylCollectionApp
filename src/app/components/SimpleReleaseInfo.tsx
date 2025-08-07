@@ -148,23 +148,6 @@ export default function SimpleReleaseInfo(props: SimpleReleaseInfoProps) {
           </div>
         )}
 
-        {/* Master Release Link */}
-        {props.master_id && (
-          <div>
-            <strong>Master Release:</strong>
-            <div style={{ marginTop: "4px" }}>
-              <Link
-                href={`/browse/master/${props.master_id}`}
-                style={{
-                  color: "var(--primary)",
-                  textDecoration: "underline",
-                }}
-              >
-                View all versions
-              </Link>
-            </div>
-          </div>
-        )}
       </div>
 
       {/* Track List - Always visible */}

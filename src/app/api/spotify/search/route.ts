@@ -36,13 +36,13 @@ async function getSpotifyAccessToken() {
   }
 
   const data = await response.json();
-  
+
   // Cache token (expires in 1 hour, we cache for 50 minutes to be safe)
   cachedToken = {
     token: data.access_token,
-    expires: Date.now() + (50 * 60 * 1000)
+    expires: Date.now() + 50 * 60 * 1000,
   };
-  
+
   return data.access_token;
 }
 
@@ -59,8 +59,10 @@ export async function GET(request: Request) {
   }
 
   // Create cache key
-  const cacheKey = `${artist.toLowerCase().trim()}:${album.toLowerCase().trim()}`;
-  
+  const cacheKey = `${artist.toLowerCase().trim()}:${album
+    .toLowerCase()
+    .trim()}`;
+
   // Check cache first
   const cached = searchCache.get(cacheKey);
   if (cached && cached.expires > Date.now()) {
@@ -70,16 +72,16 @@ export async function GET(request: Request) {
 
   try {
     const accessToken = await getSpotifyAccessToken();
-    
+
     // Enhanced search strategies with better fallbacks
-    const cleanArtist = artist.replace(/[\(\)\[\]]/g, '').trim();
-    const cleanAlbum = album.replace(/[\(\)\[\]]/g, '').trim();
-    
+    const cleanArtist = artist.replace(/[\(\)\[\]]/g, "").trim();
+    const cleanAlbum = album.replace(/[\(\)\[\]]/g, "").trim();
+
     let searchQueries = [
       `album:"${cleanAlbum}" artist:"${cleanArtist}"`, // Exact match with clean strings
       `"${cleanAlbum}" "${cleanArtist}"`, // Quoted terms
       `album:"${album}" artist:"${artist}"`, // Original exact match
-      `"${album}" "${artist}"`, // Original quoted terms  
+      `"${album}" "${artist}"`, // Original quoted terms
       `${cleanAlbum} ${cleanArtist}`, // Simple search with clean strings
       `${album} ${artist}`, // Original simple search
       `artist:${cleanArtist} ${cleanAlbum}`, // Artist-focused with clean strings
@@ -92,9 +94,11 @@ export async function GET(request: Request) {
     // Try each search strategy until we find results
     for (const query of searchQueries) {
       console.log(`Trying Spotify search: ${query}`);
-      
+
       searchResponse = await fetch(
-        `https://api.spotify.com/v1/search?q=${encodeURIComponent(query)}&type=album&limit=5&market=US`,
+        `https://api.spotify.com/v1/search?q=${encodeURIComponent(
+          query
+        )}&type=album&limit=5&market=US`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -104,23 +108,38 @@ export async function GET(request: Request) {
 
       if (searchResponse.ok) {
         const searchData = await searchResponse.json();
-        console.log(`Search results for "${query}":`, searchData.albums?.items?.length || 0, 'albums found');
-        
+        console.log(
+          `Search results for "${query}":`,
+          searchData.albums?.items?.length || 0,
+          "albums found"
+        );
+
         if (searchData.albums?.items?.length > 0) {
           // Find the best match
-          album_data = searchData.albums.items.find(albumItem => {
-            const albumName = albumItem.name.toLowerCase();
-            const searchAlbum = album.toLowerCase();
-            const artistNames = albumItem.artists.map(a => a.name.toLowerCase()).join(' ');
-            const searchArtist = artist.toLowerCase();
-            
-            // Check for exact or close matches
-            return (albumName.includes(searchAlbum) || searchAlbum.includes(albumName)) &&
-                   (artistNames.includes(searchArtist) || searchArtist.includes(artistNames));
-          }) || searchData.albums.items[0]; // Fallback to first result
-          
+          album_data =
+            searchData.albums.items.find((albumItem) => {
+              const albumName = albumItem.name.toLowerCase();
+              const searchAlbum = album.toLowerCase();
+              const artistNames = albumItem.artists
+                .map((a) => a.name.toLowerCase())
+                .join(" ");
+              const searchArtist = artist.toLowerCase();
+
+              // Check for exact or close matches
+              return (
+                (albumName.includes(searchAlbum) ||
+                  searchAlbum.includes(albumName)) &&
+                (artistNames.includes(searchArtist) ||
+                  searchArtist.includes(artistNames))
+              );
+            }) || searchData.albums.items[0]; // Fallback to first result
+
           if (album_data) {
-            console.log(`Found album: ${album_data.name} by ${album_data.artists.map(a => a.name).join(', ')}`);
+            console.log(
+              `Found album: ${album_data.name} by ${album_data.artists
+                .map((a) => a.name)
+                .join(", ")}`
+            );
             break;
           }
         }
@@ -147,15 +166,24 @@ export async function GET(request: Request) {
     );
 
     if (!tracksResponse.ok) {
-      console.error("Failed to get album tracks:", tracksResponse.status, tracksResponse.statusText);
+      console.error(
+        "Failed to get album tracks:",
+        tracksResponse.status,
+        tracksResponse.statusText
+      );
       throw new Error("Failed to get album tracks");
     }
 
     const tracksData = await tracksResponse.json();
-    console.log(`Album "${album_data.name}" has ${tracksData.items?.length || 0} tracks`);
-    
-    const tracksWithPreviews = tracksData.items?.filter(track => track.preview_url) || [];
-    console.log(`${tracksWithPreviews.length} tracks have preview URLs available`);
+    console.log(
+      `Album "${album_data.name}" has ${tracksData.items?.length || 0} tracks`
+    );
+
+    const tracksWithPreviews =
+      tracksData.items?.filter((track) => track.preview_url) || [];
+    console.log(
+      `${tracksWithPreviews.length} tracks have preview URLs available`
+    );
 
     // Prepare response data
     const responseData = {
@@ -165,25 +193,25 @@ export async function GET(request: Request) {
       tracks: tracksData,
       external_urls: album_data.external_urls,
     };
-    
+
     // Cache the successful result
     searchCache.set(cacheKey, {
       data: responseData,
-      expires: Date.now() + CACHE_DURATION
+      expires: Date.now() + CACHE_DURATION,
     });
-    
+
     // Clean up old cache entries (simple cleanup)
     if (searchCache.size > 100) {
       const now = Date.now();
-      for (const [key, value] of searchCache.entries()) {
+      // Use Array.from to avoid downlevelIteration issues
+      Array.from(searchCache.entries()).forEach(([key, value]) => {
         if (value.expires < now) {
           searchCache.delete(key);
         }
-      }
+      });
     }
-    
-    return NextResponse.json(responseData);
 
+    return NextResponse.json(responseData);
   } catch (error) {
     console.error("Spotify API error:", error);
     return NextResponse.json(

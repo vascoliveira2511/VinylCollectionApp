@@ -3203,7 +3203,7 @@ Link.editButton:hover {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 32px;
+  padding: 32px 32px 120px 32px;
   position: relative;
   background: var(--background);
 }
@@ -3716,6 +3716,17 @@ Link.editButton:hover {
 
 .metaSeparator {
   color: var(--text-tertiary);
+}
+
+.masterBadge {
+  background: var(--primary);
+  color: var(--text-inverse);
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .modernGenrePills {
@@ -9582,4 +9593,208 @@ Link.editButton:hover {
 
 .uploadButton button {
   pointer-events: none;
+}
+
+/* Recommendations Section */
+.recommendationsSection {
+  margin-top: 48px;
+  padding-top: 32px;
+  border-top: 1px solid var(--border);
+}
+
+.recommendationsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 20px;
+  margin-top: 24px;
+}
+
+.recommendationCard {
+  position: relative;
+  display: block;
+  text-decoration: none;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.recommendationCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.recommendationImage {
+  position: relative;
+  aspect-ratio: 1;
+  background: var(--surface);
+  overflow: hidden;
+}
+
+.recommendationCover {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.recommendationCard:hover .recommendationCover {
+  transform: scale(1.05);
+}
+
+.recommendationPlaceholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--surface-subtle) 0%, var(--surface) 100%);
+}
+
+.recommendationPlaceholder .vinylIcon {
+  width: 32px;
+  height: 32px;
+  background: var(--border);
+  border-radius: 50%;
+  position: relative;
+}
+
+.recommendationPlaceholder .vinylIcon::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 8px;
+  height: 8px;
+  background: var(--primary);
+  border-radius: 50%;
+}
+
+.recommendationOverlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.7) 60%, transparent 100%);
+  color: white;
+  padding: 16px 12px 12px;
+  transform: translateY(0);
+  transition: all 0.3s ease;
+}
+
+.recommendationCard:hover .recommendationOverlay {
+  transform: translateY(0);
+}
+
+.recommendationInfo {
+  pointer-events: none;
+}
+
+.recommendationTitle {
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin: 0 0 4px 0;
+  line-height: 1.2;
+  color: white;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.recommendationArtist {
+  font-size: 0.8rem;
+  margin: 0 0 2px 0;
+  color: rgba(255, 255, 255, 0.9);
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.recommendationYear {
+  font-size: 0.75rem;
+  margin: 0;
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 400;
+}
+
+/* Loading skeletons */
+.recommendationCardSkeleton {
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--surface);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.skeletonImage {
+  aspect-ratio: 1;
+  background: linear-gradient(90deg, var(--surface-subtle) 0%, var(--surface) 50%, var(--surface-subtle) 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+.skeletonText {
+  height: 12px;
+  background: linear-gradient(90deg, var(--surface-subtle) 0%, var(--surface) 50%, var(--surface-subtle) 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+  margin: 8px 12px;
+  border-radius: 6px;
+}
+
+.skeletonText:last-child {
+  width: 60%;
+  margin-bottom: 12px;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+/* Responsive design for recommendations */
+@media (max-width: 768px) {
+  .recommendationsGrid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 16px;
+  }
+  
+  .recommendationOverlay {
+    padding: 12px 10px 10px;
+  }
+  
+  .recommendationTitle {
+    font-size: 0.85rem;
+  }
+  
+  .recommendationArtist {
+    font-size: 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .recommendationsGrid {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 12px;
+  }
+  
+  .recommendationsSection {
+    margin-top: 32px;
+    padding-top: 24px;
+  }
 }
