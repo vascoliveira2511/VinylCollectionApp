@@ -3199,32 +3199,20 @@ Link.editButton:hover {
 
 /* A24-Inspired Login Page Styles */
 .loginMain {
-  height: 100vh;
+  flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 32px 32px 120px 32px;
-  position: relative;
+  padding: 32px;
   background: var(--background);
 }
 
 .loginBackground {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: var(--background);
+  /* No longer needed - background handled by loginMain */
 }
 
 .loginBackground::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: var(--background);
+  /* No longer needed - background handled by loginMain */
 }
 
 .loginContainer {
