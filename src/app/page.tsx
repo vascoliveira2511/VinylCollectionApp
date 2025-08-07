@@ -305,8 +305,7 @@ export default function Home() {
                   key={`preview-${vinyl.id}`}
                   vinyl={vinyl}
                   showDetails={false}
-                  onEdit={() => {}}
-                  onDelete={() => deleteVinyl(vinyl.id)}
+                  showActions={false}
                   priority={index < 4}
                 />
               ))}
