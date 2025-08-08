@@ -338,7 +338,7 @@ export default function BrowseDetailPage({
                           }
                           aria-label="Previous image"
                         >
-                          ‹
+                          ↑
                         </button>
                         <button
                           className={`${styles.imageNavButton} ${styles.imageNavNext}`}
@@ -349,7 +349,7 @@ export default function BrowseDetailPage({
                           }
                           aria-label="Next image"
                         >
-                          ›
+                          ↓
                         </button>
                         <div className={styles.imageCounter}>
                           {selectedImage + 1} / {displayImages.length}

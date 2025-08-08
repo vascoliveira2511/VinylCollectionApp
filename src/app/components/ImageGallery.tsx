@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ChevronLeft, ChevronRight, Grid, Maximize2 } from "lucide-react";
+import { ChevronUp, ChevronDown, Grid, Maximize2 } from "lucide-react";
 import styles from "./ImageGallery.module.css";
 
 interface Image {
@@ -66,14 +66,14 @@ export default function ImageGallery({
                 onClick={prevImage}
                 aria-label="Previous image"
               >
-                <ChevronLeft size={24} />
+                <ChevronUp size={24} />
               </button>
               <button
                 className={`${styles.navButton} ${styles.navButtonRight}`}
                 onClick={nextImage}
                 aria-label="Next image"
               >
-                <ChevronRight size={24} />
+                <ChevronDown size={24} />
               </button>
             </>
           )}
@@ -168,7 +168,7 @@ export default function ImageGallery({
                   }}
                   aria-label="Previous image"
                 >
-                  <ChevronLeft size={32} />
+                  <ChevronUp size={32} />
                 </button>
                 <button
                   className={`${styles.fullscreenNav} ${styles.fullscreenNavRight}`}
@@ -178,7 +178,7 @@ export default function ImageGallery({
                   }}
                   aria-label="Next image"
                 >
-                  <ChevronRight size={32} />
+                  <ChevronDown size={32} />
                 </button>
               </>
             )}

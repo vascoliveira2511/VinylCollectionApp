@@ -353,7 +353,7 @@ export default function VinylDetailPage({
                           }
                           aria-label="Previous image"
                         >
-                          ‹
+                          ↑
                         </button>
                         <button
                           className={`${styles.imageNavButton} ${styles.imageNavNext}`}
@@ -364,7 +364,7 @@ export default function VinylDetailPage({
                           }
                           aria-label="Next image"
                         >
-                          ›
+                          ↓
                         </button>
                         <div className={styles.imageCounter}>
                           {selectedImage + 1} / {displayImages.length}

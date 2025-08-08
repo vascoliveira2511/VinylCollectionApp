@@ -58,11 +58,15 @@
 }
 
 .navButtonLeft {
-  left: 12px;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .navButtonRight {
-  right: 12px;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 /* Always visible fullscreen button */
@@ -259,8 +263,8 @@
 
 .fullscreenNav {
   position: absolute;
-  top: 50%;
-  margin-top: -30px; /* Half of height (60px / 2) for centering */
+  left: 50%;
+  margin-left: -30px; /* Half of width (60px / 2) for centering */
   background: rgba(255, 255, 255, 0.1);
   color: white;
   border: none;
@@ -280,11 +284,15 @@
 }
 
 .fullscreenNavLeft {
-  left: -80px;
+  top: -80px;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .fullscreenNavRight {
-  right: -80px;
+  bottom: -80px;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .fullscreenInfo {
@@ -306,17 +314,21 @@
   }
 
   .fullscreenNavLeft {
-    left: 10px;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
   }
 
   .fullscreenNavRight {
-    right: 10px;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
   }
 
   .fullscreenNav {
     width: 50px;
     height: 50px;
-    margin-top: -25px; /* Half of height (50px / 2) for centering */
+    margin-left: -25px; /* Half of width (50px / 2) for centering */
   }
 
   .closeButton {
