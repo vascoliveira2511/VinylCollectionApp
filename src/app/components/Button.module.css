@@ -9,7 +9,7 @@
   text-decoration: none !important;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-  font-family: "Space Grotesk", sans-serif;
+  font-family: "Inter", sans-serif;
   white-space: nowrap;
   text-transform: none !important;
   letter-spacing: -0.01em;
@@ -68,7 +68,7 @@
 }
 
 .outline {
-  background: rgba(254, 252, 248, 0.5) !important;
+  background: var(--surface-glass) !important;
   color: var(--text-secondary) !important;
   border-color: var(--border) !important;
   backdrop-filter: blur(8px);
