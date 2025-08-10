@@ -12,17 +12,17 @@
 }
 
 .navContent {
-  background: rgba(128, 128, 128, 0.85);
+  background: var(--surface-glass);
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border: none;
+  border: 1px solid var(--border);
   border-radius: 50px;
   padding: 20px 50px;
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 50px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15), 0 4px 16px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 32px var(--shadow-medium), 0 4px 16px var(--shadow-subtle);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   min-width: 0;
   overflow: hidden;
@@ -95,7 +95,7 @@
 }
 
 .brandText {
-  color: white;
+  color: var(--text);
   font-weight: 600;
   font-size: 1rem;
   font-family: "Inter", sans-serif;
@@ -114,7 +114,7 @@
 }
 
 .navItem a {
-  color: rgba(255, 255, 255, 0.8);
+  color: var(--text-secondary);
   text-decoration: none;
   font-weight: 600;
   font-size: 0.85rem;
@@ -129,7 +129,7 @@
 }
 
 .navItem a:hover {
-  color: white;
+  color: var(--text);
 }
 
 .activeLink {
@@ -143,11 +143,11 @@
   gap: 8px;
   padding: 8px 16px;
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: var(--surface-subtle);
+  border: 1px solid var(--border);
   transition: all 0.2s ease;
   flex-shrink: 0;
-  color: rgba(255, 255, 255, 0.9);
+  color: var(--text);
   text-decoration: none;
   font-weight: 500;
   font-size: 0.8rem;
@@ -156,8 +156,8 @@
 }
 
 .profileLink:hover {
-  background: rgba(255, 255, 255, 0.2);
-  color: white;
+  background: var(--surface-elevated);
+  color: var(--text);
   text-decoration: none;
 }
 
@@ -174,7 +174,7 @@
 }
 
 .authLink {
-  color: rgba(255, 255, 255, 0.9) !important;
+  color: var(--text) !important;
   text-decoration: none;
   font-weight: 600;
   font-size: 0.85rem;
@@ -182,15 +182,15 @@
   transition: all 0.2s ease;
   padding: 8px 16px;
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: var(--surface-subtle);
+  border: 1px solid var(--border);
   text-transform: uppercase;
 }
 
 .authLink:hover {
-  color: white !important;
-  background: rgba(255, 255, 255, 0.2);
-  border-color: rgba(255, 255, 255, 0.3);
+  color: var(--text) !important;
+  background: var(--surface-elevated);
+  border-color: var(--border-strong);
 }
 
 /* Hamburger menu styles */

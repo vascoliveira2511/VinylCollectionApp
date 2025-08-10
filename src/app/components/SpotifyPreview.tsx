@@ -128,7 +128,8 @@ export default function SpotifyPreview({ artist, album }: SpotifyEmbedProps) {
         style={{
           width: "100%",
           height: "200px",
-          backgroundColor: "#f0f0f0",
+          backgroundColor: "var(--surface-elevated)",
+          color: "var(--text)",
           borderRadius: "12px",
           display: "flex",
           alignItems: "center",
