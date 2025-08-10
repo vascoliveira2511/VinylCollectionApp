@@ -27,17 +27,16 @@ function setCachedData(key: string, data: any, ttl: number = CACHE_TTL) {
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const discogsId = searchParams.get('discogsId');
-  const masterId = searchParams.get('masterId');
   
-  if (!discogsId && !masterId) {
+  if (!discogsId) {
     return NextResponse.json(
-      { error: "Either discogsId or masterId is required" },
+      { error: "discogsId is required" },
       { status: 400 }
     );
   }
 
   // Check cache first
-  const cacheKey = `recommendations:${discogsId || 'null'}:${masterId || 'null'}`;
+  const cacheKey = `recommendations:${discogsId}`;
   const cachedResult = getCachedData(cacheKey);
   if (cachedResult) {
     return NextResponse.json(cachedResult);
@@ -53,31 +52,20 @@ export async function GET(request: Request) {
   }
 
   try {
-    let releaseData;
-    let searchTerms = [];
+    // Get the vinyl release data first
+    const releaseUrl = `https://api.discogs.com/releases/${discogsId}?token=${DISCOGS_TOKEN}`;
+    const releaseResponse = await fetch(releaseUrl, {
+      headers: { "User-Agent": "VinylCollectionApp/1.0" },
+    });
     
-    // Get the release/master data first
-    if (masterId) {
-      const masterUrl = `https://api.discogs.com/masters/${masterId}?token=${DISCOGS_TOKEN}`;
-      const masterResponse = await fetch(masterUrl, {
-        headers: { "User-Agent": "VinylCollectionApp/1.0" },
-      });
-      
-      if (masterResponse.ok) {
-        releaseData = await masterResponse.json();
-      }
+    if (!releaseResponse.ok) {
+      return NextResponse.json(
+        { error: "Could not fetch release data for recommendations" },
+        { status: 404 }
+      );
     }
     
-    if (!releaseData && discogsId) {
-      const releaseUrl = `https://api.discogs.com/releases/${discogsId}?token=${DISCOGS_TOKEN}`;
-      const releaseResponse = await fetch(releaseUrl, {
-        headers: { "User-Agent": "VinylCollectionApp/1.0" },
-      });
-      
-      if (releaseResponse.ok) {
-        releaseData = await releaseResponse.json();
-      }
-    }
+    const releaseData = await releaseResponse.json();
 
     if (!releaseData) {
       return NextResponse.json(
@@ -94,25 +82,11 @@ export async function GET(request: Request) {
     // Search strategies for recommendations
     const recommendations = [];
     
-    // Strategy 1: Same artist, different albums (mix of masters and releases)
+    // Strategy 1: Same artist, different releases (vinyl only)
     if (artist) {
       try {
-        // Search for masters first
-        const artistMasterUrl = `https://api.discogs.com/database/search?artist=${encodeURIComponent(artist)}&type=master&per_page=10&token=${DISCOGS_TOKEN}`;
-        const masterResponse = await fetch(artistMasterUrl, {
-          headers: { "User-Agent": "VinylCollectionApp/1.0" },
-        });
-        
-        if (masterResponse.ok) {
-          const masterData = await masterResponse.json();
-          const filteredMasters = masterData.results
-            ?.filter((r: any) => r.id !== parseInt(masterId || discogsId || '0'))
-            ?.slice(0, 4) || [];
-          recommendations.push(...filteredMasters);
-        }
-
-        // Also search for releases
-        const artistReleaseUrl = `https://api.discogs.com/database/search?artist=${encodeURIComponent(artist)}&type=release&per_page=10&token=${DISCOGS_TOKEN}`;
+        // Search for releases only (no masters)
+        const artistReleaseUrl = `https://api.discogs.com/database/search?artist=${encodeURIComponent(artist)}&type=release&format=vinyl&per_page=10&token=${DISCOGS_TOKEN}`;
         const releaseResponse = await fetch(artistReleaseUrl, {
           headers: { "User-Agent": "VinylCollectionApp/1.0" },
         });
@@ -120,8 +94,8 @@ export async function GET(request: Request) {
         if (releaseResponse.ok) {
           const releaseData = await releaseResponse.json();
           const filteredReleases = releaseData.results
-            ?.filter((r: any) => r.id !== parseInt(discogsId || masterId || '0'))
-            ?.slice(0, 4) || [];
+            ?.filter((r: any) => r.id !== parseInt(discogsId || '0'))
+            ?.slice(0, 6) || [];
           recommendations.push(...filteredReleases);
         }
       } catch (err) {
@@ -129,30 +103,13 @@ export async function GET(request: Request) {
       }
     }
     
-    // Strategy 2: Same genre/style (mix of masters and releases)
+    // Strategy 2: Same genre/style (vinyl releases only)
     if (genres.length > 0 || styles.length > 0) {
       try {
         const genreStyle = [...genres, ...styles].slice(0, 2).join(' OR ');
         
-        // Search masters
-        const genreMasterUrl = `https://api.discogs.com/database/search?genre=${encodeURIComponent(genreStyle)}&type=master&per_page=8&sort=have,desc&token=${DISCOGS_TOKEN}`;
-        const masterResponse = await fetch(genreMasterUrl, {
-          headers: { "User-Agent": "VinylCollectionApp/1.0" },
-        });
-        
-        if (masterResponse.ok) {
-          const masterData = await masterResponse.json();
-          const filteredMasters = masterData.results
-            ?.filter((r: any) => 
-              r.id !== parseInt(masterId || discogsId || '0') && 
-              !recommendations.find((existing: any) => existing.id === r.id)
-            )
-            ?.slice(0, 4) || [];
-          recommendations.push(...filteredMasters);
-        }
-
-        // Search releases
-        const genreReleaseUrl = `https://api.discogs.com/database/search?genre=${encodeURIComponent(genreStyle)}&type=release&per_page=8&sort=have,desc&token=${DISCOGS_TOKEN}`;
+        // Search vinyl releases only
+        const genreReleaseUrl = `https://api.discogs.com/database/search?genre=${encodeURIComponent(genreStyle)}&type=release&format=vinyl&per_page=10&sort=have,desc&token=${DISCOGS_TOKEN}`;
         const releaseResponse = await fetch(genreReleaseUrl, {
           headers: { "User-Agent": "VinylCollectionApp/1.0" },
         });
@@ -161,10 +118,10 @@ export async function GET(request: Request) {
           const releaseData = await releaseResponse.json();
           const filteredReleases = releaseData.results
             ?.filter((r: any) => 
-              r.id !== parseInt(discogsId || masterId || '0') && 
+              r.id !== parseInt(discogsId || '0') && 
               !recommendations.find((existing: any) => existing.id === r.id)
             )
-            ?.slice(0, 4) || [];
+            ?.slice(0, 6) || [];
           recommendations.push(...filteredReleases);
         }
       } catch (err) {
@@ -172,28 +129,11 @@ export async function GET(request: Request) {
       }
     }
     
-    // Strategy 3: Popular releases from same year (mix of masters and releases)
+    // Strategy 3: Popular vinyl releases from same year
     if (releaseData.year) {
       try {
-        // Search masters from same year
-        const yearMasterUrl = `https://api.discogs.com/database/search?year=${releaseData.year}&type=master&per_page=6&sort=have,desc&token=${DISCOGS_TOKEN}`;
-        const masterResponse = await fetch(yearMasterUrl, {
-          headers: { "User-Agent": "VinylCollectionApp/1.0" },
-        });
-        
-        if (masterResponse.ok) {
-          const masterData = await masterResponse.json();
-          const filteredMasters = masterData.results
-            ?.filter((r: any) => 
-              r.id !== parseInt(masterId || discogsId || '0') && 
-              !recommendations.find((existing: any) => existing.id === r.id)
-            )
-            ?.slice(0, 3) || [];
-          recommendations.push(...filteredMasters);
-        }
-
-        // Search releases from same year
-        const yearReleaseUrl = `https://api.discogs.com/database/search?year=${releaseData.year}&type=release&per_page=6&sort=have,desc&token=${DISCOGS_TOKEN}`;
+        // Search vinyl releases from same year only
+        const yearReleaseUrl = `https://api.discogs.com/database/search?year=${releaseData.year}&type=release&format=vinyl&per_page=8&sort=have,desc&token=${DISCOGS_TOKEN}`;
         const releaseResponse = await fetch(yearReleaseUrl, {
           headers: { "User-Agent": "VinylCollectionApp/1.0" },
         });
@@ -202,10 +142,10 @@ export async function GET(request: Request) {
           const yearData = await releaseResponse.json();
           const filteredReleases = yearData.results
             ?.filter((r: any) => 
-              r.id !== parseInt(discogsId || masterId || '0') && 
+              r.id !== parseInt(discogsId || '0') && 
               !recommendations.find((existing: any) => existing.id === r.id)
             )
-            ?.slice(0, 3) || [];
+            ?.slice(0, 4) || [];
           recommendations.push(...filteredReleases);
         }
       } catch (err) {
@@ -216,7 +156,7 @@ export async function GET(request: Request) {
     // Remove duplicates and limit results
     const uniqueRecommendations = recommendations
       .filter((rec, index, arr) => arr.findIndex(r => r.id === rec.id) === index)
-      .slice(0, 8); // Reduce to 8 recommendations for better performance
+      .slice(0, 12); // Show up to 12 vinyl recommendations
 
     // For better performance, only fetch details for high-priority recommendations
     // Prioritize artist matches and genre matches over year matches
@@ -226,15 +166,12 @@ export async function GET(request: Request) {
       return 0;
     });
 
-    // Only fetch detailed info for top 8 recommendations to reduce API calls
+    // Only fetch detailed info for top 12 vinyl recommendations to reduce API calls
     const detailedRecommendations = await Promise.allSettled(
-      prioritizedRecs.slice(0, 8).map(async (rec: any) => {
+      prioritizedRecs.slice(0, 12).map(async (rec: any) => {
         try {
-          // Determine if it's a master or release and fetch accordingly
-          const isMaster = rec.type === 'master';
-          const detailUrl = isMaster 
-            ? `https://api.discogs.com/masters/${rec.id}?token=${DISCOGS_TOKEN}`
-            : `https://api.discogs.com/releases/${rec.id}?token=${DISCOGS_TOKEN}`;
+          // Always fetch as vinyl release (no masters)
+          const detailUrl = `https://api.discogs.com/releases/${rec.id}?token=${DISCOGS_TOKEN}`;
           
           const detailResponse = await fetch(detailUrl, {
             headers: { "User-Agent": "VinylCollectionApp/1.0" },
@@ -254,7 +191,7 @@ export async function GET(request: Request) {
               // Use high-quality image from detailed data
               imageUrl: detailData.images?.[0]?.uri500 || detailData.images?.[0]?.uri || rec.thumb || rec.cover_image,
               thumb: rec.thumb, // Keep original thumb as fallback
-              type: rec.type || (isMaster ? 'master' : 'release'),
+              type: 'release',
               country: detailData.country,
               format: detailData.formats?.[0]?.name,
               label: detailData.labels?.[0]?.name
@@ -270,7 +207,7 @@ export async function GET(request: Request) {
               style: Array.isArray(rec.style) ? rec.style : (rec.style ? [rec.style] : []),
               imageUrl: rec.thumb || rec.cover_image,
               thumb: rec.thumb || rec.cover_image,
-              type: rec.type || 'master'
+              type: 'release'
             };
           }
         } catch (err) {
@@ -285,7 +222,7 @@ export async function GET(request: Request) {
             style: Array.isArray(rec.style) ? rec.style : (rec.style ? [rec.style] : []),
             imageUrl: rec.thumb || rec.cover_image,
             thumb: rec.thumb || rec.cover_image,
-            type: rec.type || 'master'
+            type: 'release'
           };
         }
       })

@@ -52,6 +52,7 @@ model User {
   // Community features
   vinylComments   VinylComment[]
   vinylStatuses   UserVinylStatus[]
+  priceAlerts     PriceAlert[]
 }
 
 model Collection {
@@ -198,6 +199,10 @@ model VinylComment {
 model UserVinylStatus {
   id          Int      @id @default(autoincrement())
   status      String   // "want", "have", "owned", "sold"
+  priority    Int?     // 1-5 priority for wishlist items (1=highest, 5=lowest)
+  targetPrice Float?   // Target price for wishlist items
+  targetCurrency String? @default("USD") // Currency for target price
+  notes       String?  // Personal notes about this status
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   
@@ -210,4 +215,28 @@ model UserVinylStatus {
   @@index([userId])
   @@index([discogsId])
   @@index([userId, status])
+  @@index([userId, priority])
+}
+
+// Price tracking for wishlist items
+model PriceAlert {
+  id              Int      @id @default(autoincrement())
+  targetPrice     Float    // Price threshold
+  currency        String   @default("USD")
+  isActive        Boolean  @default(true)
+  lastCheckedAt   DateTime?
+  lastNotifiedAt  DateTime?
+  currentPrice    Float?   // Latest known price
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Foreign keys
+  userId          Int
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  discogsId       Int      // Discogs release ID
+
+  @@unique([userId, discogsId])
+  @@index([userId])
+  @@index([discogsId])
+  @@index([isActive, lastCheckedAt])
 }

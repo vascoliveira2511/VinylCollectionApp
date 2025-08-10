@@ -245,11 +245,6 @@
 
 .spotlightCard {
   position: relative;
-  background: var(--ctp-surface0);
-  border-radius: 12px;
-  padding: 16px;
-  border: 2px solid var(--ctp-mauve);
-  box-shadow: 0 8px 24px rgba(203, 166, 247, 0.15);
 }
 
 .spotlightBadge {
@@ -3771,21 +3766,20 @@ Link.editButton:hover {
 }
 
 .modernGenrePill {
-  background: rgba(255, 255, 255, 0.5);
-  color: var(--text-tertiary);
+  background: var(--surface-elevated);
+  color: var(--text);
   padding: 4px 12px;
   border-radius: 12px;
   font-size: 0.8rem;
-  font-weight: 400;
-  border: 1px solid var(--border-subtle);
+  font-weight: 500;
+  border: 1px solid var(--border);
   transition: all 0.2s ease;
-  backdrop-filter: blur(8px);
 }
 
 .modernGenrePill:hover {
-  background: rgba(255, 255, 255, 0.8);
-  color: var(--text-secondary);
-  border-color: var(--border);
+  background: var(--surface);
+  color: var(--primary);
+  border-color: var(--primary);
 }
 
 .personalRating {

@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import Avatar from "./Avatar";
+import ThemeToggle from "./ThemeToggle";
 import styles from "./Navbar.module.css";
 
 interface User {
@@ -129,6 +130,9 @@ export default function Navbar() {
                 >
                   Profile
                 </Link>
+              </li>
+              <li className={styles.navItem}>
+                <ThemeToggle />
               </li>
             </>
           )}

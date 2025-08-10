@@ -548,7 +548,6 @@ export default function BrowseDetailPage({
           {/* Recommendations */}
           <RecommendationsSection
             discogsId={release.id.toString()}
-            masterId={release.master_id?.toString()}
           />
         </div>
       </div>

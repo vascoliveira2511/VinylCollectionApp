@@ -150,11 +150,7 @@ export default function RecommendationsSection({
         {recommendations.slice(0, 12).map((rec) => (
           <Link
             key={rec.id}
-            href={
-              rec.type === "master"
-                ? `/browse/master/${rec.id}`
-                : `/browse/${rec.id}`
-            }
+            href={`/browse/${rec.id}`}
             className={styles.recommendationCard}
           >
             <div className={styles.recommendationImage}>

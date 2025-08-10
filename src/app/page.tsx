@@ -195,7 +195,7 @@ export default function Home() {
                   <div className={styles.statNumber}>
                     {userProfile.recentVinyls?.length || 0}
                   </div>
-                  <div className={styles.statLabel}>Recent Adds</div>
+                  <div className={styles.statLabel}>Recent</div>
                 </div>
               </div>
             )}

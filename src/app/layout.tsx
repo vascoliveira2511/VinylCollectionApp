@@ -4,6 +4,7 @@ import "./reset.css"; // Import reset.css first
 import "./globals.css";
 import ConditionalNavbar from "./components/ConditionalNavbar";
 import Footer from "./components/Footer";
+import ThemeProvider from "./components/ThemeProvider";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -34,11 +35,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={`${inter.variable} ${robotoMono.variable}`}>
-        <ConditionalNavbar />
-        {children}
-        <Footer />
+        <ThemeProvider>
+          <ConditionalNavbar />
+          {children}
+          <Footer />
+        </ThemeProvider>
       </body>
     </html>
   );

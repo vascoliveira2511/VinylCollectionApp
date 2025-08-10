@@ -1,10 +1,10 @@
 .footer {
-  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
-  color: #ffffff;
+  background: var(--surface-elevated);
+  color: var(--text);
   padding: 3rem 0 1.5rem 0;
   margin-top: auto;
-  border-top: 2px solid #444;
-  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
+  border-top: 1px solid var(--border);
+  box-shadow: 0 -4px 20px var(--shadow-subtle);
   z-index: 0;
   position: relative;
 }
@@ -19,11 +19,11 @@
 }
 
 .footerSection h4 {
-  color: #ffffff;
+  color: var(--text);
   font-size: 1.2rem;
   font-weight: 600;
   margin-bottom: 1rem;
-  border-bottom: 2px solid #555;
+  border-bottom: 2px solid var(--border);
   padding-bottom: 0.5rem;
 }
 
@@ -41,12 +41,12 @@
 .vinylIcon {
   width: 40px;
   height: 40px;
-  background: #2a2a2a;
+  background: var(--vinyl);
   border-radius: 50%;
   position: relative;
   animation: spin 8s linear infinite;
-  border: 1px solid #444;
-  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--border);
+  box-shadow: inset 0 1px 2px var(--shadow-subtle);
 }
 
 .vinylIcon::before {
@@ -70,20 +70,20 @@
   transform: translate(-50%, -50%);
   width: 4px;
   height: 4px;
-  background: #2a2a2a;
+  background: var(--vinyl);
   border-radius: 50%;
   z-index: 1;
 }
 
 .footerBrandText h3 {
-  color: #ffffff;
+  color: var(--text);
   font-size: 1.5rem;
   margin: 0 0 0.5rem 0;
   font-weight: 700;
 }
 
 .footerBrandText p {
-  color: #ccc;
+  color: var(--text-secondary);
   font-size: 0.9rem;
   margin: 0;
 }
@@ -99,20 +99,20 @@
 }
 
 .footerLinks a {
-  color: #ccc;
+  color: var(--text-secondary);
   text-decoration: none;
   transition: all 0.3s ease;
   font-size: 0.95rem;
 }
 
 .footerLinks a:hover {
-  color: #ffffff;
+  color: var(--primary);
   text-decoration: underline;
   padding-left: 5px;
 }
 
 .footerDescription {
-  color: #ccc;
+  color: var(--text-secondary);
   font-size: 0.95rem;
   line-height: 1.5;
   margin: 0;
@@ -121,7 +121,7 @@
 .footerBottom {
   margin-top: 2rem;
   padding-top: 1.5rem;
-  border-top: 1px solid #444;
+  border-top: 1px solid var(--border);
 }
 
 .footerBottomContent {
@@ -136,7 +136,7 @@
 }
 
 .footerBottomContent p {
-  color: #aaa;
+  color: var(--text-tertiary);
   font-size: 0.85rem;
   margin: 0;
 }

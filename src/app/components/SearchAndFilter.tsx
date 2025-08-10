@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import styles from "./SearchAndFilter.module.css";
 
 interface SearchAndFilterProps {
@@ -17,7 +17,11 @@ export interface FilterState {
   year: string;
   yearFrom: string;
   yearTo: string;
-  sortBy: "newest" | "oldest" | "artist" | "title" | "year";
+  condition: string;
+  rating: string;
+  priceFrom: string;
+  priceTo: string;
+  sortBy: "newest" | "oldest" | "artist" | "title" | "year" | "rating" | "price";
   displayLimit: number;
 }
 
@@ -34,6 +38,10 @@ export default function SearchAndFilter({
     year: "",
     yearFrom: "",
     yearTo: "",
+    condition: "",
+    rating: "",
+    priceFrom: "",
+    priceTo: "",
     sortBy: "newest",
     displayLimit: 12,
   });
@@ -51,18 +59,23 @@ export default function SearchAndFilter({
     setHasLoaded(true);
   }, []);
 
+  const debouncedOnFiltersChange = useCallback(
+    (newFilters: FilterState) => {
+      const timeoutId = setTimeout(() => {
+        onFiltersChange(newFilters);
+      }, 300);
+      return timeoutId;
+    },
+    [onFiltersChange]
+  );
+
   useEffect(() => {
     if (hasLoaded) {
-      // Save filters to localStorage
       localStorage.setItem("vinylFilters", JSON.stringify(filters));
-      // Use a timeout to prevent immediate re-renders
-      const timeoutId = setTimeout(() => {
-        onFiltersChange(filters);
-      }, 100);
-
+      const timeoutId = debouncedOnFiltersChange(filters);
       return () => clearTimeout(timeoutId);
     }
-  }, [filters, hasLoaded]); // Remove onFiltersChange from dependencies
+  }, [filters, hasLoaded, debouncedOnFiltersChange]);
 
   const handleFilterChange = (
     key: keyof FilterState,
@@ -80,15 +93,24 @@ export default function SearchAndFilter({
       year: "",
       yearFrom: "",
       yearTo: "",
+      condition: "",
+      rating: "",
+      priceFrom: "",
+      priceTo: "",
       sortBy: "newest",
       displayLimit: 12,
     });
   };
 
-  const getUniqueGenres = () => {
+  const getUniqueGenres = useMemo(() => {
     const allGenres = collection.flatMap((vinyl) => vinyl.genre || []);
     return Array.from(new Set(allGenres)).sort();
-  };
+  }, [collection]);
+
+  const getUniqueConditions = useMemo(() => {
+    const conditions = collection.map((vinyl) => vinyl.condition).filter(Boolean);
+    return Array.from(new Set(conditions)).sort();
+  }, [collection]);
 
   const hasActiveFilters =
     filters.search ||
@@ -97,7 +119,11 @@ export default function SearchAndFilter({
     filters.genre ||
     filters.year ||
     filters.yearFrom ||
-    filters.yearTo;
+    filters.yearTo ||
+    filters.condition ||
+    filters.rating ||
+    filters.priceFrom ||
+    filters.priceTo;
 
   return (
     <div className={styles.searchAndFilter}>
@@ -140,7 +166,7 @@ export default function SearchAndFilter({
               onChange={(e) => handleFilterChange("genre", e.target.value)}
             >
               <option value="">All Genres</option>
-              {getUniqueGenres().map((genre) => (
+              {getUniqueGenres.map((genre) => (
                 <option key={genre} value={genre}>
                   {genre}
                 </option>
@@ -171,6 +197,43 @@ export default function SearchAndFilter({
 
           <div className={styles.filterRow}>
             <select
+              value={filters.condition}
+              onChange={(e) => handleFilterChange("condition", e.target.value)}
+            >
+              <option value="">All Conditions</option>
+              {getUniqueConditions.map((condition) => (
+                <option key={condition} value={condition}>
+                  {condition}
+                </option>
+              ))}
+            </select>
+            <select
+              value={filters.rating}
+              onChange={(e) => handleFilterChange("rating", e.target.value)}
+            >
+              <option value="">All Ratings</option>
+              <option value="5">⭐⭐⭐⭐⭐</option>
+              <option value="4">⭐⭐⭐⭐ & above</option>
+              <option value="3">⭐⭐⭐ & above</option>
+              <option value="2">⭐⭐ & above</option>
+              <option value="1">⭐ & above</option>
+            </select>
+            <input
+              type="number"
+              placeholder="Price From"
+              value={filters.priceFrom}
+              onChange={(e) => handleFilterChange("priceFrom", e.target.value)}
+            />
+            <input
+              type="number"
+              placeholder="Price To"
+              value={filters.priceTo}
+              onChange={(e) => handleFilterChange("priceTo", e.target.value)}
+            />
+          </div>
+
+          <div className={styles.filterRow}>
+            <select
               value={filters.sortBy}
               onChange={(e) =>
                 handleFilterChange(
@@ -184,6 +247,8 @@ export default function SearchAndFilter({
               <option value="artist">Artist A-Z</option>
               <option value="title">Title A-Z</option>
               <option value="year">Year</option>
+              <option value="rating">Rating</option>
+              <option value="price">Price</option>
             </select>
 
             <select
