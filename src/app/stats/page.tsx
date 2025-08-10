@@ -56,7 +56,7 @@ export default function StatsPage() {
         // Fallback: generate stats from existing data
         try {
           const vinyls = await apiClient.getVinylCollection({});
-          const fallbackStats = generateStatsFromVinyls(vinyls);
+          const fallbackStats = generateStatsFromVinyls(Array.isArray(vinyls) ? vinyls : []);
           setStats(fallbackStats);
         } catch (fallbackErr) {
           setError("Failed to load statistics");

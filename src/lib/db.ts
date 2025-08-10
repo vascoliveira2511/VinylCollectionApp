@@ -13,9 +13,14 @@ if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
 export async function verifyAuth(request: NextRequest) {
   try {
     // Get the user session from cookies or headers
-    const userId = request.cookies.get("user-id")?.value;
+    const userIdStr = request.cookies.get("user-id")?.value;
     
-    if (!userId) {
+    if (!userIdStr) {
+      return null;
+    }
+
+    const userId = parseInt(userIdStr, 10);
+    if (isNaN(userId)) {
       return null;
     }
 
