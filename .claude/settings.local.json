@@ -58,7 +58,8 @@
       "WebFetch(domain:webflow.com)",
       "WebFetch(domain:www.awwwards.com)",
       "WebFetch(domain:telepathicinstruments.com)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(cat:*)"
     ],
     "deny": []
   }
