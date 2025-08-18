@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/db";
 
 export async function POST(request: Request) {
   try {
+    const { prisma } = await import("@/lib/db");
+    
     const { token } = await request.json();
 
     if (!token) {
@@ -23,13 +24,22 @@ export async function POST(request: Request) {
     }
 
     // Mark email as verified and remove verification token
-    await prisma.user.update({
+    const updatedUser = await prisma.user.update({
       where: { id: user.id },
       data: {
         emailVerified: true,
         emailVerificationToken: null,
       },
     });
+
+    // Send welcome email
+    try {
+      const { sendWelcomeEmail } = await import("@/lib/email");
+      await sendWelcomeEmail(updatedUser.email!, updatedUser.username);
+    } catch (emailError) {
+      console.error('Failed to send welcome email:', emailError);
+      // Don't fail verification if welcome email fails
+    }
 
     return NextResponse.json({ message: "Email verified successfully! You can now log in." });
   } catch (error) {
@@ -41,6 +51,8 @@ export async function POST(request: Request) {
 // Handle GET requests for email verification links
 export async function GET(request: Request) {
   try {
+    const { prisma } = await import("@/lib/db");
+    
     const { searchParams } = new URL(request.url);
     const token = searchParams.get('token');
 
@@ -62,13 +74,22 @@ export async function GET(request: Request) {
     }
 
     // Mark email as verified and remove verification token
-    await prisma.user.update({
+    const updatedUser = await prisma.user.update({
       where: { id: user.id },
       data: {
         emailVerified: true,
         emailVerificationToken: null,
       },
     });
+
+    // Send welcome email
+    try {
+      const { sendWelcomeEmail } = await import("@/lib/email");
+      await sendWelcomeEmail(updatedUser.email!, updatedUser.username);
+    } catch (emailError) {
+      console.error('Failed to send welcome email:', emailError);
+      // Don't fail verification if welcome email fails
+    }
 
     // Redirect to login page with success message
     return NextResponse.redirect(new URL('/login?verified=true', request.url));

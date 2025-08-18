@@ -1,9 +1,10 @@
 import { NextResponse } from "next/server";
 import crypto from "crypto";
-import { prisma } from "@/lib/db";
 
 export async function POST(request: Request) {
   try {
+    const { prisma } = await import("@/lib/db");
+    
     const { email } = await request.json();
 
     if (!email) {
@@ -35,14 +36,17 @@ export async function POST(request: Request) {
       },
     });
 
-    // TODO: Send password reset email here
-    // For now, we'll just return success
-    // Reset link would be: https://yourapp.com/reset-password?token=${resetToken}
+    // Send password reset email
+    try {
+      const { sendPasswordResetEmail } = await import("@/lib/email");
+      await sendPasswordResetEmail(user.email, resetToken);
+    } catch (emailError) {
+      console.error('Failed to send password reset email:', emailError);
+      // Still return success to prevent email enumeration
+    }
 
     return NextResponse.json({ 
-      message: "If an account with that email exists, we've sent a password reset link.",
-      // For development only - remove in production:
-      resetLink: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/reset-password?token=${resetToken}`
+      message: "If an account with that email exists, we've sent a password reset link."
     });
   } catch (error) {
     console.error("Forgot password error:", error);

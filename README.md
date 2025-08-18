@@ -90,9 +90,20 @@ DISCOGS_CONSUMER_SECRET=your_discogs_consumer_secret
 # Spotify API (Optional - for music previews)
 SPOTIFY_CLIENT_ID=your_spotify_client_id
 SPOTIFY_CLIENT_SECRET=your_spotify_client_secret
+
+# Email Service (Required for user verification and password reset)
+RESEND_API_KEY=your_resend_api_key
+FROM_EMAIL=noreply@yourdomain.com
+
+# Google OAuth (Optional - for Google Sign-In)
+GOOGLE_CLIENT_ID=your_google_client_id
+NEXT_PUBLIC_GOOGLE_CLIENT_ID=your_google_client_id
 ```
 
-**Note:** The Discogs and Spotify integrations are optional but provide enhanced functionality like automatic metadata fetching and music previews.
+**Note:** 
+- **Resend API** is required for email functionality (account verification, password reset, welcome emails)
+- **Discogs and Spotify** integrations are optional but provide enhanced functionality
+- **Google OAuth** is optional for social login
 
 ### Database Setup
 

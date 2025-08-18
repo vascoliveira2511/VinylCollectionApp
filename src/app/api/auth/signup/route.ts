@@ -1,9 +1,10 @@
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
-import { prisma } from "@/lib/db";
 
 export async function POST(request: Request) {
+  const { prisma } = await import("@/lib/db");
+  
   const { username, email, password } = await request.json();
 
   if (!username || !email || !password) {
@@ -54,8 +55,14 @@ export async function POST(request: Request) {
     },
   });
 
-  // TODO: Send verification email here
-  // For now, we'll return success but in production you'd send an email
+  // Send verification email
+  try {
+    const { sendVerificationEmail } = await import("@/lib/email");
+    await sendVerificationEmail(newUser.email, emailVerificationToken);
+  } catch (emailError) {
+    console.error('Failed to send verification email:', emailError);
+    // Don't fail account creation if email fails - user can request new verification
+  }
 
   return NextResponse.json({ 
     message: "Account created successfully! Please check your email to verify your account.",

@@ -1,9 +1,11 @@
 import { NextResponse } from "next/server";
 import crypto from "crypto";
-import { prisma } from "@/lib/db";
 
 export async function POST(request: Request) {
   try {
+    // Dynamically import prisma to avoid build-time issues
+    const { prisma } = await import("@/lib/db");
+    
     const { userId, email } = await request.json();
 
     if (!userId || !email) {
@@ -51,14 +53,18 @@ export async function POST(request: Request) {
       },
     });
 
-    // TODO: Send verification email here
-    // For now, we'll return success with the token for testing
+    // Send verification email
+    try {
+      const { sendVerificationEmail } = await import("@/lib/email");
+      await sendVerificationEmail(email, emailVerificationToken);
+    } catch (emailError) {
+      console.error('Failed to send verification email:', emailError);
+      // Don't fail the process if email fails - user can request new verification
+    }
 
     return NextResponse.json({ 
       message: "Email added successfully! Please check your email to verify your account.",
-      requiresVerification: true,
-      // For development only - remove in production:
-      verificationLink: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/auth/verify-email?token=${emailVerificationToken}`
+      requiresVerification: true
     });
   } catch (error) {
     console.error("Add email error:", error);
