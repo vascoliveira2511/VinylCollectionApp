@@ -28,19 +28,24 @@ export default function Login() {
     document.head.appendChild(script);
 
     script.onload = () => {
-      if (window.google) {
+      if (window.google && process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID) {
         window.google.accounts.id.initialize({
           client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
           callback: handleGoogleSignIn,
-          use_fedcm_for_prompt: true,
+          auto_select: false,
+          cancel_on_tap_outside: true,
+          use_fedcm_for_prompt: false, // Disable FedCM to fix the error
         });
       }
     };
 
     return () => {
-      document.head.removeChild(script);
+      if (document.head.contains(script)) {
+        document.head.removeChild(script);
+      }
     };
   }, []);
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
