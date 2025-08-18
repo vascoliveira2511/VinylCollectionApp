@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/db";
 import * as jose from "jose";
 
 const secret = new TextEncoder().encode(process.env.JWT_SECRET);
 
 export async function POST(request: NextRequest) {
+  const { prisma } = await import("@/lib/db");
   try {
     // Get current user from JWT
     const token = request.cookies.get("token")?.value;

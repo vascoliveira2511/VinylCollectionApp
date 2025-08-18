@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createDiscogsOAuth } from "@/lib/discogs-oauth";
-import { prisma } from "@/lib/db";
 import * as jose from "jose";
 
 // Force dynamic rendering for this route
@@ -89,6 +88,7 @@ export async function GET(request: NextRequest) {
     const profileData = await profileResponse.json();
 
     // Store access token and username in database
+    const { prisma } = await import("@/lib/db");
     await prisma.user.update({
       where: { id: parseInt(userId) },
       data: {

@@ -2,11 +2,11 @@ import { NextResponse } from "next/server";
 import { NextRequest } from "next/server";
 import bcrypt from "bcryptjs";
 import * as jose from "jose";
-import { prisma } from "@/lib/db";
 
 const secret = new TextEncoder().encode(process.env.JWT_SECRET);
 
 export async function POST(request: NextRequest) {
+  const { prisma } = await import("@/lib/db");
   const token = request.cookies.get("token")?.value;
 
   if (!token) {
