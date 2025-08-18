@@ -289,7 +289,7 @@ export default function Login() {
                       />
                     </div>
 
-                    <div style={{ textAlign: 'right', marginBottom: '16px' }}>
+                    <div style={{ textAlign: 'center', marginBottom: '16px' }}>
                       <Link href="/forgot-password" className={styles.signupLink}>
                         Forgot password?
                       </Link>
