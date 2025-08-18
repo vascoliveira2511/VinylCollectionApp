@@ -1,11 +1,11 @@
 import { NextResponse } from "next/server";
 import * as jose from "jose";
-import { prisma } from "@/lib/db";
 import { cookies } from "next/headers";
 
 const secret = new TextEncoder().encode(process.env.JWT_SECRET);
 
 export async function POST(request: Request) {
+  const { prisma } = await import("@/lib/db");
   try {
     const token = cookies().get("token")?.value;
 

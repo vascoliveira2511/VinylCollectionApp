@@ -1,11 +1,11 @@
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import * as jose from "jose";
-import { prisma } from "@/lib/db";
 
 const secret = new TextEncoder().encode(process.env.JWT_SECRET);
 
 export async function POST(request: Request) {
+  const { prisma } = await import("@/lib/db");
   const { username, password } = await request.json();
 
   // Allow login with username or email

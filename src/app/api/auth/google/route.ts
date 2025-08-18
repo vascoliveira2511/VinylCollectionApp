@@ -1,12 +1,12 @@
 import { NextResponse } from "next/server";
 import { OAuth2Client } from "google-auth-library";
 import * as jose from "jose";
-import { prisma } from "@/lib/db";
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 const secret = new TextEncoder().encode(process.env.JWT_SECRET);
 
 export async function POST(request: Request) {
+  const { prisma } = await import("@/lib/db");
   try {
     const { credential } = await request.json();
 
