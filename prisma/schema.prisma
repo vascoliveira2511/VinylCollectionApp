@@ -14,8 +14,12 @@ model User {
   id              Int      @id @default(autoincrement())
   username        String   @unique
   password        String?  // Optional for Google OAuth users
-  email           String?  @unique // For Google OAuth
+  email           String?  @unique // Optional during migration period
   googleId        String?  @unique // Google OAuth ID
+  emailVerified   Boolean  @default(false)
+  emailVerificationToken String? @unique
+  passwordResetToken     String? @unique
+  passwordResetExpires   DateTime?
   discogsUsername String?
   avatar          String?  // Base64 encoded image data or URL
   avatarType      String   @default("generated") // "generated", "uploaded", "url"

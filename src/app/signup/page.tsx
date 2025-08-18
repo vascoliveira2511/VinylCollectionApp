@@ -13,6 +13,7 @@ declare global {
 
 export default function Signup() {
   const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -74,7 +75,7 @@ export default function Signup() {
       const res = await fetch("/api/auth/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify({ username, email, password }),
       });
 
       if (res.ok) {
@@ -170,6 +171,22 @@ export default function Signup() {
                     disabled={loading}
                     className={styles.loginInput}
                     minLength={3}
+                  />
+                </div>
+
+                <div className={styles.inputGroup}>
+                  <label htmlFor="email" className={styles.inputLabel}>
+                    Email
+                  </label>
+                  <input
+                    id="email"
+                    type="email"
+                    placeholder="Enter your email address"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                    disabled={loading}
+                    className={styles.loginInput}
                   />
                 </div>
 

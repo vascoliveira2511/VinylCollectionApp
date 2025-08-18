@@ -44,18 +44,19 @@ export async function POST(request: Request) {
 
     // If not found by Google ID, check by email
     if (!user) {
-      user = await prisma.user.findUnique({
+      const existingUser = await prisma.user.findUnique({
         where: { email },
       });
 
-      // If user exists with email but no Google ID, link the accounts
-      if (user) {
+      // If user exists with same email, automatically merge
+      if (existingUser) {
         user = await prisma.user.update({
-          where: { id: user.id },
+          where: { id: existingUser.id },
           data: {
             googleId,
-            avatar: picture || user.avatar,
-            avatarType: picture ? "url" : user.avatarType,
+            avatar: picture || existingUser.avatar,
+            avatarType: picture ? "url" : existingUser.avatarType,
+            emailVerified: true, // Google email is pre-verified
           },
         });
       }
@@ -82,6 +83,7 @@ export async function POST(request: Request) {
           googleId,
           avatar: picture,
           avatarType: picture ? "url" : "generated",
+          emailVerified: true, // Google accounts are pre-verified
         },
       });
 
