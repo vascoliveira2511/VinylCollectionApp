@@ -30,13 +30,18 @@ export default function Signup() {
 
     script.onload = () => {
       if (window.google && process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID) {
-        window.google.accounts.id.initialize({
-          client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
-          callback: handleGoogleSignUp,
-          auto_select: false,
-          cancel_on_tap_outside: true,
-          use_fedcm_for_prompt: false, // Disable FedCM to fix the error
-        });
+        try {
+          window.google.accounts.id.initialize({
+            client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
+            callback: handleGoogleSignUp,
+            auto_select: false,
+            cancel_on_tap_outside: true,
+            use_fedcm_for_prompt: false, // Disable FedCM to fix the error
+          });
+        } catch (error) {
+          console.error('Google Sign-In initialization failed:', error);
+          setError('Google Sign-In configuration error. Please contact support.');
+        }
       }
     };
 
@@ -111,7 +116,19 @@ export default function Signup() {
 
   const handleGoogleButtonClick = () => {
     if (window.google) {
-      window.google.accounts.id.prompt();
+      try {
+        window.google.accounts.id.prompt((notification: any) => {
+          if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
+            console.warn('Google Sign-In prompt not displayed:', notification.getNotDisplayedReason());
+            setError('Google Sign-In not available. Please check your connection and try again.');
+          }
+        });
+      } catch (error) {
+        console.error('Google Sign-In prompt failed:', error);
+        setError('Google Sign-In temporarily unavailable. Please try again later.');
+      }
+    } else {
+      setError('Google Sign-In not loaded. Please refresh the page and try again.');
     }
   };
 
