@@ -3205,11 +3205,12 @@ Link.editButton:hover {
   position: relative;
   z-index: 1;
   width: 100%;
-  max-width: 420px;
+  max-width: 480px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
   gap: 48px;
+  margin-bottom: 80px; /* Add spacing from footer */
 }
 
 .loginHeader {
@@ -3378,7 +3379,7 @@ Link.editButton:hover {
   background: var(--surface);
   color: var(--text);
   border: 1px solid var(--border);
-  border-radius: 0;
+  border-radius: 16px;
   font-size: 1rem;
   font-weight: 500;
   cursor: pointer;

@@ -112,8 +112,7 @@ export default function ResetPassword() {
 
   return (
     <main className={styles.loginMain}>
-      <div className={styles.loginBackground}>
-        <div className={styles.loginContainer}>
+      <div className={styles.loginContainer}>
           <div className={styles.loginHeader}>
             <div className={styles.appLogo}>
               <div className="vinyl-loader">
@@ -212,7 +211,6 @@ export default function ResetPassword() {
             </div>
           </div>
         </div>
-      </div>
     </main>
   );
 }

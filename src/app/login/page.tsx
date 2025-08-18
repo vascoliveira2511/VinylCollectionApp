@@ -245,7 +245,7 @@ export default function Login() {
                   <p
                     style={{
                       fontSize: "14px",
-                      color: "#cdd6f4",
+                      color: "var(--text-muted)",
                       textAlign: "center",
                       marginTop: "16px",
                     }}

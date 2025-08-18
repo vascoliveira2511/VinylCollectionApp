@@ -73,14 +73,21 @@ export const config = {
      * - api/auth/signup (signup endpoint)
      * - api/auth/logout (logout endpoint)
      * - api/auth/discogs (discogs oauth endpoints)
+     * - api/auth/google (google oauth endpoints)
+     * - api/auth/add-email (add email for legacy accounts)
+     * - api/auth/verify-email (email verification)
+     * - api/auth/forgot-password (password reset request)
+     * - api/auth/reset-password (password reset)
      * - api/image-proxy (image proxy endpoint)
      * - login (login page)
      * - signup (signup page)
+     * - forgot-password (forgot password page)
+     * - reset-password (reset password page)
      * - _next/static (static files)
      * - _next/image (image optimization files)
      * - favicon.svg (favicon file)
      * - favicon.ico (favicon file)
      */
-    "/((?!api/auth/login|api/auth/signup|api/auth/logout|api/auth/discogs|api/auth/google|api/image-proxy|login|signup|_next/static|_next/image|favicon).*)",
+    "/((?!api/auth/login|api/auth/signup|api/auth/logout|api/auth/discogs|api/auth/google|api/auth/add-email|api/auth/verify-email|api/auth/forgot-password|api/auth/reset-password|api/image-proxy|login|signup|forgot-password|reset-password|_next/static|_next/image|favicon).*)",
   ],
 };
