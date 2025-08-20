@@ -59,7 +59,8 @@
       "WebFetch(domain:www.awwwards.com)",
       "WebFetch(domain:telepathicinstruments.com)",
       "Bash(git add:*)",
-      "Bash(cat:*)"
+      "Bash(cat:*)",
+      "Bash(npm audit:*)"
     ],
     "deny": []
   }

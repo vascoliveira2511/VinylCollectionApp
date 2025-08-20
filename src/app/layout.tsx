@@ -5,6 +5,7 @@ import "./globals.css";
 import ConditionalNavbar from "./components/ConditionalNavbar";
 import Footer from "./components/Footer";
 import ThemeProvider from "./components/ThemeProvider";
+import { Analytics } from "@vercel/analytics/next";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -42,6 +43,7 @@ export default function RootLayout({
           {children}
           <Footer />
         </ThemeProvider>
+        <Analytics />
       </body>
     </html>
   );
